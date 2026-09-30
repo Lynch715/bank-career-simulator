@@ -1,0 +1,17 @@
+{
+  "name": "银行升职记",
+  "short_name": "银行升职记",
+  "description": "从网点负责人到总行行长：一家虚构大行里的二十年。",
+  "lang": "zh-CN",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#16302b",
+  "theme_color": "#16302b",
+  "icons": [
+    {"src": "icon/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

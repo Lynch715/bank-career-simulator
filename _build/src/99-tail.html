@@ -1,0 +1,13 @@
+
+/* =====================================================================
+   启动
+   ===================================================================== */
+if(!HEADLESS){
+  THSZ.UI = UI;
+  document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => UI.showTab(b.dataset.t));
+  window.addEventListener("resize", () => { const th = $("top").getBoundingClientRect().height; document.documentElement.style.setProperty("--toph", th+"px"); });
+  UI.start();
+}
+</script>
+</body>
+</html>

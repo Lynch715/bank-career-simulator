@@ -1,0 +1,8 @@
+{
+  "name": "thsz-tests",
+  "private": true,
+  "version": "1.0.0",
+  "description": "《银行升职记》回归测试。游戏本体 index.html 是单文件零依赖,这里的依赖只服务于测试。",
+  "scripts": { "test": "bash run-all.sh" },
+  "devDependencies": { "jsdom": "^26.0.0" }
+}
