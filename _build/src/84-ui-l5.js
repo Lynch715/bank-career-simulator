@@ -11,8 +11,8 @@ Object.assign(UI, {
     const cell = 64;
     const tiles = B.regions.map(r => { const heat = r.boost>0 ? "#c9ab6a" : "#23463f", tc = r.boost>0 ? "#16302b" : "#f3edde"; const op = 0.35 + r.share*2.2;
       return `<g data-region="${r.id}" style="cursor:pointer"><rect x="${r.x*cell+2}" y="${r.y*cell+2}" width="${r.w*cell-4}" height="${r.h*cell-4}" rx="6" fill="${heat}" fill-opacity="${Math.min(0.95,op)}"/>
-        <text x="${r.x*cell+10}" y="${r.y*cell+24}" font-size="13" fill="${tc}" font-family="sans-serif">${r.name}${r.cq?" ·重庆":""}</text>
-        <text x="${r.x*cell+10}" y="${r.y*cell+42}" font-size="11" fill="${tc}" opacity=".85" font-family="sans-serif">占${Math.round(r.share*100)}%${r.boost>0?" · 调研中":""}</text></g>`; }).join("");
+        <text x="${r.x*cell+10}" y="${r.y*cell+26}" font-size="15" fill="${tc}" font-family="sans-serif">${r.name}${r.cq?" ·重庆":""}</text>
+        <text x="${r.x*cell+10}" y="${r.y*cell+46}" font-size="13" fill="${tc}" font-family="sans-serif">占${Math.round(r.share*100)}%${r.boost>0?" · 调研中":""}</text></g>`; }).join("");
     $("colM").innerHTML = `
       <div class="box"><h3>泰和银行 <em>三十六个一级分行 · 全国${B.outlets}个网点</em></h3>
         <div class="stats">

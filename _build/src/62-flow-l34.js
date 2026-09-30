@@ -77,4 +77,4 @@ function yearSpecL5(){
 }
 function fmtYi1(v){ return (v/10000).toFixed(1) + "亿"; }
 function fmtYi0(v){ return Math.round(v/10000) + "亿"; }
-function fmtBai(v){ return (v/1000000).toFixed(1) + "百亿"; }
+function fmtBai(v){ const y = v/10000; return y >= 10000 ? (y/10000).toFixed(2) + "万亿" : Math.round(y) + "亿"; }

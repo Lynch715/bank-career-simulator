@@ -94,7 +94,7 @@ T.ok("L5 事件 8 个(交接、战略会、顾清越、资本窗口、送别、�
 let evErr = 0, evN = 0;
 I.EVENTS_L5.forEach(e => {
   const o = e.opts(S());
-  o.forEach((x, i) => { toL5(); S().core.trust = 70; try{ const oo = e.opts(S())[i]; e.body(S()); if(oo.fn) oo.fn(); evN++; }catch(err){ evErr++; console.log("   ", e.id, i, err.message); } });
+  [1,0].forEach(mode => o.forEach((x, i) => { toL5(); S().core.trust = 70; try{ const oo = I.eventSpec({id:e.id}).opts[i]; G.BALANCE.odds.min = G.BALANCE.odds.max = mode; if(oo.fn) oo.fn(); evN++; }catch(err){ evErr++; console.log("   ", e.id, i, err.message); } finally { G.BALANCE.odds.min = G.BALANCE.odds.max = 1; } }));
 });
 T.ok("全部事件、全部选项可执行", evErr===0, evN+" 个选项");
 toL5(); const seen = new Set();
@@ -118,6 +118,9 @@ T.ok("结局 · 做得不好", end5("low", s=>{ s.core.clean = 80; s.track.minCl
 /* ---------- L1~L4 结局:各种打法跑出来 ---------- */
 const got = {};
 Object.keys(got5).forEach(k => got["5:"+k] = true);
+// 卡在网点、口碑和干净度都好的那一种:年龄线直接触发
+G.newGame({seed:3}); G.setBot(null); S().core.rep = 70; S().core.clean = 90; S().age = G.BALANCE.ageLine[2] - 1; S().phase = "promo";
+I.promoLose("lose"); if(S().over) got[S().over.lv+":"+S().over.id] = true;
 const plans = [];
 for(let i=0;i<80;i++){
   ["balanced","random","greedy","clean","steady"].forEach(m => plans.push({m, seed:30000+i*7+m.length}));

@@ -81,16 +81,18 @@ T.ok("第二年年龄 +1", S().age===31);
 
 // 事件:15 个都能出正文和选项,选项都能执行
 let evOk = 0, evErr = [];
+[1,0].forEach(mode => {   // 成、败两条路都走一遍
 I.EVENTS.forEach(ev=>{
   try{
     G.newGame({seed:99}); S().turn = 16; S().m = 7;
     const d = ev.pick ? (()=>{ S().staff[0].fatigue=90; return ev.pick(S()); })() : null;
     const spec = I.eventSpec({id:ev.id, data:d});
     if(!spec.body || !spec.opts.length) throw new Error("空");
-    spec.opts.forEach((o,k)=>{ G.newGame({seed:99}); S().turn=16; S().m=7; S().staff[0].fatigue=90; const sp=I.eventSpec({id:ev.id,data:ev.pick?ev.pick(S()):null}); if(sp.opts[k].fn) sp.opts[k].fn(); });
+    spec.opts.forEach((o,k)=>{ G.newGame({seed:99}); S().turn=16; S().m=7; S().staff[0].fatigue=90; const sp=I.eventSpec({id:ev.id,data:ev.pick?ev.pick(S()):null}); if(sp.opts[k].fn){ G.BALANCE.odds.min = G.BALANCE.odds.max = mode; try { sp.opts[k].fn(); } finally { G.BALANCE.odds.min = G.BALANCE.odds.max = 1; } } });
     evOk++;
   }catch(err){ evErr.push(ev.id+":"+err.message); }
 });
+}); G.BALANCE.odds.min = G.BALANCE.odds.max = 1;
 T.ok(`L1 事件共 15 个`, I.EVENTS.length===15, I.EVENTS.length);
 T.ok("每个事件每个选项都能执行", evErr.length===0, evErr.join(" "));
 Object.keys(I.EVENTS_LATER).forEach(id=>{
@@ -155,15 +157,17 @@ I.applyDecomp(al);
 T2.ok("分解压得太重,那个网点士气掉", G.S.biz.outlets[1].morale < 60 && G.S.biz.outlets[1].overload);
 // L2 事件
 let e2 = [];
+[1,0].forEach(mode => {   // 成、败两条路都走一遍
 I.EVENTS_L2.forEach(ev=>{
   try{
     G.simGame("balanced", 41, 400, {until:"l2"}); G.S.turn = 18;
     G.S.biz.outlets[2].overload = true;
     const d = ev.pick ? ev.pick(G.S) : null;
     const spec = I.eventSpec({id:ev.id, data:d});
-    spec.opts.forEach((o,k)=>{ G.simGame("balanced", 41, 400, {until:"l2"}); G.S.turn=18; G.S.biz.outlets[2].overload = true; const sp=I.eventSpec({id:ev.id,data:ev.pick?ev.pick(G.S):null}); if(sp.opts[k].fn) sp.opts[k].fn(); });
+    spec.opts.forEach((o,k)=>{ G.simGame("balanced", 41, 400, {until:"l2"}); G.S.turn=18; G.S.biz.outlets[2].overload = true; const sp=I.eventSpec({id:ev.id,data:ev.pick?ev.pick(G.S):null}); if(sp.opts[k].fn){ G.BALANCE.odds.min = G.BALANCE.odds.max = mode; try { sp.opts[k].fn(); } finally { G.BALANCE.odds.min = G.BALANCE.odds.max = 1; } } });
   }catch(err){ e2.push(ev.id+":"+err.message); }
 });
+}); G.BALANCE.odds.min = G.BALANCE.odds.max = 1;
 T2.ok("L2 事件共 15 个", I.EVENTS_L2.length===15, I.EVENTS_L2.length);
 T2.ok("L2 每个事件每个选项都能执行", e2.length===0, e2.join(" "));
 

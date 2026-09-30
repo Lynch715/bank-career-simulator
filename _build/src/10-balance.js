@@ -25,7 +25,7 @@ const BALANCE = {
     w: { perf:0.4, vote:0.25, trust:0.2, talk:0.15 },
     pass: 60,
     rivals: 3,
-    rivalBase: 55, rivalBaseLv: {1:55, 2:61, 3:62, 4:63}, retryPenalty: 3, rivalK: 0.7, rivalNoise: 5, rivalMin: 45, rivalMax: 82, rivalMaxLv: {1:70, 2:76, 3:85, 4:82}, rivalTopNoise: 3,
+    rivalBase: 55, rivalBaseLv: {1:55, 2:61, 3:62, 4:63}, retryPenalty: 3, rivalK: 0.7, rivalNoise: 5, rivalMin: 45, rivalMax: 82, rivalMaxLv: {1:68, 2:75, 3:84, 4:80}, rivalTopNoise: 3,
     vote: { goodFrom:40, goodSpan:50, badFrom:40, badSpan:40, good:100, ok:70, bad:0 },
     report: { from:80, k:0.015, guShield:80, deferMin:60 },
     cleanBonus: { from:80, 3:0.04, 4:0 },      // L3/L4 组织考察:干净度每高出 1 点加分
@@ -155,7 +155,7 @@ const BALANCE = {
     retailK: 0.0040,            // 网点个贷月投放(占网点存款)
     amort: 0.004,               // 贷款月摊还
     corpGrowth: 0.002,
-    // 利润口径(Lynch 2026-09-30):存款 1 亿一年收入 200 多万,贷款息差收窄后 1 亿一年近 100 万
+    // 利润口径(2026-09-30 确认):存款 1 亿一年收入 200 多万,贷款息差收窄后 1 亿一年近 100 万
     spread: { dep:0.022, loan:0.010 },
     expense: 300,               // 月费用(人工+运营,一年 3600 万)
     provision: 0.7,
@@ -178,7 +178,7 @@ const BALANCE = {
 
   /* ---------------- L3 万州分行(按季) ---------------- */
   L3: {
-    ldr: 0.7,                   // 存贷比七成(Lynch 2026-09-30)
+    ldr: 0.7,                   // 存贷比七成(2026-09-30 确认)
     loanMix: { corp:0.45, micro:0.20, retail:0.35 },
     spread: { dep:0.022, corp:0.008, micro:0.016, retail:0.009, platform:0.006 },
     nplRate: { corp:0.012, micro:0.025, retail:0.008 },      // 年化新增

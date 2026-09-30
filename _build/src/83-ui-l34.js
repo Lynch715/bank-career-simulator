@@ -37,7 +37,7 @@ function wzMapSvg(){
     const nn = S.biz.newOutlets.filter(o=>o.area===a.id).length;
     let g = "";
     for(let i=0;i<n;i++){ const cx = x - 30 + (i%6)*12, cy = y + 12 + Math.floor(i/6)*11; g += `<circle cx="${cx}" cy="${cy}" r="4.5" fill="${i >= n-nn ? "var(--gold)" : "var(--ink2)"}"/>`; }
-    return `<g data-area="${a.id}" style="cursor:pointer">${g}<text x="${x-30}" y="${y}" font-size="10" fill="var(--muted)" font-family="sans-serif">热${Math.round(a.heat)} 争${a.comp}</text></g>`;
+    return `<g data-area="${a.id}" style="cursor:pointer">${g}<text x="${x-30}" y="${y}" font-size="12" fill="var(--muted)" font-family="sans-serif">热${Math.round(a.heat)} 争${a.comp}</text></g>`;
   }).join("");
   return SCENES.wzmap.replace("</svg>", dots + "</svg>");
 }

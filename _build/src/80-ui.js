@@ -317,8 +317,9 @@ const UI = {
     $("pClose").onclick = () => { st.classList.add("hidden"); if(UI.tab==="people") UI.showTab("colM"); };
   },
   showMenu(){
-    UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。当前随机种子 ${S.seed}。\n\n<small class="muted">屏幕 ${screen.width}×${screen.height} · 可视 ${innerWidth}×${innerHeight} · ${document.documentElement.classList.contains("iosfix")?"桌面模式 "+getComputedStyle(document.documentElement).getPropertyValue("--apph"):"浏览器模式"}</small>`, opts:[
+    UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。\n\n遇到 bug、觉得哪里数值不对，或者想要什么新功能，加微信直接说：<b class="wx">lynchrrr</b>`, opts:[
       {t:"切换亮色 / 暗色", s:"", fn:()=>{ const r = document.documentElement; const cur = r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); r.dataset.theme = cur==="dark"?"light":"dark"; }},
+      {t:"复制微信号", s:"lynchrrr", fn:()=>{ const w = "lynchrrr"; (navigator.clipboard ? navigator.clipboard.writeText(w) : Promise.reject()).then(()=>UI.toast("微信号已复制"), ()=>UI.toast("微信号：lynchrrr")); }},
       {t:"放到桌面", s:"装好以后断网也能玩", fn:()=>INSTALL.show(true)},
       {t:"重新开一局", s:"当前进度会被覆盖", fn:()=>{ clearSave(); UI.start(); }},
       {t:"回到游戏", s:""},

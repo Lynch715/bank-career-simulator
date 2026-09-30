@@ -73,10 +73,10 @@ function eventSpec(x){
   if(x.crisis || x.id==="crisis") return crisisEventSpec();
   if(x.later){
     const L = EVENTS_LATER[x.id];
-    return {kind:"event", id:x.id, title:L.title, body:L.body(S, x.data||{}), opts:L.opts(S, x.data||{})};
+    return applyEventOdds({kind:"event", id:x.id, title:L.title, body:L.body(S, x.data||{}), opts:L.opts(S, x.data||{})}, x.id, x.data);
   }
   const e = evDef(x.id);
-  return {kind:"event", id:x.id, title:e.title, body:e.body(S, x.data||{}), opts:e.opts(S, x.data||{})};
+  return applyEventOdds({kind:"event", id:x.id, title:e.title, body:e.body(S, x.data||{}), opts:e.opts(S, x.data||{})}, x.id, x.data);
 }
 function addRookie(){
   if(S.staff.length >= STAFF_L1.length) return;

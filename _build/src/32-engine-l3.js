@@ -59,7 +59,7 @@ function initL3(){
 
 function addNpa(amt, type, origin, name){
   S.biz.npaSeq++;
-  S.biz.npa.push({id:"npa"+S.biz.npaSeq, name: name || pick(NPA_NAMES), amt:Math.round(amt), type, stage:null, until:0, origin: origin||"", orig:Math.round(amt)});
+  S.biz.npa.push({id:"npa"+S.biz.npaSeq, name: name || (() => { const used = new Set(S.biz.npa.filter(x=>!x.stage).map(x=>x.name)); const free = NPA_NAMES.filter(n=>!used.has(n)); return pick(free.length ? free : NPA_NAMES); })(), amt:Math.round(amt), type, stage:null, until:0, origin: origin||"", orig:Math.round(amt)});
 }
 
 /* ---------- 考核卡 ---------- */

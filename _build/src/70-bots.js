@@ -331,7 +331,7 @@ const THSZ = {
   setHeadless(v){ FORCE_HL = !!v; },
   internals:{ promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
-    EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
+    EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, EVENT_ODDS, applyEventOdds, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };
 THSZ.TEXT = () => ({EVENTS, EVENTS_LATER, EVENTS_L2, EVENTS_LATER_L2, EVENTS_L3, FAMILY_L3, EVENTS_L4, CRISIS_L4, EVENTS_L5, PROMO_TEXT, L2_INTRO, L3_INTRO, L4_INTRO, L5_INTRO, ENDINGS, SIDESTEP, AUDIT_OPEN, MILESTONES, LINES, TASKS_L1});
 globalThis.THSZ = THSZ;

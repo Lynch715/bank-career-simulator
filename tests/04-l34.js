@@ -76,13 +76,15 @@ T.ok("从 L3 存档起玩到关底无报错", !err3 && (S().lv>3 || S().phase!==
 
 // L3 事件
 let e3 = [];
+[1,0].forEach(mode => {   // 成、败两条路都走一遍
 I.EVENTS_L3.forEach(ev => {
   try{
     toLevel(3, 400); S().turn = 8; S().m = 6; S().flags.nananDefault = ["测试"]; S().flags.closedAt = 7; S().flags.closedArea = "wuqiao";
     const spec = I.eventSpec({id:ev.id});
-    spec.opts.forEach((o,k) => { toLevel(3, 400); S().turn=8; S().m=6; S().flags.nananDefault=["测试"]; S().flags.closedAt=7; S().flags.closedArea="wuqiao"; const sp = I.eventSpec({id:ev.id}); if(sp.opts[k].fn) sp.opts[k].fn(); });
+    spec.opts.forEach((o,k) => { toLevel(3, 400); S().turn=8; S().m=6; S().flags.nananDefault=["测试"]; S().flags.closedAt=7; S().flags.closedArea="wuqiao"; const sp = I.eventSpec({id:ev.id}); if(sp.opts[k].fn){ G.BALANCE.odds.min = G.BALANCE.odds.max = mode; try { sp.opts[k].fn(); } finally { G.BALANCE.odds.min = G.BALANCE.odds.max = 1; } } });
   }catch(err){ e3.push(ev.id+":"+err.message); }
 });
+}); G.BALANCE.odds.min = G.BALANCE.odds.max = 1;
 T.ok("L3 事件 12 个 + 家里的事 3 个", I.EVENTS_L3.filter(e=>!/^fam/.test(e.id)).length===12 && I.EVENTS_L3.filter(e=>/^fam/.test(e.id)).length===3);
 T.ok("L3 每个事件每个选项都能执行", e3.length===0, e3.join(" "));
 
@@ -121,6 +123,13 @@ S().biz.crisis.at = S().turn + 1;
 let acts = 0;
 for(let q=0;q<5 && !S().biz.crisis.done;q++){ S().ap = 0; G.setBot("balanced"); G.endTurn(); G.runJobs(); acts = S().biz.crisis.stage; }
 T.ok("危机三幕按季度演完", S().biz.crisis.done && acts===3, S().biz.crisis.kind);
+// 危机三幕全部失手:好的选项也没做成,通报写「应对迟缓」
+toLevel(4, 700);
+S().biz.crisis.at = S().turn + 1;
+G.BALANCE.odds.min = G.BALANCE.odds.max = 0;
+for(let q=0;q<5 && !S().biz.crisis.done;q++){ S().ap = 0; G.setBot("balanced"); G.endTurn(); G.runJobs(); }
+G.BALANCE.odds.min = G.BALANCE.odds.max = 1;
+T.ok("危机里好的选项也会失手,三幕都失手就是「应对迟缓」", S().biz.crisis.done && S().biz.crisis.good < 2 && S().log.some(l=>/应对迟缓/.test(l.html)), "good="+S().biz.crisis.good);
 
 // 存档起玩 L4
 toLevel(4, 800);
@@ -133,13 +142,15 @@ T.ok("从 L4 存档起玩到关底无报错", back4 && !err4 && (S().lv>4 || S()
 
 // L4 事件
 let e4 = [];
+[1,0].forEach(mode => {   // 成、败两条路都走一遍
 I.EVENTS_L4.forEach(ev => {
   try{
     toLevel(4, 900); S().turn = 9; S().m = 6; S().flags.weiIPO = "loose";
     const spec = I.eventSpec({id:ev.id});
-    spec.opts.forEach((o,k) => { toLevel(4, 900); S().turn=9; S().m=6; S().flags.weiIPO="loose"; const sp = I.eventSpec({id:ev.id}); if(sp.opts[k].fn) sp.opts[k].fn(); });
+    spec.opts.forEach((o,k) => { toLevel(4, 900); S().turn=9; S().m=6; S().flags.weiIPO="loose"; const sp = I.eventSpec({id:ev.id}); if(sp.opts[k].fn){ G.BALANCE.odds.min = G.BALANCE.odds.max = mode; try { sp.opts[k].fn(); } finally { G.BALANCE.odds.min = G.BALANCE.odds.max = 1; } } });
   }catch(err){ e4.push(ev.id+":"+err.message); }
 });
+}); G.BALANCE.odds.min = G.BALANCE.odds.max = 1;
 T.ok("L4 事件 12 个", I.EVENTS_L4.length===12, I.EVENTS_L4.length);
 T.ok("L4 每个事件每个选项都能执行", e4.length===0, e4.join(" "));
 T.done();

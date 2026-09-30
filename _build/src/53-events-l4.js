@@ -147,7 +147,7 @@ const CRISIS_L4 = {
 function crisisEventSpec(){
   const c = S.biz.crisis; const k = c.kind, st = c.stage;
   const a = CRISIS_L4[k][st];
-  return {kind:"event", id:"crisis", title:`危机 · ${a.title}`, body:a.body(S), opts:a.opts.map(o=>({t:o.t, s:o.s, fn:()=>{
+  return applyEventOdds({kind:"event", id:"crisis", title:`危机 · ${a.title}`, body:a.body(S), opts:a.opts.map(o=>({t:o.t, s:o.s, fn:()=>{
     if(o.good) c.good++;
     if(k==="client" && st===0){ const amt = 200000; inst("yyb").npl += amt; person("weilc").pos = "（被带走调查）"; person("weilc").recent = "渝江物流出事"; }
     if(k==="client" && st===1 && o.good) inst("yyb").npl += 30000;
@@ -160,5 +160,5 @@ function crisisEventSpec(){
       if(c.good >= 2){ S.biz.crisisAdj += B4().rating.crisisGood; S.flags.crisisGood = true; keyEvent(k==="run" ? "平息涪陵挤兑谣言" : "处置渝江物流风险事件"); log("gold", "事情过去了。总行的通报里有一句：重庆分行处置及时。"); }
       else { S.biz.crisisAdj += B4().rating.crisisBad; fav("songwy",-6); log("bad", "事情过去了。总行的通报里有一句：重庆分行应对迟缓。"); }
     }
-  }}))};
+  }}))}, `crisis:${k}${st}`);
 }

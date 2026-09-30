@@ -76,6 +76,28 @@ G.simGame("balanced", 777, 24);
 const rr = S().track.rolls;
 T.ok("L1 一年下来,两到三成的行动失手", rr && rr.fail/rr.n > 0.12 && rr.fail/rr.n < 0.4, rr && `${rr.fail}/${rr.n}`);
 
+/* 事件选项的成败 */
+G.newGame({seed:21}); G.setBot(null);
+const esnap = JSON.stringify(G.S);
+let sp = I.eventSpec({id:"sdx"});
+T.ok("事件选项挂了档位(重做测评、自己跟阿姨讲)", sp.opts[1].odds != null && sp.opts[2].odds != null && sp.opts[0].odds == null);
+const keepOdds = [B.odds.min, B.odds.max];
+B.odds.min = B.odds.max = 0;           // 一律失败
+G.S = JSON.parse(esnap); sp = I.eventSpec({id:"sdx"});
+const comp0e = S().kpi.comp; sp.opts[1].fn();
+T.ok("重做测评失手:双录被抽到,合规扣分,日志写的是失败那句", S().kpi.comp < comp0e - 5 && /双录的录像/.test(S().log[0].html) && !S().log.some(l=>/结果是C4/.test(l.html)));
+G.S = JSON.parse(esnap); sp = I.eventSpec({id:"huang1"});
+sp.opts[2].fn();
+T.ok("反过来的选项(跟黄世海说扛不起):失手走原来那句", /拿起了座机/.test(S().log[0].html));
+B.odds.min = B.odds.max = 1;           // 一律成功
+G.S = JSON.parse(esnap); sp = I.eventSpec({id:"huang1"});
+sp.opts[2].fn();
+T.ok("反过来的选项成了:数改小了一截", /改小了一截/.test(S().log[0].html) && S().chal.some(c=>c.id==="h1"));
+[B.odds.min, B.odds.max] = keepOdds;
+let evErrs = 0;
+for(const lvEv of [I.EVENTS, I.EVENTS_L2, I.EVENTS_L3, I.EVENTS_L4, I.EVENTS_L5]) evErrs += 0;
+T.ok("五十多个成败选项", Object.keys(I.EVENT_ODDS).length >= 50, Object.keys(I.EVENT_ODDS).length);
+
 /* 高手机器人:L1 拿第一的月份约三成,前三约七成(12 局) */
 let n = 0, first = 0, top3 = 0;
 for(let i=0;i<12;i++){ G.simGame("expert", 70000+i, 24, {onTurn: s => { if(s.lv===1 && s.kpi.rank){ n++; if(s.kpi.rank===1) first++; if(s.kpi.rank<=3) top3++; } }}); }
