@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>银行升职记</title>
 <meta name="theme-color" content="#16302b">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -13,6 +13,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script id="nozoom">
+/* 禁掉双指缩放(iOS Safari 不认 user-scalable=no,要自己拦);双击放大靠 touch-action:manipulation */
+(function(){
+  var stop = function(e){ e.preventDefault(); };
+  document.addEventListener("gesturestart", stop, {passive:false});
+  document.addEventListener("gesturechange", stop, {passive:false});
+  document.addEventListener("gestureend", stop, {passive:false});
+  document.addEventListener("touchmove", function(e){ if(e.touches && e.touches.length > 1) e.preventDefault(); }, {passive:false});
+})();
+</script>
 <script id="iosfix">
 /* iPhone 从桌面打开时,系统给网页的高度比屏幕短一截,底部会空出来。直接按屏幕高度撑满。 */
 (function(){
@@ -56,7 +66,7 @@
   --shadow:0 1px 2px rgba(0,0,0,.3);
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html,body{margin:0;height:100%;touch-action:manipulation}
 #app{position:fixed;inset:0}
 html.iosfix,html.iosfix body{height:var(--apph);background:var(--card)}
 html.iosfix #app,html.iosfix .stage,html.iosfix .overlay{bottom:auto;height:var(--apph)}
