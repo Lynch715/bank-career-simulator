@@ -158,7 +158,9 @@ function canActL5(id){
 function doSurvey(rid){
   const ck = canActL5("survey"); if(!ck.ok) return null;
   const r = S.biz.regions.find(x=>x.id===rid); if(!r) return null;
-  apUse(1); r.boost = B5().survey.turns; S.biz.csat = c100(S.biz.csat + B5().survey.rep);
+  apUse(1);
+  if(!roll(ODDS[5].survey())){ r.boost = 1; log("bad", `你去${r.name}调研了一周。分行报上来的材料跟你看到的对不上，时间都花在对数上了。<span class="num">${r.name}只长半年</span>`); keyEvent(`总行行长任上去${r.name}调研`); return {fail:true}; }
+  r.boost = B5().survey.turns; S.biz.csat = c100(S.biz.csat + B5().survey.rep);
   const lines = {
     xn: "你去了重庆。车过南滨路，你让司机开慢一点。弹子石那一带新修了一排楼，叫号机的事，没人记得了。",
     hd: "你在长三角跑了六个城市，一天一个。回北京的高铁上，你把笔记本翻到第一页，上面写着：客户在哪里。",
@@ -174,7 +176,9 @@ function doSurvey(rid){
 }
 function doReg5(){
   const ck = canActL5("reg5"); if(!ck.ok) return null;
-  apUse(1); fav("gu", B5().regTalk.fav); S.biz.regScore = Math.min(10, (S.biz.regScore||0) + B5().regTalk.score*0.5);
+  apUse(1);
+  if(!roll(ODDS[5].reg5())){ fav("gu", 1); log("bad", "你去金融监管总局汇报。顾清越把一份检查报告推过来，第七页折了个角。那一页讲的是你们的数据治理。<span class=\"num\">没加分</span>"); return {fail:true}; }
+  fav("gu", B5().regTalk.fav); S.biz.regScore = Math.min(10, (S.biz.regScore||0) + B5().regTalk.score*0.5);
   log("", `你去金融监管总局汇报。顾清越坐在长桌对面，头发白了一半，面前还是一个笔记本、一支笔、一杯自己带的水。<span class="num">顾清越好感+${B5().regTalk.fav}</span>`);
   return true;
 }

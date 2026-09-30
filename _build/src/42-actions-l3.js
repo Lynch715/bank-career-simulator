@@ -30,13 +30,15 @@ function doOpenOutlet(aid){
   apUse(1);
   S.biz.budget -= o.build; S.month.spent += o.build;
   // 爬坡速度看热度和竞争,封顶看人口
-  const ramp = Math.round(o.rampMin + (o.rampMax - o.rampMin) * clamp((a.heat - a.comp*0.5)/80, 0, 1));
+  const cold = !roll(ODDS[3].open(a));
+  const ramp = Math.round((o.rampMin + (o.rampMax - o.rampMin) * clamp((a.heat - a.comp*0.5)/80, 0, 1)) * (cold ? BALANCE.odds.L3.open.coldRamp : 1));
   const cap = Math.round(o.capMin + (o.capMax - o.capMin) * clamp(a.pop/60 * 0.6 + a.heat/100*0.4, 0, 1));
   S.biz.outletSeq++;
   S.biz.newOutlets.push({id:"no"+S.biz.outletSeq, area:aid, dep:0, ramp, cap, age:0, earned:-o.build, paid:false});
   a.rep = c100(a.rep + o.repOpen);
   S.biz.opened++;
   keyEvent(`在万州${a.name}开了新网点`);
+  if(cold){ log("bad", `${a.name}的新网点挂牌了。头一个月进门的人，一天不到二十个。对面那家行开了五年，街坊都认它。<span class="num">爬坡慢</span>`); return {ramp, cap, fail:true}; }
   log("good", `${a.name}的新网点挂牌了。剪彩那天来了两个区里的干部，横幅是谭敏连夜找人做的。`);
   return {ramp, cap};
 }
@@ -62,6 +64,7 @@ function doRenovate(bid){
   const r = B3().renovate;
   apUse(1);
   S.biz.budget -= r.cost; S.month.spent += r.cost;
+  if(!roll(ODDS[3].renovate())){ x.renov = r1(x.renov + r.eff/2); log("bad", `${x.name}做了智能化改造。机器装好了，老人不会用，大堂经理天天站在旁边教。<span class="num">效果打了折扣</span>`); return {fail:true}; }
   x.renov = r1(x.renov + r.eff);
   log("good", `${x.name}做了智能化改造。大堂里多了三台机器，柜台少了一个窗口。`);
   return true;
@@ -129,6 +132,7 @@ function doReportUpL3(){
   const ck = canActL3("reportup"); if(!ck.ok) return null;
   apUse(1);
   S.biz.reported = true;
+  if(!roll(ODDS[3].reportup())){ log("bad", pick(["你开了三个小时高速回主城。陆明远临时去了总行，秘书说材料她转交。","陆明远听你讲完，只说了一句：「万州的不良，我看的是数，不是说法。」"]) + ` <span class="num">白跑一趟</span>`); return {fail:true}; }
   fav("lu", B3().reportUp.fav);
   const lines = [
     "你开了三个小时高速回主城。陆明远听了二十分钟，问：「万州的不良，什么时候能下来？」",

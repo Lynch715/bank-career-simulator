@@ -141,7 +141,9 @@ function advance(){
 }
 function eventChain(d){
   const evs = pickEvents();
-  let chain = evs.map(x => (dd => ask(eventSpec(x), dd)));
+  // 顺延到这回合的事件,条件可能已经不成立了(比如负责人换了),再查一遍;正文出错的也跳过
+  let chain = evs.filter(x => { if(x.later || x.crisis) return true; const e = evDef(x.id); try { return !e.when || !!e.when(S); } catch(err){ return false; } })
+    .map(x => (dd => { let sp; try { sp = eventSpec(x); } catch(err){ return dd(); } ask(sp, dd); }));
   const runChain = () => { const f = chain.shift(); if(!f){ d(); return; } f(runChain); };
   runChain();
 }
@@ -170,7 +172,7 @@ function reportSpecL1(){
 }
 function kpiSpec(){
   return {kind:"kpi", title:`入行第${S.careerYear}年 · 考核卡`,
-    body:`${[null,"支行","分行","分行","总行","董事会"][S.lv]}把今年的考核卡发下来了。${S.year>1 && S.lv<5?"目标比去年上浮了一截。":""}${S.year>1 && S.lv===5?"降息压着，目标没往上加。":""}`,
+    body:`${[null,"支行","分行","分行","总行","董事会"][S.lv]}把今年的考核卡发下来了。${S.year>1 && S.lv<5?(S.kpi.whipped===S.year?"去年你排第一，今年的目标比别人多压了一截。":"目标比去年上浮了一截。"):""}${S.year>1 && S.lv===5?"降息压着，目标没往上加。":""}`,
     items:S.kpi.card.map(it=>({name:it.name, w:it.w, target:it.target, unit:it.unit})),
     opts:[{t:"收到"}]};
 }
@@ -329,8 +331,10 @@ function promoFinal(votes, stmtIdx, answers){
   // L3 起组织考察看廉洁:干净度高于基准加分,低于扣分
   const cb = p.cleanBonus && p.cleanBonus[S.lv] ? (S.core.clean - p.cleanBonus.from) * p.cleanBonus[S.lv] : 0;
   mine.clean = Math.round(cb*10)/10;
-  mine.total = Math.round(mine.perf*w.perf + mine.vote*w.vote + mine.trust*w.trust + mine.talk*w.talk + cb);
+  mine.total = Math.round(mine.perf*w.perf + mine.vote*w.vote + mine.trust*w.trust + mine.talk*w.talk + cb + gauss()*(p.selfNoise||0));
   const rivals = promoRivals();
+  S.promo.backed = null;
+  if(R() < (p.backP||0)){ const top = rivals.slice().sort((a,b)=>b.score-a.score)[0]; top.score += p.backBonus; S.promo.backed = top.name; }
   const best = rivals.slice().sort((a,b)=>b.score-a.score)[0];
   const win = mine.total >= p.pass && mine.total > best.score;
   const res = {mine, rivals, win, best, chosen};
@@ -363,6 +367,7 @@ function promoLose(kind){
     return;
   }
   log("bad", kind==="defer" ? "任命暂缓。下一个窗口，还要等。" : "这一回没选上。下一个窗口，要等一年。");
+  if(kind !== "defer" && S.promo.backed && S.promo.last && !S.promo.last.win) log("", `后来听人说，${S.promo.backed}那边，上面有人打过招呼。`);
   S.phase = "play";
 }
 function endGame(id){

@@ -114,7 +114,7 @@ const UI = {
     const tk = S.biz.task;
     const acts = ACTIONS_L1.map(a => {
       const ck = canAct(a.id);
-      return `<button class="act" data-act="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`;
+      return `<button class="act" data-act="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`;
     }).join("");
     $("colM").innerHTML = `
       <div class="box">
@@ -220,17 +220,17 @@ const UI = {
     if(id === "out"){
       const pc = B1().out.payroll;
       const opts = [
-        {t:"去社区", s:"老人多，新客户和存款", fn:()=>doOut("community")},
-        {t:"走商户街", s:"个体户多，收单和信用卡", fn:()=>doOut("street")},
+        {t:"去社区", s:"老人多，新客户和存款", odds:ODDS[1].out(), fn:()=>doOut("community")},
+        {t:"走商户街", s:"个体户多，收单和信用卡", odds:ODDS[1].out(), fn:()=>doOut("street")},
       ];
-      S.biz.prospects.filter(p=>!p.won).forEach(p => opts.push({t:`跑企业代发：${p.name}（${p.staff}人）`, s:`${p.note}${p.tries?` · 已跑${p.tries}回`:""} · 花营销费用${pc.cost}万`, disabled:S.biz.budget<pc.cost, fn:()=>doOut("payroll", p.id)}));
+      S.biz.prospects.filter(p=>!p.won).forEach(p => opts.push({t:`跑企业代发：${p.name}（${p.staff}人）`, s:`${p.note}${p.tries?` · 已跑${p.tries}回`:""} · 花营销费用${pc.cost}万`, disabled:S.biz.budget<pc.cost, odds:pc.baseP + (staffByRole("cm")[0]?staffByRole("cm")[0].mk:3)*pc.mkP + p.tries*pc.tryP, fn:()=>doOut("payroll", p.id)}));
       opts.push({t:"算了", s:"", cancel:true});
       UI.modal({kind:"pick", title:"外拓", body:"罗建把车钥匙拿在手上，等你说去哪。", opts}, UI.after);
       return;
     }
     if(id === "train"){
       const opts = [];
-      S.staff.forEach(s => ["mk","op","cp"].forEach(a => { if(s[a] < B1().train.max) opts.push({t:`${s.name} · ${ATTR_NAME[a]} ${s[a]}→${s[a]+1}`, s:ROLE_NAME[s.role], fn:()=>doTrain(s.id,a)}); }));
+      S.staff.forEach(s => ["mk","op","cp"].forEach(a => { if(s[a] < B1().train.max) opts.push({t:`${s.name} · ${ATTR_NAME[a]} ${s[a]}→${s[a]+1}`, s:ROLE_NAME[s.role], odds:ODDS[1].train(s), fn:()=>doTrain(s.id,a)}); }));
       opts.push({t:"算了", s:"", cancel:true});
       UI.modal({kind:"pick", title:"带教", body:"带谁，教什么。", opts, compact:true}, UI.after);
     }
@@ -244,7 +244,7 @@ const UI = {
       const P = b.product[p.id];
       const fee = r2((c.own + c.other*(b.card.pullBase + c.rel*b.card.pullRel)*P.pull) * P.fee + P.feeFix);
       let s = p.tip + (fee ? ` · 中收约${fmtWan(fee)}` : "");
-      return {t:p.name, s, fn:()=>doMaintain(c.id, p.id)};
+      return {t:p.name, s, odds:ODDS[1].maintain(c, p.id), fn:()=>doMaintain(c.id, p.id)};
     });
     opts.push({t:"算了", s:"", cancel:true});
     const T = CUST_TYPES[c.type];
@@ -271,7 +271,7 @@ const UI = {
       html += `<div class="body">${paras(spec.body||"")}</div>`;
     }
     const opts = spec.opts || [{t:"好"}];
-    html += `<div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}" ${o.disabled?"disabled":""} ${spec.compact?'style="min-height:40px;padding:6px 12px"':""}><b>${esc(o.t)}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}</div></div>`;
+    html += `<div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}" ${o.disabled?"disabled":""} ${spec.compact?'style="min-height:40px;padding:6px 12px"':""}><b>${esc(o.t)}${o.odds!=null?oddsChip(o.odds):""}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}</div></div>`;
     m.innerHTML = html;
     m.classList.remove("hidden");
     m.scrollTop = 0;

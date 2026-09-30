@@ -46,7 +46,7 @@ Object.assign(UI, {
   renderL3(){
     const b = B3();
     const dep = depTotal(), loans = loansTotalL3(), npl = nplL3();
-    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.branches.map(x => { const m = person(x.mgr), a = area(x.area);
       return `<tr data-branch="${x.id}" tabindex="0"><td>${x.name}<br><small class="muted">${a.name} · ${x.outlets}个网点${x.renov?` · 改造+${Math.round(x.renov*100)}%`:""}</small></td>
         <td>${m?m.name:"—"}<br><small class="muted">能力${m?m.skill:"—"}</small></td><td class="num">${fmtYi1(x.dep)}</td>
@@ -99,7 +99,7 @@ Object.assign(UI, {
     UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长"}[id], body:"", opts});
   },
   pickArea(){
-    const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, fn:()=>doOpenOutlet(a.id)}));
+    const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
     opts.push({t:"算了", s:""});
     UI.modal({kind:"pick", title:"新网点开在哪", body:`投入${B3().outlet.build}万，一年费用${B3().outlet.costY}万。`, opts});
   },
@@ -135,7 +135,7 @@ Object.assign(UI, {
 
   renderL4(){
     const dep = depTotalL4(), loans = loansL4(), npl = nplL4();
-    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.inst.map(x => `<tr class="${x.mine?"mine":""}" ${x.mine==="l3"?'id="l4wz"':""}><td>${x.name}${x.mine?' <small class="muted">你待过</small>':""}${x.focus?' <small class="tagx">倾斜</small>':""}</td>
       <td>${x.headName}</td><td class="num">${fmtYi0(x.dep)}</td><td class="num">${fmtYi0(x.loans)}</td><td class="num ${x.npl/x.loans>0.02?"neg":""}">${(x.npl/x.loans*100).toFixed(2)}%</td></tr>`).join("");
     const deps = S.biz.deputies.map(d => { const p = person(d.id), ln = LINES_L4.find(l=>l.id===d.line).name;
@@ -176,7 +176,7 @@ Object.assign(UI, {
       UI.modal({kind:"pick", title:"调整分工", body:"数字是两个人对新条线的熟悉程度，加起来比原来多还是少。调分工会伤一点团结。", opts, compact:true}); return;
     }
     if(id==="talk"){
-      const opts = S.biz.deputies.map(d => ({t:d.name, s:`好感${person(d.id).fav}`, fn:()=>doTalk(d.id)})); opts.push({t:"算了", s:""});
+      const opts = S.biz.deputies.map(d => ({t:d.name, s:`好感${person(d.id).fav}`, odds:ODDS[4].talk(d.id), fn:()=>doTalk(d.id)})); opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title:"找谁谈", body:"", opts}); return;
     }
     if(id==="startp"){

@@ -1,6 +1,9 @@
 // L1 经营模型:行动效果、适当性红线、代发沉淀、时点存款回吐、KPI 折算
 const {load, runner} = require("./lib");
 const {G} = load();
+// 机制测试:行动一律成功,关掉对手追赶、出头鸟和升职变数(这些在 09-odds 单独测)
+const SURE_ODDS = () => { Object.assign(G.BALANCE.odds, {min:1, max:1}); Object.assign(G.BALANCE.chase, {after:99, spotP:0, whip:1}); Object.assign(G.BALANCE.promo, {selfNoise:0, backP:0}); };
+SURE_ODDS();
 const I = G.internals, A = G.act;
 const T = runner("03-economy(L1)");
 G.setBot(null);

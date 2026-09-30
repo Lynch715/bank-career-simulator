@@ -18,7 +18,41 @@ function botChooseGeneric(mode){
 function dueCards(){ return S.biz.cards.filter(c=>c.due===S.m && !c.maint && c.own>0).sort((a,b)=>b.own-a.own); }
 function potCards(){ return S.biz.cards.filter(c=>!c.maint).sort((a,b)=>b.other-a.other); }
 
+/* 高手:会读卡、会算账的人。L1 按期望收益挑客户和产品,后面几关按 balanced 打 */
+function botExpertL1(){
+  // 一步前瞻:每个行动点把候选行动在副本上试一遍(按成功算),结算当月看综合得分,乘成功率取最好的
+  const b = B1(); let g = 6;
+  const o = BALANCE.odds, keep = [o.min, o.max];
+  while(S.ap > 0 && S.phase==="play" && g-- > 0){
+    const cands = [];
+    if(canAct("boss").ok) cands.push({p:ODDS[1].boss(), f:()=>doBoss()});
+    if(canAct("hall").ok) cands.push({p:ODDS[1].hall(), f:()=>doHall()});
+    if(canAct("rally").ok) cands.push({p:ODDS[1].rally(), f:()=>doRally()});
+    cands.push({p:ODDS[1].out(), f:()=>doOut("community")}, {p:ODDS[1].out(), f:()=>doOut("street")});
+    const pc = b.out.payroll, cm = staffByRole("cm")[0];
+    S.biz.prospects.filter(x=>!x.won).forEach(x => { if(S.biz.budget >= pc.cost) cands.push({p:pc.baseP + (cm?cm.mk:3)*pc.mkP + x.tries*pc.tryP, f:()=>doOut("payroll", x.id), payroll:true}); });
+    S.staff.forEach(st => ["mk","op","cp"].forEach(at => { if(st[at] < b.train.max) cands.push({p:ODDS[1].train(st), f:()=>doTrain(st.id, at), train:true}); }));
+    S.biz.cards.filter(c=>!c.maint).sort((x,y)=>(y.other + (y.due===S.m?y.own:0)) - (x.other + (x.due===S.m?x.own:0))).slice(0,10)
+      .forEach(c => PRODUCTS.forEach(pd => { if(pd.id==="fund" && c.risk < b.product.fund.riskLevel) return; cands.push({p:ODDS[1].maintain(c, pd.id), f:()=>doMaintain(c.id, pd.id)}); }));
+    const snap = JSON.stringify(S), base = (()=>{ S = JSON.parse(snap); settleMonth(); const v = S.kpi.score; S = JSON.parse(snap); return v; })();
+    let best = null;
+    o.min = o.max = 1;
+    cands.forEach(cd => {
+      S = JSON.parse(snap);
+      try { cd.f(); settleMonth(); } catch(e){ S = JSON.parse(snap); return; }
+      // 带教和代发的好处在以后,当月看不出来,给一点远期分
+      const later = cd.train ? 0.6 : (cd.payroll ? 1.5 : 0);
+      const ev = clamp(cd.p, keep[0], keep[1]) * (S.kpi.score - base + later);
+      if(!best || ev > best.ev) best = {cd, ev};
+    });
+    [o.min, o.max] = keep;
+    S = JSON.parse(snap);
+    if(!best) break;
+    best.cd.f();
+  }
+}
 function botPlay(mode){
+  if(mode === "expert"){ if(S.lv === 1) return botExpertL1(); mode = "balanced"; }
   if(S.lv === 2) return botPlayL2(mode);
   if(S.lv === 3) return botPlayL3(mode);
   if(S.lv === 4) return botPlayL4(mode);
@@ -226,8 +260,8 @@ function botDecomp(mode){
 }
 
 const BOTS = {};
-["random","greedy","balanced","clean","mentor","grind","steady"].forEach(m => {
-  const base = (m==="mentor"||m==="grind"||m==="steady") ? "balanced" : m;
+["random","greedy","balanced","clean","mentor","grind","steady","expert"].forEach(m => {
+  const base = (m==="mentor"||m==="grind"||m==="steady"||m==="expert") ? "balanced" : m;
   BOTS[m] = {
     mode:m,
     decomp: botDecomp(base),
@@ -297,7 +331,7 @@ const THSZ = {
   setHeadless(v){ FORCE_HL = !!v; },
   internals:{ promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
-    EVENTS_L5, initL5, levelStartJobs, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
+    EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };
 THSZ.TEXT = () => ({EVENTS, EVENTS_LATER, EVENTS_L2, EVENTS_LATER_L2, EVENTS_L3, FAMILY_L3, EVENTS_L4, CRISIS_L4, EVENTS_L5, PROMO_TEXT, L2_INTRO, L3_INTRO, L4_INTRO, L5_INTRO, ENDINGS, SIDESTEP, AUDIT_OPEN, MILESTONES, LINES, TASKS_L1});
 globalThis.THSZ = THSZ;

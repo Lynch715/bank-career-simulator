@@ -290,6 +290,10 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .pc{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card);font-size:12px}
 .pc b{font-size:15px;font-family:var(--serif)}
 .pgrid.dex{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.odds{font-style:normal;font-size:11px;font-weight:600;margin-left:6px;padding:1px 6px;border-radius:9px;vertical-align:2px;white-space:nowrap;font-family:var(--font);letter-spacing:0}
+.odds-sure{background:rgba(47,107,79,.14);color:var(--good)}
+.odds-maybe{background:rgba(154,106,31,.14);color:var(--warn)}
+.odds-risky{background:rgba(160,71,58,.14);color:var(--bad)}
 .pc.locked{opacity:.5;border-style:dashed}
 .dial{padding:8px 0;border-bottom:1px dashed var(--line)}
 .dial:last-child{border-bottom:0}
@@ -394,10 +398,11 @@ const BALANCE = {
     w: { perf:0.4, vote:0.25, trust:0.2, talk:0.15 },
     pass: 60,
     rivals: 3,
-    rivalBase: 55, rivalBaseLv: {1:55, 2:61, 3:62, 4:63}, retryPenalty: 3, rivalK: 0.7, rivalNoise: 5, rivalMin: 45, rivalMax: 82, rivalMaxLv: {1:80, 2:81, 3:89, 4:83}, rivalTopNoise: 3,
+    rivalBase: 55, rivalBaseLv: {1:55, 2:61, 3:62, 4:63}, retryPenalty: 3, rivalK: 0.7, rivalNoise: 5, rivalMin: 45, rivalMax: 82, rivalMaxLv: {1:70, 2:76, 3:85, 4:82}, rivalTopNoise: 3,
     vote: { goodFrom:40, goodSpan:50, badFrom:40, badSpan:40, good:100, ok:70, bad:0 },
     report: { from:80, k:0.015, guShield:80, deferMin:60 },
-    cleanBonus: { from:80, 3:0.08, 4:0 },      // L3/L4 组织考察:干净度每高出 1 点加分
+    cleanBonus: { from:80, 3:0.04, 4:0 },      // L3/L4 组织考察:干净度每高出 1 点加分
+    selfNoise: 2.5, backP: 0.2, backBonus: 5,   // 升职:自己的总分抖一下;对手有两成概率「上面打过招呼」
     stmtPick: 3,
     stmtFiller: 55,
     stmtMilestone: 88,
@@ -412,6 +417,24 @@ const BALANCE = {
     trustByLv: { 1:{huang:0.5, lu:0.3, gu:0.2}, 2:{zhouqm:0.5, lu:0.3, gu:0.2}, 3:{lu:0.6, zhouqm:0.2, gu:0.2}, 4:{lu:0.5, songwy:0.3, gu:0.2}, 5:{songwy:0.4, lu:0.3, gu:0.3} },
     cleanWarn: 70,
   },
+
+  /* 行动成败:成功率夹在 min~max 之间;>= sure 显示「有把握」,>= maybe「看情况」,再低是「悬」 */
+  odds: { min:0.12, max:0.93, sure:0.75, maybe:0.5,
+    L1: { maintain:{ base:0.56, rel:0.003, prod:{deposit:0.12, stable:0.06, insure:0, fund:-0.06}, oldInsure:-0.08, csat:0.005, poach:0.3, poachShare:0.08 },
+          hall:{ base:0.56, mk:0.03, csat:0.01, flop:0.35 },
+          out:{ base:0.52, mk:0.04, flop:0.2 },
+          train:{ base:0.64, grow:0.35, fat:0.003 },
+          rally:{ base:0.86, fat:0.008, flopMult:0.5, flopFat:8 },
+          boss:{ base:0.78, fav:0.006, flopFav:-2 } },
+    L2: { supervise:{ base:0.62, morale:0.006, fav:0.004 }, push:{ base:0.68, visit:0.06 }, campaign:{ base:0.6, morale:0.01, flop:0.35 }, report:{ base:0.68, fav:0.006 } },
+    L3: { open:{ base:0.55, heat:0.004, coldRamp:0.5 }, renovate:0.7, report:{ base:0.62, fav:0.006 } },
+    L4: { talk:{ base:0.58, fav:0.008 }, push:0.72, quota:{ base:0.5, fav:0.02 }, reg:{ base:0.68, fav:0.006 } },
+    L5: { survey:0.7, reg:{ base:0.65, fav:0.006 } },
+  },
+
+  /* 对手会追(连续第一 after 回合,第二名分数加 bonus,持续 turns 回合)、出头鸟(排第一时每回合 spotP 概率出事)、鞭打快牛 */
+  chase: { after:2, bonus:{1:10, 2:9, 3:8, 4:8}, turns:{1:3, 2:3, 3:2, 4:2}, spotP:0.3, whip:1.08,
+           spot:{ audit:3, poach1:0.25, poach:0.012, levy:0.01 } },
 
   audit: { line:40, k:0.004, maxP:0.12 },       // 年底审计:干净度低于 40,每年被查概率 (40-干净度)×0.4%,封顶 12%
 
@@ -686,9 +709,9 @@ const PAYROLL_PROSPECTS = [
 /* 支行辖内另外 7 个网点 */
 const RIVALS_L1 = [
   {id:"nanping",  name:"南坪网点",   boss:"邓宇",   style:"狼性", base:108},
-  {id:"chayuan",  name:"茶园网点",   boss:"许丽萍", style:"稳健", base:105},
-  {id:"sigongli", name:"四公里网点", boss:"黎正",   style:"关系", base:102},
-  {id:"haitangxi",name:"海棠溪网点", boss:"付强",   style:"灰色", base:100},
+  {id:"chayuan",  name:"茶园网点",   boss:"许丽萍", style:"稳健", base:107},
+  {id:"sigongli", name:"四公里网点", boss:"黎正",   style:"关系", base:105},
+  {id:"haitangxi",name:"海棠溪网点", boss:"付强",   style:"灰色", base:103},
   {id:"tongyuan", name:"铜元局网点", boss:"杨帆",   style:"稳健", base:97},
   {id:"dafo",     name:"大佛段网点", boss:"秦月",   style:"冲劲", base:94},
   {id:"nanshan",  name:"南山网点",   boss:"曾德福", style:"躺平", base:88},
@@ -914,7 +937,7 @@ function schedule(id, delay, data){ S.sched.push({id, at:S.turn + delay, data:da
 function resetNoErr(){ S.biz.noErrStreak = 0; }
 
 /* ---------- 考核卡 ---------- */
-function issueKpi(){ return [null,issueKpiL1,issueKpiL2,issueKpiL3,issueKpiL4,issueKpiL5][S.lv](); }
+function issueKpi(){ const r = [null,issueKpiL1,issueKpiL2,issueKpiL3,issueKpiL4,issueKpiL5][S.lv](); whipTargets(); return r; }
 function issueKpiL1(){
   const b = B1();
   const g = Math.pow(b.kpiGrowth, Math.min(S.year-1, b.kpiGrowthYears));
@@ -971,7 +994,7 @@ function stepRivals(newYear){
   const cfg = BALANCE["rivalL"+S.lv] || BALANCE.rivalL1;
   S.rivals.forEach(r => {
     if(newYear) r.shift += (STYLE_TREND[r.style]||0)*cfg.trendSd + gauss()*cfg.yearShift;
-    r.score = r1(r.base + r.shift + gauss()*cfg.sd + (r.bonus||0));
+    r.score = r1(r.base + r.shift + gauss()*cfg.sd + (r.bonus||0) + (r.chase||0));
     r.bonus = 0;
   });
 }
@@ -1010,7 +1033,7 @@ function monthStartL1(first){
   S.ap = S.apMax = BALANCE.ap[S.lv];
   if(S.flags.apDebt){ S.ap = Math.max(0, S.ap - S.flags.apDebt); S.flags.apDebt = 0; }
   S.month = {dep0: depTotal(), fee:0, cust:0, card:0, compHit:0, errors:0, lost:0, events:[]};
-  S.biz.rallied = false; S.biz.bossDone = false;
+  S.biz.rallied = false; S.biz.rallyFlop = false; S.biz.bossDone = false;
   S.biz.cards.forEach(c => c.maint = false);
   if(!first) budgetAdd(b.budgetMonthly);
   // 临时任务
@@ -1027,7 +1050,7 @@ function settleL1(){
   // 1 员工产出
   S.staff.forEach(s => {
     if(s.off === S.turn) return;
-    const eff = (1 - s.fatigue/b.fatigueDiv) * (S.biz.rallied ? b.rally.mult : 1) * kmh;
+    const eff = (1 - s.fatigue/b.fatigueDiv) * (S.biz.rallied ? (S.biz.rallyFlop ? 1 + (b.rally.mult-1)*BALANCE.odds.L1.rally.flopMult : b.rally.mult) : 1) * kmh;
     if(s.role==="teller"){
       csatAdd((rl.teller.csatBase + (s.op-5)*rl.teller.csatK) * 0.5);
       custAdd(s.mk * rl.teller.custK * eff);
@@ -1093,7 +1116,7 @@ function settleL1(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(depTotal()));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   // 9 本月报告
   const rep = {
     turn:S.turn, m:S.m, year:S.year,
@@ -1187,6 +1210,21 @@ function doMaintain(cardId, prodId){
   if(!P) return null;
   apUse(1);
   const isDue = (c.due === S.m);
+  const K = BALANCE.odds.L1.maintain;
+  if(!roll(ODDS[1].maintain(c, prodId))){
+    c.maint = true; c.rel = c100(c.rel + 1);
+    let lost = 0;
+    if(isDue && R() >= P.retain) lost = Math.round(c.own*cb.leaveShare*0.5);
+    else if(c.other > 0 && R() < K.poach) lost = Math.round(c.own*K.poachShare);
+    if(lost){ c.own -= lost; c.other += lost; }
+    const lines = [
+      `${c.name}听完，说再想想。临走问了一句他行的利率。`,
+      `${c.name}把宣传单折起来放进包里，说回去跟家里商量。`,
+      `你讲到一半，${c.name}的手机响了。接完电话，人说改天再来。`,
+    ];
+    log("bad", `维护<b>${c.name}</b>：` + pick(lines) + (lost ? "第二天，账上转走了一笔。" : "") + ` <span class="num">没谈成${lost?" · 存款-"+fmtWan(lost):""}</span>`);
+    return {pull:0, fee:0, viol:false, fail:true, lost};
+  }
   let pull = Math.round(c.other * (cb.pullBase + c.rel*cb.pullRel) * P.pull);
   pull = Math.min(pull, c.other);
   c.other -= pull; c.own += pull;
@@ -1220,8 +1258,10 @@ function doHall(){
   const h = B1().hall;
   apUse(1); budgetAdd(-h.cost);
   const lobbyBoost = staffByRole("lobby").reduce((a,s)=>a+s.mk,0)/10 + 0.8;
-  const cu = Math.round(ri(h.cust)*lobbyBoost), dp = Math.round(ri(h.dep)*lobbyBoost), cd = Math.round(ri(h.card)*lobbyBoost);
-  custAdd(cu); depAdd(dp); cardAdd(cd); csatAdd(h.csat);
+  const ok = roll(ODDS[1].hall()), k = ok ? 1 : BALANCE.odds.L1.hall.flop;
+  const cu = Math.round(ri(h.cust)*lobbyBoost*k), dp = Math.round(ri(h.dep)*lobbyBoost*k), cd = Math.round(ri(h.card)*lobbyBoost*k);
+  custAdd(cu); depAdd(dp); if(cd) cardAdd(cd); csatAdd(ok ? h.csat : 0);
+  if(!ok){ log("bad", `厅堂办了一场「存款送米」。${pick(["那天下雨，米只送出去一半。","隔壁行同一天在送油，人都在那边排队。","来的多是领了米就走的，填表的没几个。"])}<span class="num">新客户+${cu} · 存款+${fmtWan(dp)} · 营销费用-${h.cost}万</span>`); return {cu, dp, cd, fail:true}; }
   log("good", `厅堂办了一场「存款送米」，门口排到了人行道上。<span class="num">新客户+${cu} · 存款+${fmtWan(dp)} · 营销费用-${h.cost}万</span>`);
   return {cu, dp, cd};
 }
@@ -1254,8 +1294,10 @@ function doOut(kind, prospectId){
   }
   const t = o[kind]; if(!t) return null;
   apUse(1);
-  const cu = Math.round(ri(t.cust)*boost), dp = Math.round(ri(t.dep)*boost), cd = Math.round(ri(t.card)*boost);
-  custAdd(cu); depAdd(dp); cardAdd(cd);
+  const ok = roll(ODDS[1].out()), k = ok ? 1 : BALANCE.odds.L1.out.flop;
+  const cu = Math.round(ri(t.cust)*boost*k), dp = Math.round(ri(t.dep)*boost*k), cd = Math.round(ri(t.card)*boost*k);
+  custAdd(cu); depAdd(dp); if(cd) cardAdd(cd);
+  if(!ok){ log("bad", `${kind==="community" ? "去弹子石社区摆了一上午摊。天热，留下电话的只有几个。" : "老街上的铺子走了一圈。有两家说上个月刚被别的行跑过。"}<span class="num">新客户+${cu} · 存款+${fmtWan(dp)}</span>`); return {cu, dp, cd, fail:true}; }
   const where = kind==="community" ? "去弹子石社区摆了一上午摊，量血压的比办业务的多" : "沿着老街一家家铺子走过去，收了一摞名片";
   log("good", `${where}。<span class="num">新客户+${cu} · 存款+${fmtWan(dp)} · 信用卡代发+${cd}</span>`);
   return {cu, dp, cd};
@@ -1267,6 +1309,11 @@ function doTrain(staffId, attr){
   const t = B1().train;
   if(s[attr] >= t.max) return null;
   apUse(1);
+  if(!roll(ODDS[1].train(s))){
+    s.trained++; sfav(s.id, t.fav);
+    log("bad", `${pick([`你带${s.name}过了一遍，${pr(s)}点头。第二天碰到同样的事，还是按老办法办的。`, `讲到一半，柜台上来了客户，${s.name}起身去忙了。那天没再接上。`, `${s.name}这阵子太累，你讲的时候${pr(s)}一直在看表。`])}<span class="num">没教会</span>`);
+    return {up:0, fail:true};
+  }
   const up = Math.min(t.max - s[attr], t.attr * (R() < (s.grow-1)*0.5 ? 2 : 1));
   s[attr] += up; s.trained++;
   sfav(s.id, t.fav);
@@ -1285,6 +1332,12 @@ function doRally(){
   apUse(1);
   S.biz.rallied = true;
   S.staff.forEach(s => { s.fatigue = c100(s.fatigue + r.fatigue); sfav(s.id, r.fav); });
+  if(!roll(ODDS[1].rally())){
+    const k = BALANCE.odds.L1.rally, s0 = S.staff.slice().sort((a,b)=>b.fatigue-a.fatigue)[0];
+    S.biz.rallyFlop = true; if(s0) s0.fatigue = c100(s0.fatigue + k.flopFat);
+    log("bad", `八点二十开晨会，你把这个月的数写在白板上。${s0?s0.name:"有人"}站在最后面，散会后说孩子发烧，下午请了假。<span class="num">动员没起来 · 倦怠上升</span>`);
+    return {fail:true};
+  }
   log("", `八点二十开晨会，你把这个月的数写在白板上。没人说话，${pick(S.staff).name}在底下打了个呵欠。<span class="num">本月产出提高 · 倦怠上升</span>`);
   return true;
 }
@@ -1294,6 +1347,11 @@ function doBoss(){
   const t = B1().task;
   apUse(1);
   S.biz.bossDone = true;
+  if(!roll(ODDS[1].boss())){
+    fav("huang", BALANCE.odds.L1.boss.flopFav);
+    log("bad", S.biz.task && !S.biz.taskDone ? `材料交上去，黄世海翻了两页，说格式不对，让你重做。<span class="num">黄世海好感${BALANCE.odds.L1.boss.flopFav}</span>` : `你去支行汇报。黄世海在开会，你在走廊等到下班，没见上。<span class="num">黄世海好感${BALANCE.odds.L1.boss.flopFav}</span>`);
+    return {fail:true};
+  }
   if(S.biz.task && !S.biz.taskDone){
     S.biz.taskDone = true;
     fav("huang", t.done);
@@ -1784,7 +1842,7 @@ function monthStartL2(first){
   S.ap = S.apMax = BALANCE.ap[2];
   if(S.flags.apDebt){ S.ap = Math.max(0, S.ap - S.flags.apDebt); S.flags.apDebt = 0; }
   S.month = {dep0: depTotal(), loan0: S.biz.loans, npl0: S.biz.npl, fee:0, profit:0, compHit:0, newNpl:0, landed:[], defaults:[], expired:0};
-  S.biz.outlets.forEach(o => { o.supervised = false; o.dep0 = o.dep; });
+  S.biz.outlets.forEach(o => { o.supervised = false; o.supFlop = false; o.dep0 = o.dep; });
   S.biz.campaignDone = false; S.biz.reported = false;
   if(!first) S.biz.budget = r1(S.biz.budget + b.budgetMonthly);
   fillQueue();
@@ -1810,7 +1868,7 @@ function settleL2(){
   S.biz.outlets.forEach(o => {
     const dk = delegK(o.mgr), mk = moraleK(o);
     let inc = o.dep * b.growth * dk * mk * (o.mult||1) * kmh;
-    if(o.supervised) inc *= b.supervise.mult;
+    if(o.supervised && !o.supFlop) inc *= b.supervise.mult;
     inc += gauss() * o.dep * b.noise;
     if(!o.mgr) inc *= 0.5;
     o.dep = Math.round(o.dep + inc);
@@ -1857,7 +1915,7 @@ function settleL2(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(depTotal()));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   S.report = {
     turn:S.turn, m:S.m, year:S.year,
     dep: depTotal(), dDep: depTotal() - M.dep0, loans:S.biz.loans, dLoan:S.biz.loans - M.loan0,
@@ -2102,7 +2160,7 @@ function settleL3(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(dep));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   S.report = {
     turn:S.turn, q:qName(), dep, dDep: dep - M.dep0, loans: loansTotalL3(), dLoan: loansTotalL3() - M.loan0,
     profit, npl: nplL3()/loansTotalL3()*100, newNpl, recovered, rank:S.kpi.rank, prevRank:S.kpi.prevRank, score:S.kpi.score,
@@ -2262,7 +2320,7 @@ function settleL4(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(dep));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   S.report = {turn:S.turn, q:qName(), dep, dDep:dep-M.dep0, loans, dLoan:loans-M.loan0, profit, npl:nplL4()/loans*100,
     rating:ratingNow(), rank:S.kpi.rank, prevRank:S.kpi.prevRank, score:S.kpi.score, capRoom:capRoom(), defaults:M.defaults.map(l=>l.name)};
   return S.report;
@@ -2442,7 +2500,9 @@ function canActL5(id){
 function doSurvey(rid){
   const ck = canActL5("survey"); if(!ck.ok) return null;
   const r = S.biz.regions.find(x=>x.id===rid); if(!r) return null;
-  apUse(1); r.boost = B5().survey.turns; S.biz.csat = c100(S.biz.csat + B5().survey.rep);
+  apUse(1);
+  if(!roll(ODDS[5].survey())){ r.boost = 1; log("bad", `你去${r.name}调研了一周。分行报上来的材料跟你看到的对不上，时间都花在对数上了。<span class="num">${r.name}只长半年</span>`); keyEvent(`总行行长任上去${r.name}调研`); return {fail:true}; }
+  r.boost = B5().survey.turns; S.biz.csat = c100(S.biz.csat + B5().survey.rep);
   const lines = {
     xn: "你去了重庆。车过南滨路，你让司机开慢一点。弹子石那一带新修了一排楼，叫号机的事，没人记得了。",
     hd: "你在长三角跑了六个城市，一天一个。回北京的高铁上，你把笔记本翻到第一页，上面写着：客户在哪里。",
@@ -2458,7 +2518,9 @@ function doSurvey(rid){
 }
 function doReg5(){
   const ck = canActL5("reg5"); if(!ck.ok) return null;
-  apUse(1); fav("gu", B5().regTalk.fav); S.biz.regScore = Math.min(10, (S.biz.regScore||0) + B5().regTalk.score*0.5);
+  apUse(1);
+  if(!roll(ODDS[5].reg5())){ fav("gu", 1); log("bad", "你去金融监管总局汇报。顾清越把一份检查报告推过来，第七页折了个角。那一页讲的是你们的数据治理。<span class=\"num\">没加分</span>"); return {fail:true}; }
+  fav("gu", B5().regTalk.fav); S.biz.regScore = Math.min(10, (S.biz.regScore||0) + B5().regTalk.score*0.5);
   log("", `你去金融监管总局汇报。顾清越坐在长桌对面，头发白了一半，面前还是一个笔记本、一支笔、一杯自己带的水。<span class="num">顾清越好感+${B5().regTalk.fav}</span>`);
   return true;
 }
@@ -2491,6 +2553,128 @@ function setDial(k, v){ if(S.lv!==5 || !S.biz.dials || !(k in S.biz.dials)) retu
 function setStrategy(id){ S.biz.strategy = id; (S.biz.stratLog = S.biz.stratLog || []).push({year:S.year, id}); const o = STRAT_OPTS.find(x=>x.id===id); keyEvent(`年度战略会定调：${o.name}`); log("", `年度战略会定了调子：${o.name}。`); }
 function fmtWy(v){ return (v/100000000).toFixed(2) + "万亿"; }
 /* =====================================================================
+   行动成败:每次行动掷一次。成功率挂在关系、能力、口碑上,
+   界面只给三档:有把握 / 看情况 / 悬
+   ===================================================================== */
+function oddsClamp(p){ const o = BALANCE.odds; return clamp(p, o.min, o.max); }
+function oddsTier(p){
+  const o = BALANCE.odds; p = oddsClamp(p);
+  return p >= o.sure ? {k:"sure", t:"有把握"} : (p >= o.maybe ? {k:"maybe", t:"看情况"} : {k:"risky", t:"悬"});
+}
+function oddsChip(p){ if(p == null) return ""; const t = oddsTier(p); return `<i class="odds odds-${t.k}">${t.t}</i>`; }
+function roll(p){
+  const ok = R() < oddsClamp(p);
+  const r = S.track.rolls = S.track.rolls || {n:0, fail:0};
+  r.n++; if(!ok) r.fail++;
+  return ok;
+}
+const avgOf = (arr, f) => arr.length ? arr.reduce((a,x)=>a+f(x),0)/arr.length : 0;
+const favOf = id => { const p = person(id); return p ? p.fav : 50; };
+
+/* 每关每个行动的成功率。带参数的(选客户、选人)在选择面板里给档位 */
+const ODDS = {
+  1: {
+    maintain: (c, prod) => { const k = BALANCE.odds.L1.maintain;
+      return k.base + c.rel*k.rel + (k.prod[prod]||0) + (prod==="insure" && c.type==="retire" ? k.oldInsure : 0) + (S.biz.csat-80)*k.csat; },
+    hall: () => { const k = BALANCE.odds.L1.hall; return k.base + staffByRole("lobby").reduce((a,s)=>a+s.mk,0)*k.mk + (S.biz.csat-80)*k.csat; },
+    out: () => { const k = BALANCE.odds.L1.out, cm = staffByRole("cm")[0]; return k.base + (cm?cm.mk:3)*k.mk; },
+    train: s => { const k = BALANCE.odds.L1.train; return k.base + (s.grow-1)*k.grow - s.fatigue*k.fat; },
+    rally: () => { const k = BALANCE.odds.L1.rally; return k.base - avgOf(S.staff, s=>s.fatigue)*k.fat; },
+    boss: () => { const k = BALANCE.odds.L1.boss; return k.base + (favOf("huang")-50)*k.fav; },
+  },
+  2: {
+    supervise: o => { const k = BALANCE.odds.L2.supervise; return k.base + (o.morale-50)*k.morale + ((o.mgr?favOf(o.mgr):50)-50)*k.fav; },
+    push: p => { const k = BALANCE.odds.L2.push; if(!p) return null;
+      if(p.stage >= 2){ const b = B2().project, d = PROJ_L2.find(x=>x.id===p.id); return Math.min(b.cap, b.approveBase - b.risk[d.tier] + p.visits*b.visit + p.gift*b.gift + (S.flags.projBonus && S.flags.projBonus[p.id] || 0)); }
+      return k.base + p.visits*k.visit; },
+    campaign: () => { const k = BALANCE.odds.L2.campaign; return k.base + (avgOf(S.biz.outlets, o=>o.morale)-50)*k.morale; },
+    reportup: () => { const k = BALANCE.odds.L2.report; return k.base + (favOf("zhouqm")-50)*k.fav; },
+  },
+  3: {
+    open: a => { const k = BALANCE.odds.L3.open; return a ? k.base + (a.heat - a.comp*0.5)*k.heat : null; },
+    renovate: () => BALANCE.odds.L3.renovate,
+    reportup: () => { const k = BALANCE.odds.L3.report; return k.base + (favOf("lu")-50)*k.fav; },
+  },
+  4: {
+    talk: id => { const k = BALANCE.odds.L4.talk; return id ? k.base + (favOf(id)-50)*k.fav : null; },
+    pushp: () => BALANCE.odds.L4.push,
+    quota: () => { const k = BALANCE.odds.L4.quota; return k.base + (favOf("lu") - B4().askQuota.needFav)*k.fav; },
+    regulator: () => { const k = BALANCE.odds.L4.reg; return k.base + (favOf("gu")-50)*k.fav; },
+  },
+  5: {
+    survey: () => BALANCE.odds.L5.survey,
+    reg5: () => { const k = BALANCE.odds.L5.reg; return k.base + (favOf("gu")-50)*k.fav; },
+  },
+};
+/* 不带参数也算得出来的,给行动按钮挂档位 */
+function actOdds(id){ const f = ODDS[S.lv] && ODDS[S.lv][id]; if(!f || f.length > 0) return null; try { return f(); } catch(e){ return null; } }
+/* =====================================================================
+   对手会追、枪打出头鸟、鞭打快牛
+   ===================================================================== */
+const CHASE_LINES = [
+  r => `【群消息】${r.name}的${r.boss}把这个月的休假全停了，晨会开到八点半。`,
+  r => `【群消息】${r.boss}那边抢了两家大户，利率压得很低。有人在群里问是不是上面给了政策。`,
+  r => `【群消息】${r.name}这个月的数报得很猛。${r.boss}在会上说：「第一名也不是谁家的。」`,
+];
+function rivalReact(){
+  const c = BALANCE.chase;
+  if(S.lv >= 5 || !S.rivals || !S.rivals.length) return;
+  S.rivals.forEach(r => { if(r.chaseLeft > 0){ r.chaseLeft--; if(!r.chaseLeft) r.chase = 0; } });
+  if((S.biz.rankStreak||0) >= c.after && !S.rivals.some(r => r.chaseLeft > 0)){
+    const second = (S.kpi.table||[]).find(x => !x.me);
+    const r = second && S.rivals.find(x => x.id === second.id);
+    if(r){ r.chase = c.bonus[S.lv]; r.chaseLeft = c.turns[S.lv]; log("group", pick(CHASE_LINES)(r)); }
+  }
+  if(S.kpi.rank === 1 && S.phase === "play" && R() < c.spotP) spotlight();
+}
+/* 排第一,事也跟着来 */
+function spotlight(){
+  const c = BALANCE.chase.spot, kind = pick(S.lv === 1 ? ["poach","task","audit"] : ["poach","audit","levy"]);
+  if(kind === "audit"){
+    S.kpi.comp = c100(S.kpi.comp - c.audit);
+    log("bad", pick([`${[null,"分行运营部","分行内控部","总行审计","总行审计"][S.lv]}来抽查，头一站就是你们。查出两张凭证盖章不清。`,
+      `上面的检查组说是随机抽的，抽到的正好是排第一的。整改单写了一页半。`]) + ` <span class="num">合规-${c.audit}</span>`);
+    return;
+  }
+  if(kind === "task" && S.lv === 1){
+    if(!S.biz.task || S.biz.taskDone){ S.biz.task = pick(TASKS_L1); S.biz.taskDone = false; S.biz.bossDone = false; }
+    fav("huang", -1);
+    log("bad", `黄世海在群里@你：「弹子石排第一，这个任务你们来。」${S.biz.task}`);
+    return;
+  }
+  if(kind === "levy"){
+    const cut = Math.round(depTotal() * c.levy);
+    if(S.lv === 2) S.biz.corp.dep = Math.max(0, S.biz.corp.dep - cut);
+    else if(S.lv === 3){ const x = S.biz.branches.slice().sort((a,b)=>b.dep-a.dep)[0]; x.dep -= cut; }
+    else if(S.lv === 4){ const x = S.biz.inst.slice().sort((a,b)=>b.dep-a.dep)[0]; x.dep -= cut; }
+    log("bad", `上面搞专项调剂，排第一的先出。一笔存款划给了排名靠后的兄弟单位。 <span class="num">存款-${fmtWan(cut)}</span>`);
+    return;
+  }
+  // poach:他行挖角
+  if(S.lv === 1){
+    const cd = S.biz.cards.filter(x => x.own > 50).sort((a,b)=>b.own-a.own)[0];
+    if(!cd) return;
+    const out = Math.round(cd.own * c.poach1);
+    cd.own -= out; cd.other += out; cd.rel = c100(cd.rel - 5);
+    log("bad", `${cd.name}的外孙女在他行上班。这个月，${cd.name}把一笔定期转过去了。 <span class="num">存款-${fmtWan(out)}</span>`);
+  } else {
+    const cut = Math.round(depTotal() * c.poach);
+    if(S.lv === 2) S.biz.corp.dep = Math.max(0, S.biz.corp.dep - cut);
+    else if(S.lv === 3){ const x = pick(S.biz.branches); x.dep -= cut; }
+    else { const x = pick(S.biz.inst); x.dep -= cut; }
+    log("bad", `他行给了一个大户更低的价，${pick(["那家企业的财务把结算户挪了一半过去。","对方老板打电话来，说「不好意思，那边给得多」。"])} <span class="num">存款-${fmtWan(cut)}</span>`);
+  }
+}
+/* 鞭打快牛:去年排第一,今年的量化目标多压一截 */
+function whipTargets(){
+  const h = S.kpi.history; if(!h || !h.length || S.lv >= 5) return false;
+  const last = h[h.length-1];
+  if(last.rank !== 1) return false;
+  S.kpi.card.forEach(it => { if(it.kind === "flow") it.target = Math.round(it.target * BALANCE.chase.whip); });
+  S.kpi.whipped = S.year;
+  return true;
+}
+/* =====================================================================
    L2 行动(每个 1 AP)。贷款审批不占行动点。
    ===================================================================== */
 const ACTIONS_L2 = [
@@ -2521,8 +2705,13 @@ function doSupervise(oid){
   const o = outlet(oid); if(!o || o.supervised) return null;
   const b = B2().supervise;
   apUse(1);
-  o.supervised = true; o.morale = c100(o.morale + b.morale);
   const p = person(o.mgr);
+  if(!roll(ODDS[2].supervise(o))){
+    o.supervised = true; o.supFlop = true; o.morale = c100(o.morale + Math.round(b.morale/3));
+    log("bad", `你去${o.name}督导了一天。${p?p.name+"陪着笑，把你送到门口。":""}下午你一走，排班表又改回去了。<span class="num">${o.name}没什么起色</span>`);
+    return {fail:true};
+  }
+  o.supervised = true; o.morale = c100(o.morale + b.morale);
   const d = p ? (b.fav[p.trait] != null ? b.fav[p.trait] : 1) : 0;
   if(p) fav(p.id, d);
   const lines = {
@@ -2540,6 +2729,11 @@ function doPush(pid){
   const ck = canActL2("push"); if(!ck.ok) return null;
   const p = project(pid); if(!p || p.lost || p.stage>=3) return null;
   apUse(1);
+  if(p.stage < 2 && !roll(ODDS[2].push(p))){
+    const d = PROJ_L2.find(x=>x.id===p.id);
+    log("bad", `约了${d.name}的人，${pick(["对方老总出差了，下周再说。","会开到一半，对方财务说方案要重新报上去。","到了才知道，他行上周刚来过，给的价比你低。"])}<span class="num">${d.name}没往前走</span>`);
+    return {fail:true};
+  }
   return projAdvance(p, false);
 }
 
@@ -2591,7 +2785,11 @@ function doCampaign(){
   apUse(1);
   S.biz.campaignDone = true;
   S.biz.budget = r1(S.biz.budget - b.cost); S.month.spent = (S.month.spent||0) + b.cost;
+  const ok = roll(ODDS[2].campaign()), kk = ok ? 1 : BALANCE.odds.L2.campaign.flop;
   let tot = 0;
+  if(!ok){ S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr) * kk); o.dep += add; tot += add; if(o.mgr) fav(o.mgr, b.fav); });
+    log("bad", `全支行搞了一场「南岸存款月」。拱门扎起来了，来的人不多。${pick(["隔壁行同一周在送油。","那半个月一直下雨。","几个网点的人各干各的，没拧成一股。"])}<span class="num">存款+${fmtWan(tot)}</span>`);
+    return {tot, fail:true}; }
   S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr)); o.dep += add; tot += add; o.morale = c100(o.morale + b.morale); if(o.mgr) fav(o.mgr, b.fav); });
   log("good", `全支行搞了一场「南岸存款月」。四个网点门口的拱门是同一家公司扎的。<span class="num">存款+${fmtWan(tot)}</span>`);
   return {tot};
@@ -2601,6 +2799,7 @@ function doReportUp(){
   const ck = canActL2("reportup"); if(!ck.ok) return null;
   apUse(1);
   S.biz.reported = true;
+  if(!roll(ODDS[2].reportup())){ log("bad", pick(["周启明在开会，秘书让你把材料放下。一个星期没有回音。","你讲到第二页，周启明打断你：「这个数，上个月不是这么报的。」"]) + ` <span class="num">白跑一趟</span>`); return {fail:true}; }
   fav("zhouqm", B2().reportUp.fav);
   const lines = [
     "周启明听你讲完，在本子上记了两行，问了一句不良率。",
@@ -2642,13 +2841,15 @@ function doOpenOutlet(aid){
   apUse(1);
   S.biz.budget -= o.build; S.month.spent += o.build;
   // 爬坡速度看热度和竞争,封顶看人口
-  const ramp = Math.round(o.rampMin + (o.rampMax - o.rampMin) * clamp((a.heat - a.comp*0.5)/80, 0, 1));
+  const cold = !roll(ODDS[3].open(a));
+  const ramp = Math.round((o.rampMin + (o.rampMax - o.rampMin) * clamp((a.heat - a.comp*0.5)/80, 0, 1)) * (cold ? BALANCE.odds.L3.open.coldRamp : 1));
   const cap = Math.round(o.capMin + (o.capMax - o.capMin) * clamp(a.pop/60 * 0.6 + a.heat/100*0.4, 0, 1));
   S.biz.outletSeq++;
   S.biz.newOutlets.push({id:"no"+S.biz.outletSeq, area:aid, dep:0, ramp, cap, age:0, earned:-o.build, paid:false});
   a.rep = c100(a.rep + o.repOpen);
   S.biz.opened++;
   keyEvent(`在万州${a.name}开了新网点`);
+  if(cold){ log("bad", `${a.name}的新网点挂牌了。头一个月进门的人，一天不到二十个。对面那家行开了五年，街坊都认它。<span class="num">爬坡慢</span>`); return {ramp, cap, fail:true}; }
   log("good", `${a.name}的新网点挂牌了。剪彩那天来了两个区里的干部，横幅是谭敏连夜找人做的。`);
   return {ramp, cap};
 }
@@ -2674,6 +2875,7 @@ function doRenovate(bid){
   const r = B3().renovate;
   apUse(1);
   S.biz.budget -= r.cost; S.month.spent += r.cost;
+  if(!roll(ODDS[3].renovate())){ x.renov = r1(x.renov + r.eff/2); log("bad", `${x.name}做了智能化改造。机器装好了，老人不会用，大堂经理天天站在旁边教。<span class="num">效果打了折扣</span>`); return {fail:true}; }
   x.renov = r1(x.renov + r.eff);
   log("good", `${x.name}做了智能化改造。大堂里多了三台机器，柜台少了一个窗口。`);
   return true;
@@ -2741,6 +2943,7 @@ function doReportUpL3(){
   const ck = canActL3("reportup"); if(!ck.ok) return null;
   apUse(1);
   S.biz.reported = true;
+  if(!roll(ODDS[3].reportup())){ log("bad", pick(["你开了三个小时高速回主城。陆明远临时去了总行，秘书说材料她转交。","陆明远听你讲完，只说了一句：「万州的不良，我看的是数，不是说法。」"]) + ` <span class="num">白跑一趟</span>`); return {fail:true}; }
   fav("lu", B3().reportUp.fav);
   const lines = [
     "你开了三个小时高速回主城。陆明远听了二十分钟，问：「万州的不良，什么时候能下来？」",
@@ -2827,6 +3030,11 @@ function doTalk(id){
   const ck = canActL4("talk"); if(!ck.ok) return null;
   const p = person(id); if(!p) return null;
   apUse(1);
+  if(!roll(ODDS[4].talk(id))){
+    fav(id, -2); S.biz.unity = c100(S.biz.unity - 2);
+    log("bad", `你和${p.name}谈了一个钟头。${pick(["说到分工，两个人都停了一下，后面的话就客气了。","谈完第二天，班子会上有人提了句「有些事还是上会说比较好」。",p.name+"一直在记，一句也没接。"])}<span class="num">${p.name}好感-2 · 团结-2</span>`);
+    return {fail:true};
+  }
   fav(id, B4().unity.talk); S.biz.unity = c100(S.biz.unity + 3);
   const lines = {
     zhouqm: "周启明坐下来先提南岸：「你那时候报的数，我都记得。」两个人都笑了。",
@@ -2853,8 +3061,9 @@ function doPushProj(pid){
   const ck = canActL4("pushp"); if(!ck.ok) return null;
   const p = S.biz.projects.find(x=>x.id===pid && !x.done); if(!p) return null;
   apUse(1);
-  p.prog++;
   const s = STRAT_L4.find(x=>x.id===p.id);
+  if(!roll(ODDS[4].pushp())){ log("bad", `你去${s.name}的现场看了一天。${pick(["审批卡在区里，进度表那一格没动。","合作方换了对接人，前面谈的要重新过一遍。"])}<span class="num">进度没动</span>`); return {fail:true}; }
+  p.prog++;
   if(p.prog >= s.q) finishProject(p);
   else log("", `你去${s.name}的现场看了一天。回来的车上，项目组长把进度表改了一格。`);
   return true;
@@ -2872,7 +3081,7 @@ function doQuota(){
   const ck = canActL4("quota"); if(!ck.ok) return null;
   const q = B4().askQuota;
   apUse(1);
-  if(person("lu").fav >= q.needFav){
+  if(roll(ODDS[4].quota())){
     S.biz.capital += q.add; fav("lu", q.fav);
     log("good", `你在总行等了两天。第三天下午，陆明远把一份批复放在桌上：「就这一次。」<span class="num">资本额度+${fmtYi(q.add)}</span>`);
     return true;
@@ -2885,6 +3094,7 @@ function doRegulator(){
   const ck = canActL4("regulator"); if(!ck.ok) return null;
   const r = B4().regTalk;
   apUse(1);
+  if(!roll(ODDS[4].regulator())){ fav("gu", 1); log("bad", `你去监管局汇报。顾清越问到第三个问题，是万州一笔展期的来龙去脉。你说回去核实，她在本子上记了一笔。<span class="num">没加分</span>`); return {fail:true}; }
   fav("gu", r.fav); S.biz.regScore = Math.min(10, (S.biz.regScore||0) + r.score*0.5);
   log("", `你去监管局汇报。顾清越坐在长桌对面，面前一个笔记本，一支笔，一杯自己带的水。她问了三个问题，都是不良。<span class="num">顾清越好感+${r.fav}</span>`);
   return true;
@@ -4652,7 +4862,9 @@ function advance(){
 }
 function eventChain(d){
   const evs = pickEvents();
-  let chain = evs.map(x => (dd => ask(eventSpec(x), dd)));
+  // 顺延到这回合的事件,条件可能已经不成立了(比如负责人换了),再查一遍;正文出错的也跳过
+  let chain = evs.filter(x => { if(x.later || x.crisis) return true; const e = evDef(x.id); try { return !e.when || !!e.when(S); } catch(err){ return false; } })
+    .map(x => (dd => { let sp; try { sp = eventSpec(x); } catch(err){ return dd(); } ask(sp, dd); }));
   const runChain = () => { const f = chain.shift(); if(!f){ d(); return; } f(runChain); };
   runChain();
 }
@@ -4681,7 +4893,7 @@ function reportSpecL1(){
 }
 function kpiSpec(){
   return {kind:"kpi", title:`入行第${S.careerYear}年 · 考核卡`,
-    body:`${[null,"支行","分行","分行","总行","董事会"][S.lv]}把今年的考核卡发下来了。${S.year>1 && S.lv<5?"目标比去年上浮了一截。":""}${S.year>1 && S.lv===5?"降息压着，目标没往上加。":""}`,
+    body:`${[null,"支行","分行","分行","总行","董事会"][S.lv]}把今年的考核卡发下来了。${S.year>1 && S.lv<5?(S.kpi.whipped===S.year?"去年你排第一，今年的目标比别人多压了一截。":"目标比去年上浮了一截。"):""}${S.year>1 && S.lv===5?"降息压着，目标没往上加。":""}`,
     items:S.kpi.card.map(it=>({name:it.name, w:it.w, target:it.target, unit:it.unit})),
     opts:[{t:"收到"}]};
 }
@@ -4840,8 +5052,10 @@ function promoFinal(votes, stmtIdx, answers){
   // L3 起组织考察看廉洁:干净度高于基准加分,低于扣分
   const cb = p.cleanBonus && p.cleanBonus[S.lv] ? (S.core.clean - p.cleanBonus.from) * p.cleanBonus[S.lv] : 0;
   mine.clean = Math.round(cb*10)/10;
-  mine.total = Math.round(mine.perf*w.perf + mine.vote*w.vote + mine.trust*w.trust + mine.talk*w.talk + cb);
+  mine.total = Math.round(mine.perf*w.perf + mine.vote*w.vote + mine.trust*w.trust + mine.talk*w.talk + cb + gauss()*(p.selfNoise||0));
   const rivals = promoRivals();
+  S.promo.backed = null;
+  if(R() < (p.backP||0)){ const top = rivals.slice().sort((a,b)=>b.score-a.score)[0]; top.score += p.backBonus; S.promo.backed = top.name; }
   const best = rivals.slice().sort((a,b)=>b.score-a.score)[0];
   const win = mine.total >= p.pass && mine.total > best.score;
   const res = {mine, rivals, win, best, chosen};
@@ -4874,6 +5088,7 @@ function promoLose(kind){
     return;
   }
   log("bad", kind==="defer" ? "任命暂缓。下一个窗口，还要等。" : "这一回没选上。下一个窗口，要等一年。");
+  if(kind !== "defer" && S.promo.backed && S.promo.last && !S.promo.last.win) log("", `后来听人说，${S.promo.backed}那边，上面有人打过招呼。`);
   S.phase = "play";
 }
 function endGame(id){
@@ -5176,7 +5391,41 @@ function botChooseGeneric(mode){
 function dueCards(){ return S.biz.cards.filter(c=>c.due===S.m && !c.maint && c.own>0).sort((a,b)=>b.own-a.own); }
 function potCards(){ return S.biz.cards.filter(c=>!c.maint).sort((a,b)=>b.other-a.other); }
 
+/* 高手:会读卡、会算账的人。L1 按期望收益挑客户和产品,后面几关按 balanced 打 */
+function botExpertL1(){
+  // 一步前瞻:每个行动点把候选行动在副本上试一遍(按成功算),结算当月看综合得分,乘成功率取最好的
+  const b = B1(); let g = 6;
+  const o = BALANCE.odds, keep = [o.min, o.max];
+  while(S.ap > 0 && S.phase==="play" && g-- > 0){
+    const cands = [];
+    if(canAct("boss").ok) cands.push({p:ODDS[1].boss(), f:()=>doBoss()});
+    if(canAct("hall").ok) cands.push({p:ODDS[1].hall(), f:()=>doHall()});
+    if(canAct("rally").ok) cands.push({p:ODDS[1].rally(), f:()=>doRally()});
+    cands.push({p:ODDS[1].out(), f:()=>doOut("community")}, {p:ODDS[1].out(), f:()=>doOut("street")});
+    const pc = b.out.payroll, cm = staffByRole("cm")[0];
+    S.biz.prospects.filter(x=>!x.won).forEach(x => { if(S.biz.budget >= pc.cost) cands.push({p:pc.baseP + (cm?cm.mk:3)*pc.mkP + x.tries*pc.tryP, f:()=>doOut("payroll", x.id), payroll:true}); });
+    S.staff.forEach(st => ["mk","op","cp"].forEach(at => { if(st[at] < b.train.max) cands.push({p:ODDS[1].train(st), f:()=>doTrain(st.id, at), train:true}); }));
+    S.biz.cards.filter(c=>!c.maint).sort((x,y)=>(y.other + (y.due===S.m?y.own:0)) - (x.other + (x.due===S.m?x.own:0))).slice(0,10)
+      .forEach(c => PRODUCTS.forEach(pd => { if(pd.id==="fund" && c.risk < b.product.fund.riskLevel) return; cands.push({p:ODDS[1].maintain(c, pd.id), f:()=>doMaintain(c.id, pd.id)}); }));
+    const snap = JSON.stringify(S), base = (()=>{ S = JSON.parse(snap); settleMonth(); const v = S.kpi.score; S = JSON.parse(snap); return v; })();
+    let best = null;
+    o.min = o.max = 1;
+    cands.forEach(cd => {
+      S = JSON.parse(snap);
+      try { cd.f(); settleMonth(); } catch(e){ S = JSON.parse(snap); return; }
+      // 带教和代发的好处在以后,当月看不出来,给一点远期分
+      const later = cd.train ? 0.6 : (cd.payroll ? 1.5 : 0);
+      const ev = clamp(cd.p, keep[0], keep[1]) * (S.kpi.score - base + later);
+      if(!best || ev > best.ev) best = {cd, ev};
+    });
+    [o.min, o.max] = keep;
+    S = JSON.parse(snap);
+    if(!best) break;
+    best.cd.f();
+  }
+}
 function botPlay(mode){
+  if(mode === "expert"){ if(S.lv === 1) return botExpertL1(); mode = "balanced"; }
   if(S.lv === 2) return botPlayL2(mode);
   if(S.lv === 3) return botPlayL3(mode);
   if(S.lv === 4) return botPlayL4(mode);
@@ -5384,8 +5633,8 @@ function botDecomp(mode){
 }
 
 const BOTS = {};
-["random","greedy","balanced","clean","mentor","grind","steady"].forEach(m => {
-  const base = (m==="mentor"||m==="grind"||m==="steady") ? "balanced" : m;
+["random","greedy","balanced","clean","mentor","grind","steady","expert"].forEach(m => {
+  const base = (m==="mentor"||m==="grind"||m==="steady"||m==="expert") ? "balanced" : m;
   BOTS[m] = {
     mode:m,
     decomp: botDecomp(base),
@@ -5455,7 +5704,7 @@ const THSZ = {
   setHeadless(v){ FORCE_HL = !!v; },
   internals:{ promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
-    EVENTS_L5, initL5, levelStartJobs, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
+    EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };
 THSZ.TEXT = () => ({EVENTS, EVENTS_LATER, EVENTS_L2, EVENTS_LATER_L2, EVENTS_L3, FAMILY_L3, EVENTS_L4, CRISIS_L4, EVENTS_L5, PROMO_TEXT, L2_INTRO, L3_INTRO, L4_INTRO, L5_INTRO, ENDINGS, SIDESTEP, AUDIT_OPEN, MILESTONES, LINES, TASKS_L1});
 globalThis.THSZ = THSZ;
@@ -5575,7 +5824,7 @@ const UI = {
     const tk = S.biz.task;
     const acts = ACTIONS_L1.map(a => {
       const ck = canAct(a.id);
-      return `<button class="act" data-act="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`;
+      return `<button class="act" data-act="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`;
     }).join("");
     $("colM").innerHTML = `
       <div class="box">
@@ -5681,17 +5930,17 @@ const UI = {
     if(id === "out"){
       const pc = B1().out.payroll;
       const opts = [
-        {t:"去社区", s:"老人多，新客户和存款", fn:()=>doOut("community")},
-        {t:"走商户街", s:"个体户多，收单和信用卡", fn:()=>doOut("street")},
+        {t:"去社区", s:"老人多，新客户和存款", odds:ODDS[1].out(), fn:()=>doOut("community")},
+        {t:"走商户街", s:"个体户多，收单和信用卡", odds:ODDS[1].out(), fn:()=>doOut("street")},
       ];
-      S.biz.prospects.filter(p=>!p.won).forEach(p => opts.push({t:`跑企业代发：${p.name}（${p.staff}人）`, s:`${p.note}${p.tries?` · 已跑${p.tries}回`:""} · 花营销费用${pc.cost}万`, disabled:S.biz.budget<pc.cost, fn:()=>doOut("payroll", p.id)}));
+      S.biz.prospects.filter(p=>!p.won).forEach(p => opts.push({t:`跑企业代发：${p.name}（${p.staff}人）`, s:`${p.note}${p.tries?` · 已跑${p.tries}回`:""} · 花营销费用${pc.cost}万`, disabled:S.biz.budget<pc.cost, odds:pc.baseP + (staffByRole("cm")[0]?staffByRole("cm")[0].mk:3)*pc.mkP + p.tries*pc.tryP, fn:()=>doOut("payroll", p.id)}));
       opts.push({t:"算了", s:"", cancel:true});
       UI.modal({kind:"pick", title:"外拓", body:"罗建把车钥匙拿在手上，等你说去哪。", opts}, UI.after);
       return;
     }
     if(id === "train"){
       const opts = [];
-      S.staff.forEach(s => ["mk","op","cp"].forEach(a => { if(s[a] < B1().train.max) opts.push({t:`${s.name} · ${ATTR_NAME[a]} ${s[a]}→${s[a]+1}`, s:ROLE_NAME[s.role], fn:()=>doTrain(s.id,a)}); }));
+      S.staff.forEach(s => ["mk","op","cp"].forEach(a => { if(s[a] < B1().train.max) opts.push({t:`${s.name} · ${ATTR_NAME[a]} ${s[a]}→${s[a]+1}`, s:ROLE_NAME[s.role], odds:ODDS[1].train(s), fn:()=>doTrain(s.id,a)}); }));
       opts.push({t:"算了", s:"", cancel:true});
       UI.modal({kind:"pick", title:"带教", body:"带谁，教什么。", opts, compact:true}, UI.after);
     }
@@ -5705,7 +5954,7 @@ const UI = {
       const P = b.product[p.id];
       const fee = r2((c.own + c.other*(b.card.pullBase + c.rel*b.card.pullRel)*P.pull) * P.fee + P.feeFix);
       let s = p.tip + (fee ? ` · 中收约${fmtWan(fee)}` : "");
-      return {t:p.name, s, fn:()=>doMaintain(c.id, p.id)};
+      return {t:p.name, s, odds:ODDS[1].maintain(c, p.id), fn:()=>doMaintain(c.id, p.id)};
     });
     opts.push({t:"算了", s:"", cancel:true});
     const T = CUST_TYPES[c.type];
@@ -5732,7 +5981,7 @@ const UI = {
       html += `<div class="body">${paras(spec.body||"")}</div>`;
     }
     const opts = spec.opts || [{t:"好"}];
-    html += `<div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}" ${o.disabled?"disabled":""} ${spec.compact?'style="min-height:40px;padding:6px 12px"':""}><b>${esc(o.t)}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}</div></div>`;
+    html += `<div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}" ${o.disabled?"disabled":""} ${spec.compact?'style="min-height:40px;padding:6px 12px"':""}><b>${esc(o.t)}${o.odds!=null?oddsChip(o.odds):""}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}</div></div>`;
     m.innerHTML = html;
     m.classList.remove("hidden");
     m.scrollTop = 0;
@@ -5857,7 +6106,7 @@ Object.assign(UI, {
     const dep = depTotal(), dd = S.report && S.lv===2 && S.report.dDep!=null && S.track.scoreHistory.length ? S.report.dDep : 0;
     const acts = ACTIONS_L2.map(a => {
       const ck = canActL2(a.id);
-      return `<button class="act" data-act2="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`;
+      return `<button class="act" data-act2="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`;
     }).join("");
     const rows = S.biz.outlets.map(o => {
       const m = o.mgr ? person(o.mgr) : null;
@@ -5921,14 +6170,14 @@ Object.assign(UI, {
     if(id==="campaign"){ doCampaign(); UI.refresh(); return; }
     if(id==="reportup"){ doReportUp(); UI.refresh(); return; }
     if(id==="supervise" || id==="appoint"){
-      const opts = S.biz.outlets.map(o => { const m = o.mgr?person(o.mgr):null; return {t:`${o.name} · ${m?m.name:"空缺"}`, s:`士气${Math.round(o.morale)}${o.supervised?" · 本月已督导":""}`, disabled: id==="supervise" && o.supervised, fn:()=> id==="supervise" ? doSupervise(o.id) : setTimeout(()=>UI.appointModal(o.id), 0)}; });
+      const opts = S.biz.outlets.map(o => { const m = o.mgr?person(o.mgr):null; return {t:`${o.name} · ${m?m.name:"空缺"}`, s:`士气${Math.round(o.morale)}${o.supervised?" · 本月已督导":""}`, disabled: id==="supervise" && o.supervised, odds: id==="supervise" ? ODDS[2].supervise(o) : null, fn:()=> id==="supervise" ? doSupervise(o.id) : setTimeout(()=>UI.appointModal(o.id), 0)}; });
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title: id==="supervise"?"去哪个网点":"换哪个网点的负责人", body:"", opts});
       return;
     }
     if(id==="push" || id==="visit"){
       const ps = activeProjects();
-      const opts = ps.map(p => { const d = PROJ_L2.find(x=>x.id===p.id); return {t:`${d.name} · ${PROJ_STAGES[p.stage]}`, s:d.what, fn:()=> id==="push" ? doPush(p.id) : setTimeout(()=>UI.visitModal(p.id), 0)}; });
+      const opts = ps.map(p => { const d = PROJ_L2.find(x=>x.id===p.id); return {t:`${d.name} · ${PROJ_STAGES[p.stage]}`, s:d.what, odds: id==="push" ? ODDS[2].push(p) : null, fn:()=> id==="push" ? doPush(p.id) : setTimeout(()=>UI.visitModal(p.id), 0)}; });
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title: id==="push"?"推进哪个项目":"去拜访谁", body: id==="push"?"到了「审批」一栏的项目，推进就是上分行贷审会。":"", opts});
     }
@@ -6045,7 +6294,7 @@ Object.assign(UI, {
   renderL3(){
     const b = B3();
     const dep = depTotal(), loans = loansTotalL3(), npl = nplL3();
-    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.branches.map(x => { const m = person(x.mgr), a = area(x.area);
       return `<tr data-branch="${x.id}" tabindex="0"><td>${x.name}<br><small class="muted">${a.name} · ${x.outlets}个网点${x.renov?` · 改造+${Math.round(x.renov*100)}%`:""}</small></td>
         <td>${m?m.name:"—"}<br><small class="muted">能力${m?m.skill:"—"}</small></td><td class="num">${fmtYi1(x.dep)}</td>
@@ -6098,7 +6347,7 @@ Object.assign(UI, {
     UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长"}[id], body:"", opts});
   },
   pickArea(){
-    const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, fn:()=>doOpenOutlet(a.id)}));
+    const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
     opts.push({t:"算了", s:""});
     UI.modal({kind:"pick", title:"新网点开在哪", body:`投入${B3().outlet.build}万，一年费用${B3().outlet.costY}万。`, opts});
   },
@@ -6134,7 +6383,7 @@ Object.assign(UI, {
 
   renderL4(){
     const dep = depTotalL4(), loans = loansL4(), npl = nplL4();
-    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.inst.map(x => `<tr class="${x.mine?"mine":""}" ${x.mine==="l3"?'id="l4wz"':""}><td>${x.name}${x.mine?' <small class="muted">你待过</small>':""}${x.focus?' <small class="tagx">倾斜</small>':""}</td>
       <td>${x.headName}</td><td class="num">${fmtYi0(x.dep)}</td><td class="num">${fmtYi0(x.loans)}</td><td class="num ${x.npl/x.loans>0.02?"neg":""}">${(x.npl/x.loans*100).toFixed(2)}%</td></tr>`).join("");
     const deps = S.biz.deputies.map(d => { const p = person(d.id), ln = LINES_L4.find(l=>l.id===d.line).name;
@@ -6175,7 +6424,7 @@ Object.assign(UI, {
       UI.modal({kind:"pick", title:"调整分工", body:"数字是两个人对新条线的熟悉程度，加起来比原来多还是少。调分工会伤一点团结。", opts, compact:true}); return;
     }
     if(id==="talk"){
-      const opts = S.biz.deputies.map(d => ({t:d.name, s:`好感${person(d.id).fav}`, fn:()=>doTalk(d.id)})); opts.push({t:"算了", s:""});
+      const opts = S.biz.deputies.map(d => ({t:d.name, s:`好感${person(d.id).fav}`, odds:ODDS[4].talk(d.id), fn:()=>doTalk(d.id)})); opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title:"找谁谈", body:"", opts}); return;
     }
     if(id==="startp"){
@@ -6202,7 +6451,7 @@ Object.assign(UI, {
 Object.assign(UI, {
   renderL5(){
     const b = B5(), B = S.biz;
-    const acts = L5_ACTIONS.map(a => { const ck = canActL5(a.id); return `<button class="act" data-act5="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = L5_ACTIONS.map(a => { const ck = canActL5(a.id); return `<button class="act" data-act5="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const dials = DIAL_DEF.map(d => `<div class="dial"><div class="dh"><b>${d.name}</b><span class="muted">${d.tip}</span></div>
       <div class="dr"><small>${d.lo}</small><input type="range" min="1" max="5" step="1" value="${B.dials[d.k]}" data-dial="${d.k}" aria-label="${d.name}"><small>${d.hi}</small><b class="num">${B.dials[d.k]}</b></div></div>`).join("");
     const peers = (S.kpi.table||[]).map((p,i) => `<tr class="${p.me?"me":""}"><td class="n">${i+1}</td><td>${p.name}</td><td class="s num">${fmtWy(p.score)}</td></tr>`).join("");
@@ -6236,7 +6485,7 @@ Object.assign(UI, {
     if(id==="reg5"){ doReg5(); UI.refresh(); return; }
     if(id==="reform"){ UI.modal({kind:"pick", title:"机构改革", body:"压掉一个管理层级，费用省下一截。四千多个岗位要重新竞聘，下面会有怨气。这件事一任只能做一次。", opts:[{t:"「做。」", s:"费用省8% · 口碑掉", fn:()=>doReform()},{t:"再想想", s:""}]}); return; }
     if(id==="visit5"){ doVisit5(); UI.refresh(); return; }
-    if(id==="survey"){ const opts = S.biz.regions.map(r => ({t:r.name+(r.cq?"（有重庆）":""), s:`占全行存款${Math.round(r.share*100)}%`, fn:()=>doSurvey(r.id)})); opts.push({t:"算了", s:""}); UI.modal({kind:"pick", title:"去哪里调研", body:"", opts}); }
+    if(id==="survey"){ const opts = S.biz.regions.map(r => ({t:r.name+(r.cq?"（有重庆）":""), s:`占全行存款${Math.round(r.share*100)}%`, odds:ODDS[5].survey(), fn:()=>doSurvey(r.id)})); opts.push({t:"算了", s:""}); UI.modal({kind:"pick", title:"去哪里调研", body:"", opts}); }
   },
 
   /* ---------- 结局页 ---------- */

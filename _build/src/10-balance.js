@@ -25,10 +25,11 @@ const BALANCE = {
     w: { perf:0.4, vote:0.25, trust:0.2, talk:0.15 },
     pass: 60,
     rivals: 3,
-    rivalBase: 55, rivalBaseLv: {1:55, 2:61, 3:62, 4:63}, retryPenalty: 3, rivalK: 0.7, rivalNoise: 5, rivalMin: 45, rivalMax: 82, rivalMaxLv: {1:80, 2:81, 3:89, 4:83}, rivalTopNoise: 3,
+    rivalBase: 55, rivalBaseLv: {1:55, 2:61, 3:62, 4:63}, retryPenalty: 3, rivalK: 0.7, rivalNoise: 5, rivalMin: 45, rivalMax: 82, rivalMaxLv: {1:70, 2:76, 3:85, 4:82}, rivalTopNoise: 3,
     vote: { goodFrom:40, goodSpan:50, badFrom:40, badSpan:40, good:100, ok:70, bad:0 },
     report: { from:80, k:0.015, guShield:80, deferMin:60 },
-    cleanBonus: { from:80, 3:0.08, 4:0 },      // L3/L4 组织考察:干净度每高出 1 点加分
+    cleanBonus: { from:80, 3:0.04, 4:0 },      // L3/L4 组织考察:干净度每高出 1 点加分
+    selfNoise: 2.5, backP: 0.2, backBonus: 5,   // 升职:自己的总分抖一下;对手有两成概率「上面打过招呼」
     stmtPick: 3,
     stmtFiller: 55,
     stmtMilestone: 88,
@@ -43,6 +44,24 @@ const BALANCE = {
     trustByLv: { 1:{huang:0.5, lu:0.3, gu:0.2}, 2:{zhouqm:0.5, lu:0.3, gu:0.2}, 3:{lu:0.6, zhouqm:0.2, gu:0.2}, 4:{lu:0.5, songwy:0.3, gu:0.2}, 5:{songwy:0.4, lu:0.3, gu:0.3} },
     cleanWarn: 70,
   },
+
+  /* 行动成败:成功率夹在 min~max 之间;>= sure 显示「有把握」,>= maybe「看情况」,再低是「悬」 */
+  odds: { min:0.12, max:0.93, sure:0.75, maybe:0.5,
+    L1: { maintain:{ base:0.56, rel:0.003, prod:{deposit:0.12, stable:0.06, insure:0, fund:-0.06}, oldInsure:-0.08, csat:0.005, poach:0.3, poachShare:0.08 },
+          hall:{ base:0.56, mk:0.03, csat:0.01, flop:0.35 },
+          out:{ base:0.52, mk:0.04, flop:0.2 },
+          train:{ base:0.64, grow:0.35, fat:0.003 },
+          rally:{ base:0.86, fat:0.008, flopMult:0.5, flopFat:8 },
+          boss:{ base:0.78, fav:0.006, flopFav:-2 } },
+    L2: { supervise:{ base:0.62, morale:0.006, fav:0.004 }, push:{ base:0.68, visit:0.06 }, campaign:{ base:0.6, morale:0.01, flop:0.35 }, report:{ base:0.68, fav:0.006 } },
+    L3: { open:{ base:0.55, heat:0.004, coldRamp:0.5 }, renovate:0.7, report:{ base:0.62, fav:0.006 } },
+    L4: { talk:{ base:0.58, fav:0.008 }, push:0.72, quota:{ base:0.5, fav:0.02 }, reg:{ base:0.68, fav:0.006 } },
+    L5: { survey:0.7, reg:{ base:0.65, fav:0.006 } },
+  },
+
+  /* 对手会追(连续第一 after 回合,第二名分数加 bonus,持续 turns 回合)、出头鸟(排第一时每回合 spotP 概率出事)、鞭打快牛 */
+  chase: { after:2, bonus:{1:10, 2:9, 3:8, 4:8}, turns:{1:3, 2:3, 3:2, 4:2}, spotP:0.3, whip:1.08,
+           spot:{ audit:3, poach1:0.25, poach:0.012, levy:0.01 } },
 
   audit: { line:40, k:0.004, maxP:0.12 },       // 年底审计:干净度低于 40,每年被查概率 (40-干净度)×0.4%,封顶 12%
 

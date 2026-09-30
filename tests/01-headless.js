@@ -20,7 +20,7 @@ for(let i=0;i<N;i++){
 if(firstErr) console.log(firstErr);
 T.ok(`${N} 局零报错`, errors===0, errors);
 T.ok("每局都走到结局", stuck===0, stuck);
-console.log("  · 最高到达比例(目标 balanced:L2 95 · L3 70 · L4 35 · L5 12)");
+console.log("  · 最高到达比例(目标 balanced:L2 90 · L3 60 · L4 28 · L5 9)");
 modes.forEach(m=>{ const s=stat[m]; console.log(`  · ${m.padEnd(8)} L2 ${pct(s.l2,s.n)}% · L3 ${pct(s.l3,s.n)}% · L4 ${pct(s.l4,s.n)}% · L5 ${pct(s.l5,s.n)}% · 卡住 ${pct(s.lock,s.n)}% · 回机关 ${pct(s.side,s.n)}% · 出事 ${pct(s.caught,s.n)}% · 总行任满 ${pct(s.end5,s.n)}%`); });
 T.ok("balanced 24 回合内看到升职窗口 ≥90%", pct(stat.balanced.win24, stat.balanced.n) >= 90, pct(stat.balanced.win24, stat.balanced.n)+"%");
 T.ok("存档写进 thsz_save 且可解析", (()=>{ try{ return JSON.parse(store.thsz_save).ver===4; }catch(e){ return false; } })());

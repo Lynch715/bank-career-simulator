@@ -70,9 +70,9 @@ const PAYROLL_PROSPECTS = [
 /* 支行辖内另外 7 个网点 */
 const RIVALS_L1 = [
   {id:"nanping",  name:"南坪网点",   boss:"邓宇",   style:"狼性", base:108},
-  {id:"chayuan",  name:"茶园网点",   boss:"许丽萍", style:"稳健", base:105},
-  {id:"sigongli", name:"四公里网点", boss:"黎正",   style:"关系", base:102},
-  {id:"haitangxi",name:"海棠溪网点", boss:"付强",   style:"灰色", base:100},
+  {id:"chayuan",  name:"茶园网点",   boss:"许丽萍", style:"稳健", base:107},
+  {id:"sigongli", name:"四公里网点", boss:"黎正",   style:"关系", base:105},
+  {id:"haitangxi",name:"海棠溪网点", boss:"付强",   style:"灰色", base:103},
   {id:"tongyuan", name:"铜元局网点", boss:"杨帆",   style:"稳健", base:97},
   {id:"dafo",     name:"大佛段网点", boss:"秦月",   style:"冲劲", base:94},
   {id:"nanshan",  name:"南山网点",   boss:"曾德福", style:"躺平", base:88},

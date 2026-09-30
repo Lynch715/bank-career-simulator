@@ -39,7 +39,7 @@ Object.assign(UI, {
     const dep = depTotal(), dd = S.report && S.lv===2 && S.report.dDep!=null && S.track.scoreHistory.length ? S.report.dDep : 0;
     const acts = ACTIONS_L2.map(a => {
       const ck = canActL2(a.id);
-      return `<button class="act" data-act2="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}</b><small>${a.desc}</small></button>`;
+      return `<button class="act" data-act2="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`;
     }).join("");
     const rows = S.biz.outlets.map(o => {
       const m = o.mgr ? person(o.mgr) : null;
@@ -103,14 +103,14 @@ Object.assign(UI, {
     if(id==="campaign"){ doCampaign(); UI.refresh(); return; }
     if(id==="reportup"){ doReportUp(); UI.refresh(); return; }
     if(id==="supervise" || id==="appoint"){
-      const opts = S.biz.outlets.map(o => { const m = o.mgr?person(o.mgr):null; return {t:`${o.name} · ${m?m.name:"空缺"}`, s:`士气${Math.round(o.morale)}${o.supervised?" · 本月已督导":""}`, disabled: id==="supervise" && o.supervised, fn:()=> id==="supervise" ? doSupervise(o.id) : setTimeout(()=>UI.appointModal(o.id), 0)}; });
+      const opts = S.biz.outlets.map(o => { const m = o.mgr?person(o.mgr):null; return {t:`${o.name} · ${m?m.name:"空缺"}`, s:`士气${Math.round(o.morale)}${o.supervised?" · 本月已督导":""}`, disabled: id==="supervise" && o.supervised, odds: id==="supervise" ? ODDS[2].supervise(o) : null, fn:()=> id==="supervise" ? doSupervise(o.id) : setTimeout(()=>UI.appointModal(o.id), 0)}; });
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title: id==="supervise"?"去哪个网点":"换哪个网点的负责人", body:"", opts});
       return;
     }
     if(id==="push" || id==="visit"){
       const ps = activeProjects();
-      const opts = ps.map(p => { const d = PROJ_L2.find(x=>x.id===p.id); return {t:`${d.name} · ${PROJ_STAGES[p.stage]}`, s:d.what, fn:()=> id==="push" ? doPush(p.id) : setTimeout(()=>UI.visitModal(p.id), 0)}; });
+      const opts = ps.map(p => { const d = PROJ_L2.find(x=>x.id===p.id); return {t:`${d.name} · ${PROJ_STAGES[p.stage]}`, s:d.what, odds: id==="push" ? ODDS[2].push(p) : null, fn:()=> id==="push" ? doPush(p.id) : setTimeout(()=>UI.visitModal(p.id), 0)}; });
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title: id==="push"?"推进哪个项目":"去拜访谁", body: id==="push"?"到了「审批」一栏的项目，推进就是上分行贷审会。":"", opts});
     }

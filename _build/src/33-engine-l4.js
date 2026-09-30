@@ -146,7 +146,7 @@ function settleL4(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(dep));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   S.report = {turn:S.turn, q:qName(), dep, dDep:dep-M.dep0, loans, dLoan:loans-M.loan0, profit, npl:nplL4()/loans*100,
     rating:ratingNow(), rank:S.kpi.rank, prevRank:S.kpi.prevRank, score:S.kpi.score, capRoom:capRoom(), defaults:M.defaults.map(l=>l.name)};
   return S.report;

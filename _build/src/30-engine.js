@@ -149,7 +149,7 @@ function schedule(id, delay, data){ S.sched.push({id, at:S.turn + delay, data:da
 function resetNoErr(){ S.biz.noErrStreak = 0; }
 
 /* ---------- 考核卡 ---------- */
-function issueKpi(){ return [null,issueKpiL1,issueKpiL2,issueKpiL3,issueKpiL4,issueKpiL5][S.lv](); }
+function issueKpi(){ const r = [null,issueKpiL1,issueKpiL2,issueKpiL3,issueKpiL4,issueKpiL5][S.lv](); whipTargets(); return r; }
 function issueKpiL1(){
   const b = B1();
   const g = Math.pow(b.kpiGrowth, Math.min(S.year-1, b.kpiGrowthYears));
@@ -206,7 +206,7 @@ function stepRivals(newYear){
   const cfg = BALANCE["rivalL"+S.lv] || BALANCE.rivalL1;
   S.rivals.forEach(r => {
     if(newYear) r.shift += (STYLE_TREND[r.style]||0)*cfg.trendSd + gauss()*cfg.yearShift;
-    r.score = r1(r.base + r.shift + gauss()*cfg.sd + (r.bonus||0));
+    r.score = r1(r.base + r.shift + gauss()*cfg.sd + (r.bonus||0) + (r.chase||0));
     r.bonus = 0;
   });
 }
@@ -245,7 +245,7 @@ function monthStartL1(first){
   S.ap = S.apMax = BALANCE.ap[S.lv];
   if(S.flags.apDebt){ S.ap = Math.max(0, S.ap - S.flags.apDebt); S.flags.apDebt = 0; }
   S.month = {dep0: depTotal(), fee:0, cust:0, card:0, compHit:0, errors:0, lost:0, events:[]};
-  S.biz.rallied = false; S.biz.bossDone = false;
+  S.biz.rallied = false; S.biz.rallyFlop = false; S.biz.bossDone = false;
   S.biz.cards.forEach(c => c.maint = false);
   if(!first) budgetAdd(b.budgetMonthly);
   // 临时任务
@@ -262,7 +262,7 @@ function settleL1(){
   // 1 员工产出
   S.staff.forEach(s => {
     if(s.off === S.turn) return;
-    const eff = (1 - s.fatigue/b.fatigueDiv) * (S.biz.rallied ? b.rally.mult : 1) * kmh;
+    const eff = (1 - s.fatigue/b.fatigueDiv) * (S.biz.rallied ? (S.biz.rallyFlop ? 1 + (b.rally.mult-1)*BALANCE.odds.L1.rally.flopMult : b.rally.mult) : 1) * kmh;
     if(s.role==="teller"){
       csatAdd((rl.teller.csatBase + (s.op-5)*rl.teller.csatK) * 0.5);
       custAdd(s.mk * rl.teller.custK * eff);
@@ -328,7 +328,7 @@ function settleL1(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(depTotal()));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   // 9 本月报告
   const rep = {
     turn:S.turn, m:S.m, year:S.year,

@@ -29,8 +29,13 @@ function doSupervise(oid){
   const o = outlet(oid); if(!o || o.supervised) return null;
   const b = B2().supervise;
   apUse(1);
-  o.supervised = true; o.morale = c100(o.morale + b.morale);
   const p = person(o.mgr);
+  if(!roll(ODDS[2].supervise(o))){
+    o.supervised = true; o.supFlop = true; o.morale = c100(o.morale + Math.round(b.morale/3));
+    log("bad", `你去${o.name}督导了一天。${p?p.name+"陪着笑，把你送到门口。":""}下午你一走，排班表又改回去了。<span class="num">${o.name}没什么起色</span>`);
+    return {fail:true};
+  }
+  o.supervised = true; o.morale = c100(o.morale + b.morale);
   const d = p ? (b.fav[p.trait] != null ? b.fav[p.trait] : 1) : 0;
   if(p) fav(p.id, d);
   const lines = {
@@ -48,6 +53,11 @@ function doPush(pid){
   const ck = canActL2("push"); if(!ck.ok) return null;
   const p = project(pid); if(!p || p.lost || p.stage>=3) return null;
   apUse(1);
+  if(p.stage < 2 && !roll(ODDS[2].push(p))){
+    const d = PROJ_L2.find(x=>x.id===p.id);
+    log("bad", `约了${d.name}的人，${pick(["对方老总出差了，下周再说。","会开到一半，对方财务说方案要重新报上去。","到了才知道，他行上周刚来过，给的价比你低。"])}<span class="num">${d.name}没往前走</span>`);
+    return {fail:true};
+  }
   return projAdvance(p, false);
 }
 
@@ -99,7 +109,11 @@ function doCampaign(){
   apUse(1);
   S.biz.campaignDone = true;
   S.biz.budget = r1(S.biz.budget - b.cost); S.month.spent = (S.month.spent||0) + b.cost;
+  const ok = roll(ODDS[2].campaign()), kk = ok ? 1 : BALANCE.odds.L2.campaign.flop;
   let tot = 0;
+  if(!ok){ S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr) * kk); o.dep += add; tot += add; if(o.mgr) fav(o.mgr, b.fav); });
+    log("bad", `全支行搞了一场「南岸存款月」。拱门扎起来了，来的人不多。${pick(["隔壁行同一周在送油。","那半个月一直下雨。","几个网点的人各干各的，没拧成一股。"])}<span class="num">存款+${fmtWan(tot)}</span>`);
+    return {tot, fail:true}; }
   S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr)); o.dep += add; tot += add; o.morale = c100(o.morale + b.morale); if(o.mgr) fav(o.mgr, b.fav); });
   log("good", `全支行搞了一场「南岸存款月」。四个网点门口的拱门是同一家公司扎的。<span class="num">存款+${fmtWan(tot)}</span>`);
   return {tot};
@@ -109,6 +123,7 @@ function doReportUp(){
   const ck = canActL2("reportup"); if(!ck.ok) return null;
   apUse(1);
   S.biz.reported = true;
+  if(!roll(ODDS[2].reportup())){ log("bad", pick(["周启明在开会，秘书让你把材料放下。一个星期没有回音。","你讲到第二页，周启明打断你：「这个数，上个月不是这么报的。」"]) + ` <span class="num">白跑一趟</span>`); return {fail:true}; }
   fav("zhouqm", B2().reportUp.fav);
   const lines = [
     "周启明听你讲完，在本子上记了两行，问了一句不良率。",

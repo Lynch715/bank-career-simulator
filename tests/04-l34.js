@@ -1,6 +1,9 @@
 // L3 万州 / L4 重庆分行:经营模型、跨关旧账、存档独立起玩、事件
 const {load, runner} = require("./lib");
 const {G, store} = load();
+// 机制测试:行动一律成功,关掉对手追赶、出头鸟和升职变数(这些在 09-odds 单独测)
+const SURE_ODDS = () => { Object.assign(G.BALANCE.odds, {min:1, max:1}); Object.assign(G.BALANCE.chase, {after:99, spotP:0, whip:1}); Object.assign(G.BALANCE.promo, {selfNoise:0, backP:0}); };
+SURE_ODDS();
 const I = G.internals, A = G.act;
 const T = runner("04-l34");
 const S = () => G.S;

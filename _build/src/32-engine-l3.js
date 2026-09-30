@@ -190,7 +190,7 @@ function settleL3(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(dep));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   S.report = {
     turn:S.turn, q:qName(), dep, dDep: dep - M.dep0, loans: loansTotalL3(), dLoan: loansTotalL3() - M.loan0,
     profit, npl: nplL3()/loansTotalL3()*100, newNpl, recovered, rank:S.kpi.rank, prevRank:S.kpi.prevRank, score:S.kpi.score,

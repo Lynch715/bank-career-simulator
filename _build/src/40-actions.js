@@ -33,6 +33,21 @@ function doMaintain(cardId, prodId){
   if(!P) return null;
   apUse(1);
   const isDue = (c.due === S.m);
+  const K = BALANCE.odds.L1.maintain;
+  if(!roll(ODDS[1].maintain(c, prodId))){
+    c.maint = true; c.rel = c100(c.rel + 1);
+    let lost = 0;
+    if(isDue && R() >= P.retain) lost = Math.round(c.own*cb.leaveShare*0.5);
+    else if(c.other > 0 && R() < K.poach) lost = Math.round(c.own*K.poachShare);
+    if(lost){ c.own -= lost; c.other += lost; }
+    const lines = [
+      `${c.name}听完，说再想想。临走问了一句他行的利率。`,
+      `${c.name}把宣传单折起来放进包里，说回去跟家里商量。`,
+      `你讲到一半，${c.name}的手机响了。接完电话，人说改天再来。`,
+    ];
+    log("bad", `维护<b>${c.name}</b>：` + pick(lines) + (lost ? "第二天，账上转走了一笔。" : "") + ` <span class="num">没谈成${lost?" · 存款-"+fmtWan(lost):""}</span>`);
+    return {pull:0, fee:0, viol:false, fail:true, lost};
+  }
   let pull = Math.round(c.other * (cb.pullBase + c.rel*cb.pullRel) * P.pull);
   pull = Math.min(pull, c.other);
   c.other -= pull; c.own += pull;
@@ -66,8 +81,10 @@ function doHall(){
   const h = B1().hall;
   apUse(1); budgetAdd(-h.cost);
   const lobbyBoost = staffByRole("lobby").reduce((a,s)=>a+s.mk,0)/10 + 0.8;
-  const cu = Math.round(ri(h.cust)*lobbyBoost), dp = Math.round(ri(h.dep)*lobbyBoost), cd = Math.round(ri(h.card)*lobbyBoost);
-  custAdd(cu); depAdd(dp); cardAdd(cd); csatAdd(h.csat);
+  const ok = roll(ODDS[1].hall()), k = ok ? 1 : BALANCE.odds.L1.hall.flop;
+  const cu = Math.round(ri(h.cust)*lobbyBoost*k), dp = Math.round(ri(h.dep)*lobbyBoost*k), cd = Math.round(ri(h.card)*lobbyBoost*k);
+  custAdd(cu); depAdd(dp); if(cd) cardAdd(cd); csatAdd(ok ? h.csat : 0);
+  if(!ok){ log("bad", `厅堂办了一场「存款送米」。${pick(["那天下雨，米只送出去一半。","隔壁行同一天在送油，人都在那边排队。","来的多是领了米就走的，填表的没几个。"])}<span class="num">新客户+${cu} · 存款+${fmtWan(dp)} · 营销费用-${h.cost}万</span>`); return {cu, dp, cd, fail:true}; }
   log("good", `厅堂办了一场「存款送米」，门口排到了人行道上。<span class="num">新客户+${cu} · 存款+${fmtWan(dp)} · 营销费用-${h.cost}万</span>`);
   return {cu, dp, cd};
 }
@@ -100,8 +117,10 @@ function doOut(kind, prospectId){
   }
   const t = o[kind]; if(!t) return null;
   apUse(1);
-  const cu = Math.round(ri(t.cust)*boost), dp = Math.round(ri(t.dep)*boost), cd = Math.round(ri(t.card)*boost);
-  custAdd(cu); depAdd(dp); cardAdd(cd);
+  const ok = roll(ODDS[1].out()), k = ok ? 1 : BALANCE.odds.L1.out.flop;
+  const cu = Math.round(ri(t.cust)*boost*k), dp = Math.round(ri(t.dep)*boost*k), cd = Math.round(ri(t.card)*boost*k);
+  custAdd(cu); depAdd(dp); if(cd) cardAdd(cd);
+  if(!ok){ log("bad", `${kind==="community" ? "去弹子石社区摆了一上午摊。天热，留下电话的只有几个。" : "老街上的铺子走了一圈。有两家说上个月刚被别的行跑过。"}<span class="num">新客户+${cu} · 存款+${fmtWan(dp)}</span>`); return {cu, dp, cd, fail:true}; }
   const where = kind==="community" ? "去弹子石社区摆了一上午摊，量血压的比办业务的多" : "沿着老街一家家铺子走过去，收了一摞名片";
   log("good", `${where}。<span class="num">新客户+${cu} · 存款+${fmtWan(dp)} · 信用卡代发+${cd}</span>`);
   return {cu, dp, cd};
@@ -113,6 +132,11 @@ function doTrain(staffId, attr){
   const t = B1().train;
   if(s[attr] >= t.max) return null;
   apUse(1);
+  if(!roll(ODDS[1].train(s))){
+    s.trained++; sfav(s.id, t.fav);
+    log("bad", `${pick([`你带${s.name}过了一遍，${pr(s)}点头。第二天碰到同样的事，还是按老办法办的。`, `讲到一半，柜台上来了客户，${s.name}起身去忙了。那天没再接上。`, `${s.name}这阵子太累，你讲的时候${pr(s)}一直在看表。`])}<span class="num">没教会</span>`);
+    return {up:0, fail:true};
+  }
   const up = Math.min(t.max - s[attr], t.attr * (R() < (s.grow-1)*0.5 ? 2 : 1));
   s[attr] += up; s.trained++;
   sfav(s.id, t.fav);
@@ -131,6 +155,12 @@ function doRally(){
   apUse(1);
   S.biz.rallied = true;
   S.staff.forEach(s => { s.fatigue = c100(s.fatigue + r.fatigue); sfav(s.id, r.fav); });
+  if(!roll(ODDS[1].rally())){
+    const k = BALANCE.odds.L1.rally, s0 = S.staff.slice().sort((a,b)=>b.fatigue-a.fatigue)[0];
+    S.biz.rallyFlop = true; if(s0) s0.fatigue = c100(s0.fatigue + k.flopFat);
+    log("bad", `八点二十开晨会，你把这个月的数写在白板上。${s0?s0.name:"有人"}站在最后面，散会后说孩子发烧，下午请了假。<span class="num">动员没起来 · 倦怠上升</span>`);
+    return {fail:true};
+  }
   log("", `八点二十开晨会，你把这个月的数写在白板上。没人说话，${pick(S.staff).name}在底下打了个呵欠。<span class="num">本月产出提高 · 倦怠上升</span>`);
   return true;
 }
@@ -140,6 +170,11 @@ function doBoss(){
   const t = B1().task;
   apUse(1);
   S.biz.bossDone = true;
+  if(!roll(ODDS[1].boss())){
+    fav("huang", BALANCE.odds.L1.boss.flopFav);
+    log("bad", S.biz.task && !S.biz.taskDone ? `材料交上去，黄世海翻了两页，说格式不对，让你重做。<span class="num">黄世海好感${BALANCE.odds.L1.boss.flopFav}</span>` : `你去支行汇报。黄世海在开会，你在走廊等到下班，没见上。<span class="num">黄世海好感${BALANCE.odds.L1.boss.flopFav}</span>`);
+    return {fail:true};
+  }
   if(S.biz.task && !S.biz.taskDone){
     S.biz.taskDone = true;
     fav("huang", t.done);

@@ -1,6 +1,9 @@
 // L5 总行:拨盘、降息、资本、同业排名、战略会、送别;全部结局都能触发;图鉴与履历
 const {load, runner} = require("./lib");
 const {G, store} = load();
+// 机制测试:行动一律成功,关掉对手追赶、出头鸟和升职变数(这些在 09-odds 单独测)
+const SURE_ODDS = () => { Object.assign(G.BALANCE.odds, {min:1, max:1}); Object.assign(G.BALANCE.chase, {after:99, spotP:0, whip:1}); Object.assign(G.BALANCE.promo, {selfNoise:0, backP:0}); };
+SURE_ODDS();
 G.setHeadless(true);
 const I = G.internals, A = G.act;
 const T = runner("06-l5");
@@ -81,8 +84,8 @@ A.survey("xn");
 T.ok("调研:片区两个半年长得快", S().biz.regions.find(r=>r.id==="xn").boost===B.survey.turns);
 A.reform();
 T.ok("机构改革:费用系数下降,一任一次", S().biz.expenseK < 1 && S().biz.reformDone && !A.reform());
-const gf = I.person("gu").fav; A.reg5();
-T.ok("监管沟通:顾清越好感上去", I.person("gu").fav > gf);
+const gf = I.person("gu").fav, rs0 = S().biz.regScore||0; A.reg5();
+T.ok("监管沟通:顾清越好感和监管分上去", I.person("gu").fav >= Math.min(100, gf+1) && (S().biz.regScore||0) > rs0, gf+"→"+I.person("gu").fav);
 
 /* ---------- 事件 ---------- */
 toL5();

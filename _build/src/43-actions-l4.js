@@ -39,6 +39,11 @@ function doTalk(id){
   const ck = canActL4("talk"); if(!ck.ok) return null;
   const p = person(id); if(!p) return null;
   apUse(1);
+  if(!roll(ODDS[4].talk(id))){
+    fav(id, -2); S.biz.unity = c100(S.biz.unity - 2);
+    log("bad", `你和${p.name}谈了一个钟头。${pick(["说到分工，两个人都停了一下，后面的话就客气了。","谈完第二天，班子会上有人提了句「有些事还是上会说比较好」。",p.name+"一直在记，一句也没接。"])}<span class="num">${p.name}好感-2 · 团结-2</span>`);
+    return {fail:true};
+  }
   fav(id, B4().unity.talk); S.biz.unity = c100(S.biz.unity + 3);
   const lines = {
     zhouqm: "周启明坐下来先提南岸：「你那时候报的数，我都记得。」两个人都笑了。",
@@ -65,8 +70,9 @@ function doPushProj(pid){
   const ck = canActL4("pushp"); if(!ck.ok) return null;
   const p = S.biz.projects.find(x=>x.id===pid && !x.done); if(!p) return null;
   apUse(1);
-  p.prog++;
   const s = STRAT_L4.find(x=>x.id===p.id);
+  if(!roll(ODDS[4].pushp())){ log("bad", `你去${s.name}的现场看了一天。${pick(["审批卡在区里，进度表那一格没动。","合作方换了对接人，前面谈的要重新过一遍。"])}<span class="num">进度没动</span>`); return {fail:true}; }
+  p.prog++;
   if(p.prog >= s.q) finishProject(p);
   else log("", `你去${s.name}的现场看了一天。回来的车上，项目组长把进度表改了一格。`);
   return true;
@@ -84,7 +90,7 @@ function doQuota(){
   const ck = canActL4("quota"); if(!ck.ok) return null;
   const q = B4().askQuota;
   apUse(1);
-  if(person("lu").fav >= q.needFav){
+  if(roll(ODDS[4].quota())){
     S.biz.capital += q.add; fav("lu", q.fav);
     log("good", `你在总行等了两天。第三天下午，陆明远把一份批复放在桌上：「就这一次。」<span class="num">资本额度+${fmtYi(q.add)}</span>`);
     return true;
@@ -97,6 +103,7 @@ function doRegulator(){
   const ck = canActL4("regulator"); if(!ck.ok) return null;
   const r = B4().regTalk;
   apUse(1);
+  if(!roll(ODDS[4].regulator())){ fav("gu", 1); log("bad", `你去监管局汇报。顾清越问到第三个问题，是万州一笔展期的来龙去脉。你说回去核实，她在本子上记了一笔。<span class="num">没加分</span>`); return {fail:true}; }
   fav("gu", r.fav); S.biz.regScore = Math.min(10, (S.biz.regScore||0) + r.score*0.5);
   log("", `你去监管局汇报。顾清越坐在长桌对面，面前一个笔记本，一支笔，一杯自己带的水。她问了三个问题，都是不良。<span class="num">顾清越好感+${r.fav}</span>`);
   return true;

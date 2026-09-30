@@ -186,7 +186,7 @@ function monthStartL2(first){
   S.ap = S.apMax = BALANCE.ap[2];
   if(S.flags.apDebt){ S.ap = Math.max(0, S.ap - S.flags.apDebt); S.flags.apDebt = 0; }
   S.month = {dep0: depTotal(), loan0: S.biz.loans, npl0: S.biz.npl, fee:0, profit:0, compHit:0, newNpl:0, landed:[], defaults:[], expired:0};
-  S.biz.outlets.forEach(o => { o.supervised = false; o.dep0 = o.dep; });
+  S.biz.outlets.forEach(o => { o.supervised = false; o.supFlop = false; o.dep0 = o.dep; });
   S.biz.campaignDone = false; S.biz.reported = false;
   if(!first) S.biz.budget = r1(S.biz.budget + b.budgetMonthly);
   fillQueue();
@@ -212,7 +212,7 @@ function settleL2(){
   S.biz.outlets.forEach(o => {
     const dk = delegK(o.mgr), mk = moraleK(o);
     let inc = o.dep * b.growth * dk * mk * (o.mult||1) * kmh;
-    if(o.supervised) inc *= b.supervise.mult;
+    if(o.supervised && !o.supFlop) inc *= b.supervise.mult;
     inc += gauss() * o.dep * b.noise;
     if(!o.mgr) inc *= 0.5;
     o.dep = Math.round(o.dep + inc);
@@ -259,7 +259,7 @@ function settleL2(){
   S.track.rankHistory.push(S.kpi.rank);
   S.track.scoreHistory.push(S.kpi.score);
   S.track.depHistory.push(Math.round(depTotal()));
-  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0;
+  S.biz.rankStreak = (S.kpi.rank === 1) ? (S.biz.rankStreak||0)+1 : 0; rivalReact();
   S.report = {
     turn:S.turn, m:S.m, year:S.year,
     dep: depTotal(), dDep: depTotal() - M.dep0, loans:S.biz.loans, dLoan:S.biz.loans - M.loan0,
