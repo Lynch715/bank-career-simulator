@@ -14,15 +14,18 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script id="iosfix">
-/* iPhone 从桌面打开时,系统报的可视高度比屏幕短一截,底部会空出来。按屏幕实际高度撑满。 */
+/* iPhone 从桌面打开时,系统给网页的高度比屏幕短一截,底部会空出来。直接按屏幕高度撑满。 */
 (function(){
-  var ios=/iPhone|iPad|iPod/.test(navigator.userAgent), sa=navigator.standalone===true;
+  var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
+  var sa=navigator.standalone===true || (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches));
   if(!ios||!sa) return;
+  var r=document.documentElement; r.classList.add('iosfix');
   function fix(){
-    var land=innerWidth>innerHeight, h=land?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height), r=document.documentElement;
-    if(h>innerHeight+2){ r.style.setProperty('--apph',h+'px'); r.style.setProperty('--apgap',(h-innerHeight)+'px'); r.classList.add('iosfix'); } else r.classList.remove('iosfix');
+    var land=innerWidth>innerHeight, h=land?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height);
+    h=Math.max(h, innerHeight);
+    r.style.setProperty('--apph',h+'px'); r.style.setProperty('--apgap',Math.max(0,h-innerHeight)+'px');
   }
-  fix(); addEventListener('resize',fix); addEventListener('orientationchange',function(){setTimeout(fix,300)});
+  fix(); addEventListener('resize',fix); addEventListener('orientationchange',function(){setTimeout(fix,300)}); addEventListener('pageshow',fix);
 })();
 </script>
 <style>
@@ -52,7 +55,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 #app{position:fixed;inset:0}
-html.iosfix,html.iosfix body{height:var(--apph)}
+html.iosfix,html.iosfix body{height:var(--apph);background:var(--card)}
 html.iosfix #app,html.iosfix .stage,html.iosfix .overlay{bottom:auto;height:var(--apph)}
 body{background:var(--paper);color:var(--text);font:14px/1.6 var(--font);-webkit-font-smoothing:antialiased;overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
@@ -5772,7 +5775,7 @@ const UI = {
     $("pClose").onclick = () => { st.classList.add("hidden"); if(UI.tab==="people") UI.showTab("colM"); };
   },
   showMenu(){
-    UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。当前随机种子 ${S.seed}。`, opts:[
+    UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。当前随机种子 ${S.seed}。\n\n<small class="muted">屏幕 ${screen.width}×${screen.height} · 可视 ${innerWidth}×${innerHeight} · ${document.documentElement.classList.contains("iosfix")?"桌面模式 "+getComputedStyle(document.documentElement).getPropertyValue("--apph"):"浏览器模式"}</small>`, opts:[
       {t:"切换亮色 / 暗色", s:"", fn:()=>{ const r = document.documentElement; const cur = r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); r.dataset.theme = cur==="dark"?"light":"dark"; }},
       {t:"放到桌面", s:"装好以后断网也能玩", fn:()=>INSTALL.show(true)},
       {t:"重新开一局", s:"当前进度会被覆盖", fn:()=>{ clearSave(); UI.start(); }},
