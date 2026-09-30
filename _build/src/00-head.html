@@ -21,7 +21,10 @@
   if(!ios||!sa) return;
   var r=document.documentElement; r.classList.add('iosfix');
   function fix(){
-    var land=innerWidth>innerHeight, h=land?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height);
+    // 实测(iOS 26):屏幕 393×852,系统给的视口 462×932,按宽度缩放后只盖到屏幕的 793,底下少一截状态栏的高度。
+    // 按视口宽度 × 屏幕长宽比,算出铺满整块屏幕需要的高度。
+    var a=Math.max(screen.width,screen.height), b=Math.min(screen.width,screen.height), land=innerWidth>innerHeight;
+    var h=Math.round(innerWidth*(land?b/a:a/b));
     h=Math.max(h, innerHeight);
     r.style.setProperty('--apph',h+'px'); r.style.setProperty('--apgap',Math.max(0,h-innerHeight)+'px');
   }
