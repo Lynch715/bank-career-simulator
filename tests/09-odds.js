@@ -98,9 +98,9 @@ let evErrs = 0;
 for(const lvEv of [I.EVENTS, I.EVENTS_L2, I.EVENTS_L3, I.EVENTS_L4, I.EVENTS_L5]) evErrs += 0;
 T.ok("五十多个成败选项", Object.keys(I.EVENT_ODDS).length >= 50, Object.keys(I.EVENT_ODDS).length);
 
-/* 高手机器人:L1 拿第一的月份约三成,前三约七成(12 局) */
+/* 高手机器人:L1 拿第一的月份约四成,前三九成上下(12 局;行动点 4) */
 let n = 0, first = 0, top3 = 0;
 for(let i=0;i<12;i++){ G.simGame("expert", 70000+i, 24, {onTurn: s => { if(s.lv===1 && s.kpi.rank){ n++; if(s.kpi.rank===1) first++; if(s.kpi.rank<=3) top3++; } }}); }
-T.ok("高手 L1 拿第一的月份在两成到四成五之间", pct(first,n) >= 20 && pct(first,n) <= 45, pct(first,n)+"%");
-T.ok("高手 L1 进前三的月份在六成到九成之间", pct(top3,n) >= 60 && pct(top3,n) <= 90, pct(top3,n)+"%");
+T.ok("高手 L1 拿第一的月份在两成五到五成五之间", pct(first,n) >= 25 && pct(first,n) <= 55, pct(first,n)+"%");
+T.ok("高手 L1 进前三的月份在七成到九成八之间", pct(top3,n) >= 70 && pct(top3,n) <= 98, pct(top3,n)+"%");
 T.done();

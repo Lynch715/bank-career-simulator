@@ -25,10 +25,10 @@ const click = el => el.dispatchEvent(new w.MouseEvent("click", {bubbles:true}));
   T.ok("主面板出现 6 个行动", d.querySelectorAll("[data-act]").length === 6);
   // 手点一次厅堂营销
   const hall = $('[data-act="hall"]'); click(hall); await sleep(20);
-  T.ok("点厅堂营销扣了行动点", w.THSZ.S.ap === 2);
+  T.ok("点厅堂营销扣了行动点", w.THSZ.S.ap === w.THSZ.BALANCE.ap[1] - 1);
   // 手点一张客户卡 + 选产品
   const cc = $(".cc:not(.done)"); if(cc){ click(cc); await sleep(20); click($("#modal .opt")); await sleep(20); }
-  T.ok("维护客户扣了行动点", w.THSZ.S.ap === 1);
+  T.ok("维护客户扣了行动点", w.THSZ.S.ap === w.THSZ.BALANCE.ap[1] - 2);
 
   let seen = new Set(), decomp = false, l2Turns = 0, lastT = null, guard = 0, stmtClicked = false, handover = false;
   while(guard++ < 6000){

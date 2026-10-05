@@ -12,14 +12,14 @@ G.newGame({seed:11});
 const S = ()=>G.S;
 T.ok("开局存款 3 亿", Math.round(I.depTotal())===30000, I.depTotal());
 T.ok("开局 40 张客户卡、5 名员工", S().biz.cards.length===40 && S().staff.length===5);
-T.ok("L1 行动点 3", S().ap===3);
+T.ok("L1 行动点 4", S().ap===G.BALANCE.ap[1] && S().ap===4);
 
 // 维护:挖他行资产
 let c = S().biz.cards.find(x=>x.other>200 && x.risk<=2);
 let own0 = c.own, oth0 = c.other;
 let r = A.maintain(c.id, "deposit");
 T.ok("维护客户把他行资产挪过来", c.own>own0 && c.own+c.other===own0+oth0, r.pull);
-T.ok("维护耗 1 AP", S().ap===2);
+T.ok("维护耗 1 AP", S().ap===G.BALANCE.ap[1]-1);
 // 适当性红线
 const clean0 = S().core.clean;
 let c2 = S().biz.cards.find(x=>x.risk<=2 && x.id!==c.id);
@@ -53,7 +53,7 @@ G.endTurn(); G.runJobs();
 T.ok("月结后回合推进", S().turn===2);
 T.ok("月报记录排名", S().track.rankHistory.length===1);
 T.ok("月初营销费用补 2 万", S().biz.budget >= 2);
-T.ok("AP 重置", S().ap===3 || S().ap===2);
+T.ok("AP 重置", S().ap===G.BALANCE.ap[1] || S().ap===G.BALANCE.ap[1]-1);
 
 // KPI 折算:flow 按时序,封顶 120%
 G.newGame({seed:12});
