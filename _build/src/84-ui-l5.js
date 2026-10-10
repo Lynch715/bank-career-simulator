@@ -4,7 +4,7 @@
 Object.assign(UI, {
   renderL5(){
     const b = B5(), B = S.biz;
-    const acts = L5_ACTIONS.map(a => { const ck = canActL5(a.id); return `<button class="act" data-act5="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = L5_ACTIONS.map(a => { const ck = canActL5(a.id); return `<button class="act" data-act5="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const dials = DIAL_DEF.map(d => `<div class="dial"><div class="dh"><b>${d.name}</b><span class="muted">${d.tip}</span></div>
       <div class="dr"><small>${d.lo}</small><input type="range" min="1" max="5" step="1" value="${B.dials[d.k]}" data-dial="${d.k}" aria-label="${d.name}"><small>${d.hi}</small><b class="num">${B.dials[d.k]}</b></div></div>`).join("");
     const peers = (S.kpi.table||[]).map((p,i) => `<tr class="${p.me?"me":""}"><td class="n">${i+1}</td><td>${p.name}</td><td class="s num">${fmtWy(p.score)}</td></tr>`).join("");

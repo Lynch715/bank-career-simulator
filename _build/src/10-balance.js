@@ -8,7 +8,11 @@ const BALANCE = {
   metaKey: "thsz_meta",
 
   start: { age:30, careerYear:8, lv:1 },
-  ap: {1:4, 2:4, 3:4, 4:4, 5:3},
+  ap: {1:4, 2:5, 3:6, 4:6, 5:6},
+  // 大事占几个点
+  apCost: { 3:{open:2, platform:2}, 4:{startp:2, quota:2}, 5:{survey:2, reform:3} },
+  // 推不掉的会:每回合 0/1/2/3 件的概率
+  meet: { dist: { 2:[.55,.4,.05], 3:[.25,.5,.25], 4:[.1,.4,.4,.1], 5:[.05,.25,.4,.3] } },
   turnMonths: {1:1, 2:1, 3:3, 4:3, 5:6},
   tenure: {1:24, 2:24, 3:12, 4:12, 5:8},        // 最低任期(回合)
   transYears: {1:2, 2:2, 3:2, 4:3},              // 过渡期年数
@@ -54,7 +58,7 @@ const BALANCE = {
           rally:{ base:0.86, fat:0.008, flopMult:0.5, flopFat:8 },
           boss:{ base:0.78, fav:0.006, flopFav:-2 } },
     L2: { supervise:{ base:0.62, morale:0.006, fav:0.004 }, push:{ base:0.68, visit:0.06 }, campaign:{ base:0.6, morale:0.01, flop:0.35 }, report:{ base:0.68, fav:0.006 } },
-    L3: { open:{ base:0.55, heat:0.004, coldRamp:0.5 }, renovate:0.7, report:{ base:0.62, fav:0.006 } },
+    L3: { open:{ base:0.55, heat:0.004, coldRamp:0.5 }, renovate:0.7, squat:{ base:0.6, fav:0.006 }, report:{ base:0.62, fav:0.006 } },
     L4: { talk:{ base:0.58, fav:0.008 }, push:0.72, quota:{ base:0.5, fav:0.02 }, reg:{ base:0.68, fav:0.006 } },
     L5: { survey:0.7, reg:{ base:0.65, fav:0.006 } },
   },
@@ -160,7 +164,7 @@ const BALANCE = {
     expense: 300,               // 月费用(人工+运营,一年 3600 万)
     provision: 0.7,
     nplBase: { rate:0.010, resolve:0.07 },
-    kpiTarget: { dep:40000, loan:30000, profit:6800, fee:600, npl:1.5, comp:100 },
+    kpiTarget: { dep:42400, loan:31800, profit:7200, fee:640, npl:1.5, comp:100 },
     kpiGrowth: 1.12, kpiGrowthYears: 1,
     corpShare: 12000,           // 分解指标时对公条线先扣掉的存款任务
     queue: { min:2, max:3, microShare:0.6, micro:[100,600], corp:[600,2000], relP:0.15, expireMsg:true },
@@ -193,6 +197,7 @@ const BALANCE = {
     outlet: { build:300, costY:150, rampMin:2000, rampMax:6000, capMin:20000, capMax:50000, repOpen:5, perBranch:4 },
     closeOutlet: { lossShare:0.3, rep:-10, saveY:150 },
     renovate: { cost:200, eff:0.15 },
+    squat: { boost:0.3 },             // 下支行蹲点:这季存款增量多三成
     tilt: { corpLoan:1.35, retailDep:1.25, retailLoan:1.2, riskNpl:0.85, riskRecover:1.2, opsComp:3, opsExpense:0.95, hrSkill:1, others:-3 },
     dispose: { perQ:3, riskBonus:1,
       collect:{ cost:0.02, q:2, rec:0.30 }, sue:{ cost:0.05, q:4, rec:0.50, noiseP:0.2 }, restr:{ cost:0, q:0, redef:0.4, redefQ:2 }, writeoff:{ quotaY:40000 } },
@@ -201,7 +206,7 @@ const BALANCE = {
     platform: { size:[200000,500000], clean:8, gov:10, defP:0.35, delayM:[24,48] },
     appoint: { oldFavHit:-15, newFav:10 },
     reportUp: { fav:4 },
-    kpiTarget: { profit:70000, dep:300000, loan:300000, npl:2.0, eff:null, comp:100 },
+    kpiTarget: { profit:80500, dep:366000, loan:345000, npl:2.0, eff:null, comp:100 },
     effTargetK: 1.03,
     kpiGrowth: 1.08, kpiGrowthYears: 1,
     bonusTop: 3, bonusRep: 3, bonusTrust: 3,
@@ -223,7 +228,7 @@ const BALANCE = {
     regTalk: { fav:5, score:4 },
     rating: { base:2.5, nplK:0.8, compK:0.03, crisisBad:1, crisisGood:-0.5 },
     reportUp: { fav:4 },
-    kpiTarget: { profit:600000, scale:6000000, npl:1.5, roe:15, rating:2, proj:1 },
+    kpiTarget: { profit:618000, scale:6180000, npl:1.5, roe:15, rating:2, proj:1 },
     kpiGrowth: 1.08, kpiGrowthYears: 1,
     bonusTop: 3, bonusRep: 3, bonusTrust: 3,
     crisisAt: [5,8],
@@ -260,7 +265,7 @@ const BALANCE = {
       {id:"donglian",name:"东联银行", dep:900000000, g:0.036},
       {id:"pingchuan",name:"平川银行", dep:800000000, g:0.035},
     ],
-    endScore: { top:107, mid:101 },
+    endScore: { top:106.5, mid:101 },
     bonusTop: 2, bonusRep: 2, bonusTrust: 2,
   },
 };

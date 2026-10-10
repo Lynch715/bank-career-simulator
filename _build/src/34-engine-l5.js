@@ -152,13 +152,14 @@ function yearEndL5(){ S.biz.scoreLog.push(S.kpi.score); }
 function canActL5(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"这半年的行动点用完了"};
+  if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
   if(id==="reform" && S.biz.reformDone) return {ok:false, why:"机构改革已经做过了"};
   return {ok:true};
 }
 function doSurvey(rid){
   const ck = canActL5("survey"); if(!ck.ok) return null;
   const r = S.biz.regions.find(x=>x.id===rid); if(!r) return null;
-  apUse(1);
+  apUse(apCost("survey"));
   if(!roll(ODDS[5].survey())){ r.boost = 1; log("bad", `你去${r.name}调研了一周。分行报上来的材料跟你看到的对不上，时间都花在对数上了。<span class="num">${r.name}只长半年</span>`); keyEvent(`总行行长任上去${r.name}调研`); return {fail:true}; }
   r.boost = B5().survey.turns; S.biz.csat = c100(S.biz.csat + B5().survey.rep);
   const lines = {
@@ -185,7 +186,7 @@ function doReg5(){
 function doReform(){
   const ck = canActL5("reform"); if(!ck.ok) return null;
   const r = B5().reform;
-  apUse(1); S.biz.reformDone = true; S.biz.expenseK *= r.expense; S.biz.csat = c100(S.biz.csat + r.rep);
+  apUse(apCost("reform")); S.biz.reformDone = true; S.biz.expenseK *= r.expense; S.biz.csat = c100(S.biz.csat + r.rep);
   keyEvent("推动总行机构改革，压减一个管理层级");
   log("warn", "机构改革的文件发下去了。全国二级分行的管理层级压掉一层，四千多个岗位要重新竞聘。那一周，你的手机响了两百多次。");
   return true;

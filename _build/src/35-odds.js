@@ -38,6 +38,7 @@ const ODDS = {
   },
   3: {
     open: a => { const k = BALANCE.odds.L3.open; return a ? k.base + (a.heat - a.comp*0.5)*k.heat : null; },
+    squat: x => { const k = BALANCE.odds.L3.squat; return x ? k.base + (favOf(x.mgr)-50)*k.fav : null; },
     renovate: () => BALANCE.odds.L3.renovate,
     reportup: () => { const k = BALANCE.odds.L3.report; return k.base + (favOf("lu")-50)*k.fav; },
   },

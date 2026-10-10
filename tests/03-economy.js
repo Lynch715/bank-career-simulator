@@ -113,7 +113,7 @@ function toL2(mode, seed){
 toL2("balanced", 31);
 let s2 = G.S;
 T2.ok("进入 L2:四个网点 + 对公团队", s2.lv===2 && s2.biz.outlets.length===4 && !!s2.biz.corp.lead);
-T2.ok("L2 行动点 4", s2.ap===4 || s2.ap===3);
+T2.ok("L2 行动点 5", s2.ap===G.BALANCE.ap[2] || s2.ap===G.BALANCE.ap[2]-1);
 T2.ok("支行存款约 40 亿起步", Math.abs(I.depTotal()/10000 - 40) < 4, (I.depTotal()/10000).toFixed(1)+"亿");
 T2.ok("弹子石交给了 L1 的旧部", !!G.S.biz.outlets[0].mgr && I.person(G.S.biz.outlets[0].mgr).kind==="sub");
 T2.ok("弹子石负责人的能力来自 L1 的属性", I.skillOf(G.S.biz.outlets[0].mgr) === I.person(G.S.biz.outlets[0].mgr).skill);

@@ -98,7 +98,7 @@ function monthStartL3(first){
   S.ap = S.apMax = BALANCE.ap[3];
   if(S.flags.apDebt){ S.ap = Math.max(0, S.ap - S.flags.apDebt); S.flags.apDebt = 0; }
   S.month = {dep0: depTotal(), loan0: loansTotalL3(), npl0: nplL3(), profit:0, fee:0, spent:0, newNpl:0, recovered:0, defaults:[], nanan:[]};
-  S.biz.branches.forEach(x => x.dep0 = x.dep);
+  S.biz.branches.forEach(x => { x.dep0 = x.dep; x.squat = false; x.squatK = 0; });
   S.biz.disposedQ = 0; S.biz.reported = false;
   if(!first) S.biz.budget = Math.round(S.biz.budget + b.budgetQ);
 }
@@ -111,7 +111,7 @@ function settleL3(){
   // 2 支行存款(委托给支行行长)
   S.biz.branches.forEach(x => {
     const a = area(x.area);
-    let inc = x.dep * areaGrowth(a) * delegK3(x.mgr) * (1 + x.renov) * (tilt==="retail" ? t.retailDep : 1);
+    let inc = x.dep * areaGrowth(a) * delegK3(x.mgr) * (1 + x.renov) * (1 + (x.squatK||0)) * (tilt==="retail" ? t.retailDep : 1);
     inc += gauss() * x.dep * 0.003;
     x.dep = Math.round(x.dep + inc); x.lastInc = x.dep - x.dep0;
   });

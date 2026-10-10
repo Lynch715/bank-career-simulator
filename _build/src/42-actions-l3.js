@@ -4,6 +4,7 @@
 const ACTIONS_L3 = [
   {id:"open",     name:"开网点",     desc:"在一个片区开新网点，投入三百万"},
   {id:"close",    name:"撤并网点",   desc:"撤掉一个网点，省费用，片区口碑掉"},
+  {id:"squat",    name:"下支行蹲点", desc:"去一个支行蹲几天，这个季度存款长得快一点"},
   {id:"renovate", name:"网点改造",   desc:"给一个支行做智能化改造，效能上去"},
   {id:"tilt",     name:"条线倾斜",   desc:"资源往一个部门偏，其他部门不高兴"},
   {id:"appoint",  name:"干部任免",   desc:"换一个支行行长"},
@@ -14,9 +15,11 @@ const ACTIONS_L3 = [
 function canActL3(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
+  if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
   const b = B3();
   if(id==="open" && S.biz.budget < b.outlet.build) return {ok:false, why:`发展费用不够（要${b.outlet.build}万）`};
   if(id==="renovate" && S.biz.budget < b.renovate.cost) return {ok:false, why:`发展费用不够（要${b.renovate.cost}万）`};
+  if(id==="squat" && !S.biz.branches.some(x=>!x.squat)) return {ok:false, why:"这个季度每个支行都去过了"};
   if(id==="close" && !S.biz.branches.some(x=>x.outlets>1)) return {ok:false, why:"没有能撤的网点"};
   if(id==="platform" && S.biz.platformDone.length >= PLATFORMS_L3.length) return {ok:false, why:"区里的平台都谈过了"};
   if(id==="reportup" && S.biz.reported) return {ok:false, why:"这个季度已经回过主城了"};
@@ -27,7 +30,7 @@ function doOpenOutlet(aid){
   const ck = canActL3("open"); if(!ck.ok) return null;
   const a = area(aid); if(!a) return null;
   const o = B3().outlet;
-  apUse(1);
+  apUse(apCost("open"));
   S.biz.budget -= o.build; S.month.spent += o.build;
   // 爬坡速度看热度和竞争,封顶看人口
   const cold = !roll(ODDS[3].open(a));
@@ -58,6 +61,16 @@ function doCloseOutlet(bid){
   return {loss};
 }
 
+function doSquatL3(bid){
+  const ck = canActL3("squat"); if(!ck.ok) return null;
+  const x = branch(bid); if(!x || x.squat) return null;
+  const m = person(x.mgr), nm = m ? m.name : "支行行长";
+  apUse(1); x.squat = true;
+  if(!roll(ODDS[3].squat(x))){ if(m) fav(m.id, -2); log("bad", `你在${x.name}蹲了三天。${nm}陪着跑了三天客户，回来跟人说，行长是来挑刺的。<span class="num">这季没长起来</span>`); return {fail:true}; }
+  x.squatK = B3().squat.boost; if(m) fav(m.id, 3);
+  log("good", `你在${x.name}蹲了三天，跟${nm}跑了八家客户。最后一天晚上，${nm}把下个季度的客户名单拿给你看。`);
+  return true;
+}
 function doRenovate(bid){
   const ck = canActL3("renovate"); if(!ck.ok) return null;
   const x = branch(bid); if(!x || x.renov >= 0.3) return null;
@@ -104,7 +117,7 @@ function doPlatform(){
   const ck = canActL3("platform"); if(!ck.ok) return null;
   const pf = PLATFORMS_L3.find(p => !S.biz.platformDone.includes(p.id));
   if(!pf) return null;
-  apUse(1);
+  apUse(apCost("platform"));
   const b = B3().platform;
   const size = Math.round(rr(b.size) / 10000) * 10000;
   S.biz.platformOffer = {id:pf.id, size};

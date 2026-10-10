@@ -305,6 +305,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .odds-sure{background:rgba(47,107,79,.14);color:var(--good)}
 .odds-maybe{background:rgba(154,106,31,.14);color:var(--warn)}
 .odds-risky{background:rgba(160,71,58,.14);color:var(--bad)}
+.apc{font-style:normal;font-size:12px;font-weight:600;margin-left:6px;padding:0 6px;border-radius:9px;vertical-align:2px;white-space:nowrap;font-family:var(--font);letter-spacing:0;border:1px solid var(--line);color:var(--muted)}
 .pc.locked{opacity:.5;border-style:dashed}
 .dial{padding:8px 0;border-bottom:1px dashed var(--line)}
 .dial:last-child{border-bottom:0}
@@ -397,7 +398,11 @@ const BALANCE = {
   metaKey: "thsz_meta",
 
   start: { age:30, careerYear:8, lv:1 },
-  ap: {1:4, 2:4, 3:4, 4:4, 5:3},
+  ap: {1:4, 2:5, 3:6, 4:6, 5:6},
+  // 大事占几个点
+  apCost: { 3:{open:2, platform:2}, 4:{startp:2, quota:2}, 5:{survey:2, reform:3} },
+  // 推不掉的会:每回合 0/1/2/3 件的概率
+  meet: { dist: { 2:[.55,.4,.05], 3:[.25,.5,.25], 4:[.1,.4,.4,.1], 5:[.05,.25,.4,.3] } },
   turnMonths: {1:1, 2:1, 3:3, 4:3, 5:6},
   tenure: {1:24, 2:24, 3:12, 4:12, 5:8},        // 最低任期(回合)
   transYears: {1:2, 2:2, 3:2, 4:3},              // 过渡期年数
@@ -443,7 +448,7 @@ const BALANCE = {
           rally:{ base:0.86, fat:0.008, flopMult:0.5, flopFat:8 },
           boss:{ base:0.78, fav:0.006, flopFav:-2 } },
     L2: { supervise:{ base:0.62, morale:0.006, fav:0.004 }, push:{ base:0.68, visit:0.06 }, campaign:{ base:0.6, morale:0.01, flop:0.35 }, report:{ base:0.68, fav:0.006 } },
-    L3: { open:{ base:0.55, heat:0.004, coldRamp:0.5 }, renovate:0.7, report:{ base:0.62, fav:0.006 } },
+    L3: { open:{ base:0.55, heat:0.004, coldRamp:0.5 }, renovate:0.7, squat:{ base:0.6, fav:0.006 }, report:{ base:0.62, fav:0.006 } },
     L4: { talk:{ base:0.58, fav:0.008 }, push:0.72, quota:{ base:0.5, fav:0.02 }, reg:{ base:0.68, fav:0.006 } },
     L5: { survey:0.7, reg:{ base:0.65, fav:0.006 } },
   },
@@ -549,7 +554,7 @@ const BALANCE = {
     expense: 300,               // 月费用(人工+运营,一年 3600 万)
     provision: 0.7,
     nplBase: { rate:0.010, resolve:0.07 },
-    kpiTarget: { dep:40000, loan:30000, profit:6800, fee:600, npl:1.5, comp:100 },
+    kpiTarget: { dep:42400, loan:31800, profit:7200, fee:640, npl:1.5, comp:100 },
     kpiGrowth: 1.12, kpiGrowthYears: 1,
     corpShare: 12000,           // 分解指标时对公条线先扣掉的存款任务
     queue: { min:2, max:3, microShare:0.6, micro:[100,600], corp:[600,2000], relP:0.15, expireMsg:true },
@@ -582,6 +587,7 @@ const BALANCE = {
     outlet: { build:300, costY:150, rampMin:2000, rampMax:6000, capMin:20000, capMax:50000, repOpen:5, perBranch:4 },
     closeOutlet: { lossShare:0.3, rep:-10, saveY:150 },
     renovate: { cost:200, eff:0.15 },
+    squat: { boost:0.3 },             // 下支行蹲点:这季存款增量多三成
     tilt: { corpLoan:1.35, retailDep:1.25, retailLoan:1.2, riskNpl:0.85, riskRecover:1.2, opsComp:3, opsExpense:0.95, hrSkill:1, others:-3 },
     dispose: { perQ:3, riskBonus:1,
       collect:{ cost:0.02, q:2, rec:0.30 }, sue:{ cost:0.05, q:4, rec:0.50, noiseP:0.2 }, restr:{ cost:0, q:0, redef:0.4, redefQ:2 }, writeoff:{ quotaY:40000 } },
@@ -590,7 +596,7 @@ const BALANCE = {
     platform: { size:[200000,500000], clean:8, gov:10, defP:0.35, delayM:[24,48] },
     appoint: { oldFavHit:-15, newFav:10 },
     reportUp: { fav:4 },
-    kpiTarget: { profit:70000, dep:300000, loan:300000, npl:2.0, eff:null, comp:100 },
+    kpiTarget: { profit:80500, dep:366000, loan:345000, npl:2.0, eff:null, comp:100 },
     effTargetK: 1.03,
     kpiGrowth: 1.08, kpiGrowthYears: 1,
     bonusTop: 3, bonusRep: 3, bonusTrust: 3,
@@ -612,7 +618,7 @@ const BALANCE = {
     regTalk: { fav:5, score:4 },
     rating: { base:2.5, nplK:0.8, compK:0.03, crisisBad:1, crisisGood:-0.5 },
     reportUp: { fav:4 },
-    kpiTarget: { profit:600000, scale:6000000, npl:1.5, roe:15, rating:2, proj:1 },
+    kpiTarget: { profit:618000, scale:6180000, npl:1.5, roe:15, rating:2, proj:1 },
     kpiGrowth: 1.08, kpiGrowthYears: 1,
     bonusTop: 3, bonusRep: 3, bonusTrust: 3,
     crisisAt: [5,8],
@@ -649,7 +655,7 @@ const BALANCE = {
       {id:"donglian",name:"东联银行", dep:900000000, g:0.036},
       {id:"pingchuan",name:"平川银行", dep:800000000, g:0.035},
     ],
-    endScore: { top:107, mid:101 },
+    endScore: { top:106.5, mid:101 },
     bonusTop: 2, bonusRep: 2, bonusTrust: 2,
   },
 };
@@ -2084,7 +2090,7 @@ function monthStartL3(first){
   S.ap = S.apMax = BALANCE.ap[3];
   if(S.flags.apDebt){ S.ap = Math.max(0, S.ap - S.flags.apDebt); S.flags.apDebt = 0; }
   S.month = {dep0: depTotal(), loan0: loansTotalL3(), npl0: nplL3(), profit:0, fee:0, spent:0, newNpl:0, recovered:0, defaults:[], nanan:[]};
-  S.biz.branches.forEach(x => x.dep0 = x.dep);
+  S.biz.branches.forEach(x => { x.dep0 = x.dep; x.squat = false; x.squatK = 0; });
   S.biz.disposedQ = 0; S.biz.reported = false;
   if(!first) S.biz.budget = Math.round(S.biz.budget + b.budgetQ);
 }
@@ -2097,7 +2103,7 @@ function settleL3(){
   // 2 支行存款(委托给支行行长)
   S.biz.branches.forEach(x => {
     const a = area(x.area);
-    let inc = x.dep * areaGrowth(a) * delegK3(x.mgr) * (1 + x.renov) * (tilt==="retail" ? t.retailDep : 1);
+    let inc = x.dep * areaGrowth(a) * delegK3(x.mgr) * (1 + x.renov) * (1 + (x.squatK||0)) * (tilt==="retail" ? t.retailDep : 1);
     inc += gauss() * x.dep * 0.003;
     x.dep = Math.round(x.dep + inc); x.lastInc = x.dep - x.dep0;
   });
@@ -2510,13 +2516,14 @@ function yearEndL5(){ S.biz.scoreLog.push(S.kpi.score); }
 function canActL5(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"这半年的行动点用完了"};
+  if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
   if(id==="reform" && S.biz.reformDone) return {ok:false, why:"机构改革已经做过了"};
   return {ok:true};
 }
 function doSurvey(rid){
   const ck = canActL5("survey"); if(!ck.ok) return null;
   const r = S.biz.regions.find(x=>x.id===rid); if(!r) return null;
-  apUse(1);
+  apUse(apCost("survey"));
   if(!roll(ODDS[5].survey())){ r.boost = 1; log("bad", `你去${r.name}调研了一周。分行报上来的材料跟你看到的对不上，时间都花在对数上了。<span class="num">${r.name}只长半年</span>`); keyEvent(`总行行长任上去${r.name}调研`); return {fail:true}; }
   r.boost = B5().survey.turns; S.biz.csat = c100(S.biz.csat + B5().survey.rep);
   const lines = {
@@ -2543,7 +2550,7 @@ function doReg5(){
 function doReform(){
   const ck = canActL5("reform"); if(!ck.ok) return null;
   const r = B5().reform;
-  apUse(1); S.biz.reformDone = true; S.biz.expenseK *= r.expense; S.biz.csat = c100(S.biz.csat + r.rep);
+  apUse(apCost("reform")); S.biz.reformDone = true; S.biz.expenseK *= r.expense; S.biz.csat = c100(S.biz.csat + r.rep);
   keyEvent("推动总行机构改革，压减一个管理层级");
   log("warn", "机构改革的文件发下去了。全国二级分行的管理层级压掉一层，四千多个岗位要重新竞聘。那一周，你的手机响了两百多次。");
   return true;
@@ -2608,6 +2615,7 @@ const ODDS = {
   },
   3: {
     open: a => { const k = BALANCE.odds.L3.open; return a ? k.base + (a.heat - a.comp*0.5)*k.heat : null; },
+    squat: x => { const k = BALANCE.odds.L3.squat; return x ? k.base + (favOf(x.mgr)-50)*k.fav : null; },
     renovate: () => BALANCE.odds.L3.renovate,
     reportup: () => { const k = BALANCE.odds.L3.report; return k.base + (favOf("lu")-50)*k.fav; },
   },
@@ -2690,6 +2698,130 @@ function whipTargets(){
   S.kpi.whipped = S.year;
   return true;
 }
+/* =====================================================================
+   推不掉的会:从支行起,每回合开头冒出几件要你到场的事。
+   去占 1 点;不去,对应的人或指标挨一下。职务越高,会越多
+   ===================================================================== */
+const subsFav = n => subordinates().forEach(p => fav(p.id, n));
+const meetComp = n => { S.kpi.comp = c100(S.kpi.comp + n); };
+const MEETINGS = {
+  2: [
+    {id:"m2_jyfx", title:"分行经营分析会",
+      body:"分行的月度经营分析会定在周三下午两点，周启明主持。各支行行长挨个上去讲，讲完了他要问存款缺口怎么补。",
+      go:{s:"周启明记你一笔", fn:()=>fav("zhouqm",2), log:"你讲了十二分钟。周启明在本子上记了两行，没有追问。"},
+      skip:{t:"「让副行长去代会。」", s:"周启明不高兴", fn:()=>fav("zhouqm",-5), log:"代会的副行长回来说，周启明点到南岸的时候，停了一下，问了一句「你们行长呢」。"}},
+    {id:"m2_qu", title:"区里的金融工作座谈会",
+      body:"南岸区金融办通知，辖内银行一把手开座谈会，常务副区长参加。会上要报今年支持区里重点项目的情况。",
+      go:{s:"陆明远听说了", fn:()=>fav("lu",2), log:"座谈会开了一上午。散会时金融办主任找你要了张名片。"},
+      skip:{t:"「派公司部的人去。」", s:"区里那条线淡一点", fn:()=>fav("lu",-3), log:"区里的会议纪要发下来，各家银行的名字后面都跟着行长，南岸支行那一行写的是公司部经理。"}},
+    {id:"m2_anfang", title:"案防检查进点会",
+      body:"分行内控合规部来南岸做案防检查，按规定支行行长要参加进点会，当面签承诺书。",
+      go:{s:"合规好看一点", fn:()=>meetComp(1), log:"进点会二十分钟。你签了字，检查组长把承诺书收进了文件袋。"},
+      skip:{t:"「我这边走不开，让副行长签。」", s:"合规扣分", fn:()=>meetComp(-5), log:"检查报告里多了一句：支行主要负责人未参加进点会。"}},
+    {id:"m2_lihui", title:"网点负责人例会",
+      body:"每月头一个周一，四个网点的负责人到支行开例会。上个月有人在群里问，这个月还开不开。",
+      go:{s:"下面的人心里有数", fn:()=>subsFav(1), log:"例会开到十二点。邓宇和许丽萍为一个客户归属吵了几句，最后你拍了板。"},
+      skip:{t:"「这个月不开了，有事群里说。」", s:"下面的人心里没底", fn:()=>subsFav(-3), log:"群里安静了一个星期。"}},
+    {id:"m2_jingshi", title:"警示教育大会",
+      body:"分行开全辖警示教育大会，放一个外地银行行长受审的片子。各支行班子成员都要到，要签到。",
+      go:{s:"合规好看一点", fn:()=>meetComp(1), log:"片子放了四十分钟。灯亮起来的时候，后排有人在看手机。"},
+      skip:{t:"「签到让办公室代一下。」", s:"合规扣分 · 周启明知道", fn:()=>{ meetComp(-3); fav("zhouqm",-2); }, log:"纪委的人当场对了签到表。"}},
+  ],
+  3: [
+    {id:"m3_jyfx", title:"重庆分行季度经营分析会",
+      body:"重庆分行开季度经营分析会，各二级分行行长回主城当面汇报。从万州过去，高铁两个多小时。",
+      go:{s:"陆明远记你一笔", fn:()=>fav("lu",2), log:"你在会上讲了万州的不良。陆明远没说话，散会后让秘书把你的材料多印了一份。"},
+      skip:{t:"「视频接入，我在万州讲。」", s:"陆明远不高兴", fn:()=>fav("lu",-5), log:"视频卡了两次。陆明远说：「万州的情况，会后单独报给我。」"}},
+    {id:"m3_quwei", title:"区里召集一把手开会",
+      body:"万州区政府召集驻区金融机构一把手，通报今年的重点项目和化债安排。区长主持，要各行表态。",
+      go:{s:"片区口碑回一点", fn:()=>S.biz.areas.forEach(a=>a.rep=c100(a.rep+1)), log:"轮到你表态，你说了三分钟，没有说具体的数。区长点了点头。"},
+      skip:{t:"「派分管副行长去。」", s:"片区口碑掉", fn:()=>S.biz.areas.forEach(a=>a.rep=c100(a.rep-3)), log:"会后区里的工作群里，几家银行都发了行长表态的照片。"}},
+    {id:"m3_jianguan", title:"监管分局约谈",
+      body:"万州监管分局通知，就辖内贷款五级分类的问题约谈分行主要负责人。通知上写的是主要负责人。",
+      go:{s:"合规好看一点 · 顾清越知道", fn:()=>{ meetComp(1); fav("gu",2); }, log:"约谈一个半小时。分局局长把问题清单念了一遍，你一条一条答了。"},
+      skip:{t:"「风险总监去，他比我清楚。」", s:"合规扣分 · 顾清越知道", fn:()=>{ meetComp(-6); fav("gu",-3); }, log:"监管分局的函第二天就到了，抄送重庆监管局。"}},
+    {id:"m3_hanghang", title:"支行行长会",
+      body:"一季度一次的支行行长会。各支行行长从区县赶过来，有的要坐三个小时汽车。",
+      go:{s:"下面的人心里有数", fn:()=>subsFav(1), log:"会开了一整天。晚饭在食堂，你挨桌敬了一杯茶。"},
+      skip:{t:"「改成视频会。」", s:"下面的人心里没底", fn:()=>subsFav(-3), log:"视频会上，有三个支行的画面一直是黑的。"}},
+    {id:"m3_xuncha", title:"巡察组座谈",
+      body:"重庆分行巡察组进驻万州，要和班子成员一个一个谈话。第一个约的是你。",
+      go:{s:"合规好看一点", fn:()=>meetComp(1), log:"谈了五十分钟。巡察组长最后问：「有没有什么要补充的？」你说没有。"},
+      skip:{t:"「跟他们改个时间。」", s:"合规扣分 · 陆明远知道", fn:()=>{ meetComp(-3); fav("lu",-3); }, log:"改了时间。巡察组的工作日志上记了这一笔。"}},
+  ],
+  4: [
+    {id:"m4_zonghang", title:"总行季度经营分析会",
+      body:"总行开季度经营分析会，各一级分行行长到北京现场汇报，宋文远主持。重庆排在第十一个发言。",
+      go:{s:"宋文远记你一笔", fn:()=>fav("songwy",2), log:"你讲了八分钟。宋文远问了一个资本占用的问题，你答上来了。"},
+      skip:{t:"「请周启明代我去。」", s:"宋文远不高兴", fn:()=>fav("songwy",-5), log:"周启明回来说，轮到重庆的时候，宋文远看了一眼名单。"}},
+    {id:"m4_shizhengfu", title:"市政府金融工作会议",
+      body:"市政府召开全市金融工作会议，分管副市长主持，要几家大行发言，重庆分行排在第三个。",
+      go:{s:"陆明远听说了", fn:()=>fav("lu",2), log:"你发言六分钟，讲了制造业贷款。会后市金融办把你的发言稿要走了。"},
+      skip:{t:"「让副行长去发言。」", s:"市里那条线淡一点", fn:()=>fav("lu",-4), log:"第二天的新闻稿里，几家行的名字后面都是行长，重庆分行那里写的是副行长。"}},
+    {id:"m4_jianguanju", title:"监管局约谈",
+      body:"重庆监管局就集中度风险约谈重庆分行主要负责人，顾清越参加。",
+      go:{s:"合规好看一点 · 顾清越知道", fn:()=>{ meetComp(1); fav("gu",2); }, log:"约谈两个小时。顾清越全程没开口，最后在记录上签了字。"},
+      skip:{t:"「风险条线去，我书面汇报。」", s:"合规扣分 · 顾清越知道", fn:()=>{ meetComp(-6); fav("gu",-4); }, log:"监管局回了一份函，第二段写着：请主要负责人高度重视。"}},
+    {id:"m4_banzi", title:"班子会",
+      body:"副行长们攒了一堆要上会的事，办公室问班子会这周能不能开。",
+      go:{s:"班子团结一点", fn:()=>{ S.biz.unity = c100(S.biz.unity+2); }, log:"班子会开到晚上七点，十一个议题过了九个。"},
+      skip:{t:"「推到下周。」", s:"班子散一点", fn:()=>{ S.biz.unity = c100(S.biz.unity-5); }, log:"副行长们各自去找你单独汇报，同一件事你听了三个说法。"}},
+    {id:"m4_xunshi", title:"总行巡视进驻",
+      body:"总行巡视组进驻重庆分行，开进驻动员会。按要求一把手要作动员讲话。",
+      go:{s:"合规好看一点", fn:()=>meetComp(1), log:"动员讲话十分钟，稿子是办公室写的，你改了两段。"},
+      skip:{t:"「我在外地，请周启明讲。」", s:"合规扣分 · 宋文远知道", fn:()=>{ meetComp(-3); fav("songwy",-3); }, log:"巡视组长在会上说了一句：「一把手要带头接受监督。」"}},
+  ],
+  5: [
+    {id:"m5_dongshi", title:"董事会",
+      body:"董事会审议半年经营情况和资本规划，你要列席汇报。陆明远是董事长。",
+      go:{s:"董事会那边稳一点", fn:()=>fav("lu",2), log:"董事会开了五个小时。独立董事问了三个问题，两个关于不良。"},
+      skip:{t:"「请分管副行长汇报。」", s:"陆明远不高兴", fn:()=>fav("lu",-6), log:"会后陆明远打来电话，问你那天在忙什么。"}},
+    {id:"m5_jianguan", title:"监管通报会",
+      body:"金融监管总局召开年度监管通报会，各家大行行长到场。顾清越坐在主席台第二排。",
+      go:{s:"评级好说一点 · 顾清越知道", fn:()=>{ fav("gu",2); S.biz.regScore = Math.min(10,(S.biz.regScore||0)+0.5); }, log:"通报会两个小时，点了四家行的名，没有泰和。"},
+      skip:{t:"「请首席风险官去。」", s:"评级难说 · 顾清越知道", fn:()=>{ fav("gu",-5); S.biz.regScore = Math.max(-10,(S.biz.regScore||0)-2); }, log:"会场上各家大行的位子都是行长，泰和那张桌签换了名字。"}},
+    {id:"m5_fenhang", title:"全国分行行长会",
+      body:"半年一次的全国分行行长会，三十六个一级分行行长都到北京。你要作主报告。",
+      go:{s:"下面的人心里有数", fn:()=>subsFav(1), log:"主报告讲了一个小时零十分。分组讨论的时候，你去了西部那一组。"},
+      skip:{t:"「书面印发，我不讲了。」", s:"下面的人心里没底", fn:()=>subsFav(-4), log:"报告印发下去了。分行行长群里有人说，这是第一次行长会没有主报告。"}},
+    {id:"m5_chuangkou", title:"人民银行窗口指导",
+      body:"人民银行召集几家大行开窗口指导会，讲下半年的信贷投放节奏。",
+      go:{s:"合规好看一点", fn:()=>meetComp(1), log:"会上没有发材料，每个人都在记。"},
+      skip:{t:"「让计划财务部去听。」", s:"合规扣分", fn:()=>meetComp(-4), log:"计划财务部的人回来，记的笔记只有一页。"}},
+    {id:"m5_touzizhe", title:"业绩发布会",
+      body:"半年业绩发布会，分析师和记者都在。按惯例行长要上台答问。",
+      go:{s:"口碑回一点", fn:()=>{ S.biz.csat = c100(S.biz.csat+2); }, log:"有分析师问息差还能守多久。你说了一个数，第二天的研报里引了。"},
+      skip:{t:"「请副行长和首席财务官答。」", s:"口碑掉", fn:()=>{ S.biz.csat = c100(S.biz.csat-4); }, log:"第二天有篇报道的标题是：泰和行长缺席业绩会。"}},
+  ],
+};
+
+function meetCount(){
+  const d = BALANCE.meet.dist[S.lv]; if(!d) return 0;
+  let x = R();
+  for(let i=0;i<d.length;i++){ x -= d[i]; if(x < 0) return i; }
+  return d.length - 1;
+}
+function meetPick(){
+  const pool = (MEETINGS[S.lv] || []).slice(), n = Math.min(meetCount(), pool.length), out = [];
+  for(let i=0;i<n;i++){ const k = Math.floor(R()*pool.length); out.push(pool.splice(k,1)[0]); }
+  return out;
+}
+function meetSpec(m){
+  const can = S.ap >= 1;
+  return {kind:"event", id:m.id, title:m.title, body:m.body + "<br><small class=\"muted\">推不掉的会：去要占 1 个行动点。</small>", opts:[
+    {t:"「我去。」", s:"占1点 · " + m.go.s, disabled:!can, fn:()=>{ apUse(1); m.go.fn(); log("", m.go.log); S.track.meetGo = (S.track.meetGo||0)+1; }},
+    {t:m.skip.t, s:m.skip.s, fn:()=>{ m.skip.fn(); log("warn", m.skip.log); S.track.meetSkip = (S.track.meetSkip||0)+1; }},
+  ]};
+}
+function meetChain(d){
+  if(S.phase !== "play" || S.lv < 2) return d();
+  const list = meetPick();
+  const next = () => { const m = list.shift(); if(!m || S.phase!=="play") return d(); ask(meetSpec(m), next); };
+  next();
+}
+/* 大事占几个点 */
+function apCost(id){ const c = BALANCE.apCost[S.lv]; return (c && c[id]) || 1; }
+function apCostTag(id){ const n = apCost(id); return n > 1 ? `<i class="apc">占${n}点</i>` : ""; }
 /* =====================================================================
    L2 行动(每个 1 AP)。贷款审批不占行动点。
    ===================================================================== */
@@ -2831,6 +2963,7 @@ function doReportUp(){
 const ACTIONS_L3 = [
   {id:"open",     name:"开网点",     desc:"在一个片区开新网点，投入三百万"},
   {id:"close",    name:"撤并网点",   desc:"撤掉一个网点，省费用，片区口碑掉"},
+  {id:"squat",    name:"下支行蹲点", desc:"去一个支行蹲几天，这个季度存款长得快一点"},
   {id:"renovate", name:"网点改造",   desc:"给一个支行做智能化改造，效能上去"},
   {id:"tilt",     name:"条线倾斜",   desc:"资源往一个部门偏，其他部门不高兴"},
   {id:"appoint",  name:"干部任免",   desc:"换一个支行行长"},
@@ -2841,9 +2974,11 @@ const ACTIONS_L3 = [
 function canActL3(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
+  if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
   const b = B3();
   if(id==="open" && S.biz.budget < b.outlet.build) return {ok:false, why:`发展费用不够（要${b.outlet.build}万）`};
   if(id==="renovate" && S.biz.budget < b.renovate.cost) return {ok:false, why:`发展费用不够（要${b.renovate.cost}万）`};
+  if(id==="squat" && !S.biz.branches.some(x=>!x.squat)) return {ok:false, why:"这个季度每个支行都去过了"};
   if(id==="close" && !S.biz.branches.some(x=>x.outlets>1)) return {ok:false, why:"没有能撤的网点"};
   if(id==="platform" && S.biz.platformDone.length >= PLATFORMS_L3.length) return {ok:false, why:"区里的平台都谈过了"};
   if(id==="reportup" && S.biz.reported) return {ok:false, why:"这个季度已经回过主城了"};
@@ -2854,7 +2989,7 @@ function doOpenOutlet(aid){
   const ck = canActL3("open"); if(!ck.ok) return null;
   const a = area(aid); if(!a) return null;
   const o = B3().outlet;
-  apUse(1);
+  apUse(apCost("open"));
   S.biz.budget -= o.build; S.month.spent += o.build;
   // 爬坡速度看热度和竞争,封顶看人口
   const cold = !roll(ODDS[3].open(a));
@@ -2885,6 +3020,16 @@ function doCloseOutlet(bid){
   return {loss};
 }
 
+function doSquatL3(bid){
+  const ck = canActL3("squat"); if(!ck.ok) return null;
+  const x = branch(bid); if(!x || x.squat) return null;
+  const m = person(x.mgr), nm = m ? m.name : "支行行长";
+  apUse(1); x.squat = true;
+  if(!roll(ODDS[3].squat(x))){ if(m) fav(m.id, -2); log("bad", `你在${x.name}蹲了三天。${nm}陪着跑了三天客户，回来跟人说，行长是来挑刺的。<span class="num">这季没长起来</span>`); return {fail:true}; }
+  x.squatK = B3().squat.boost; if(m) fav(m.id, 3);
+  log("good", `你在${x.name}蹲了三天，跟${nm}跑了八家客户。最后一天晚上，${nm}把下个季度的客户名单拿给你看。`);
+  return true;
+}
 function doRenovate(bid){
   const ck = canActL3("renovate"); if(!ck.ok) return null;
   const x = branch(bid); if(!x || x.renov >= 0.3) return null;
@@ -2931,7 +3076,7 @@ function doPlatform(){
   const ck = canActL3("platform"); if(!ck.ok) return null;
   const pf = PLATFORMS_L3.find(p => !S.biz.platformDone.includes(p.id));
   if(!pf) return null;
-  apUse(1);
+  apUse(apCost("platform"));
   const b = B3().platform;
   const size = Math.round(rr(b.size) / 10000) * 10000;
   S.biz.platformOffer = {id:pf.id, size};
@@ -3020,6 +3165,7 @@ const ACTIONS_L4 = [
 function canActL4(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
+  if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
   const act = S.biz.projects.filter(p=>!p.done);
   if(id==="startp"){
     if(act.length >= B4().proj.max) return {ok:false, why:"手上已经有三个项目了"};
@@ -3067,7 +3213,7 @@ function doStartProj(pid){
   const i = S.biz.projQueue.indexOf(id); if(i<0) return null;
   const s = STRAT_L4.find(x=>x.id===id);
   if(capRoom() < s.rwa) return {noRoom:true};
-  apUse(1);
+  apUse(apCost("startp"));
   S.biz.projQueue.splice(i,1);
   S.biz.projects.push({id, prog:0, done:false, at:S.turn});
   log("", `<b>${s.name}</b>启动了。${s.what}。项目组的第一次会在分行十七楼开，${deputy("corp") ? deputy("corp").name : "分管副行长"}坐在长桌那头。`);
@@ -3096,7 +3242,7 @@ function doFocus(iid){
 function doQuota(){
   const ck = canActL4("quota"); if(!ck.ok) return null;
   const q = B4().askQuota;
-  apUse(1);
+  apUse(apCost("quota"));
   if(roll(ODDS[4].quota())){
     S.biz.capital += q.add; fav("lu", q.fav);
     log("good", `你在总行等了两天。第三天下午，陆明远把一份批复放在桌上：「就这一次。」<span class="num">资本额度+${fmtYi(q.add)}</span>`);
@@ -5031,6 +5177,7 @@ function advance(){
   if(newYear) job(d => ask(kpiSpec(), d));
   if(newYear && S.lv===2) job(d => decompAsk(d));
   job(d => { rumorCheck(d); });
+  job(d => meetChain(d));
   job(d => eventChain(d));
   job(d => { computeCore(); save(); d(); });
 }
@@ -5738,6 +5885,7 @@ function botPlayL3(mode){
       if(id==="open") doOpenOutlet(pick(S.biz.areas).id);
       else if(id==="close") doCloseOutlet(pick(S.biz.branches.filter(x=>x.outlets>1)).id);
       else if(id==="renovate") doRenovate(pick(S.biz.branches).id) || doReportUpL3();
+      else if(id==="squat") doSquatL3(pick(S.biz.branches.filter(x=>!x.squat)).id);
       else if(id==="tilt") doTilt(pick(LINES_L3).id) || doReportUpL3();
       else if(id==="appoint"){ const x = pick(S.biz.branches), c = appointCandsL3(x.id); if(c.length) doAppointL3(x.id, pick(c).id); else doReportUpL3() || apUse(1); }
       else if(id==="platform"){ doPlatform(); decidePlatform(R()<0.5); }
@@ -5755,6 +5903,7 @@ function botPlayL3(mode){
     if(!S.biz.reported && person("lu").fav < 65){ doReportUpL3(); continue; }
     if(canActL3("renovate").ok){ const x = S.biz.branches.filter(y=>y.renov<0.3).sort((a,c)=>c.dep-a.dep)[0]; if(x && doRenovate(x.id)) continue; }
     if(!S.biz.reported){ doReportUpL3(); continue; }
+    if(canActL3("squat").ok && !steady){ const x = S.biz.branches.filter(y=>!y.squat).sort((a,c)=>c.dep-a.dep)[0]; if(x && doSquatL3(x.id)) continue; }
     break;
   }
 }
@@ -5867,7 +6016,7 @@ function simGame(mode, seed, maxTurns, opts){
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
-  act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
+  act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,
     swap:doSwap, talk:doTalk, startProj:doStartProj, pushProj:doPushProj, focus:doFocus, quota:doQuota, regulator:doRegulator,
     maintain:doMaintain, hall:doHall, out:doOut, train:doTrain, rally:doRally, boss:doBoss, setRole,
@@ -5876,7 +6025,7 @@ const THSZ = {
   get S(){ return S; }, set S(v){ S = v; },
   setBot(m){ BOT = m ? BOTS[m] : null; },
   setHeadless(v){ FORCE_HL = !!v; },
-  internals:{ promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
+  internals:{ meetChain, meetSpec, meetPick, MEETINGS, apCost, promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
     EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, EVENT_ODDS, applyEventOdds, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };
@@ -6469,7 +6618,7 @@ Object.assign(UI, {
   renderL3(){
     const b = B3();
     const dep = depTotal(), loans = loansTotalL3(), npl = nplL3();
-    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.branches.map(x => { const m = person(x.mgr), a = area(x.area);
       return `<tr data-branch="${x.id}" tabindex="0"><td>${x.name}<br><small class="muted">${a.name} · ${x.outlets}个网点${x.renov?` · 改造+${Math.round(x.renov*100)}%`:""}</small></td>
         <td>${m?m.name:"—"}<br><small class="muted">能力${m?m.skill:"—"}</small></td><td class="num">${fmtYi1(x.dep)}</td>
@@ -6517,9 +6666,9 @@ Object.assign(UI, {
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title:"资源往哪条线偏", body:"偏了一条，另外几条的老总心里有数。", opts}); return;
     }
-    const opts = S.biz.branches.filter(x => id!=="close" || x.outlets>1).map(x => { const m = person(x.mgr); return {t:`${x.name} · ${m?m.name:""}`, s:`${area(x.area).name} · ${x.outlets}个网点 · ${fmtYi1(x.dep)}`, fn:()=> id==="close" ? doCloseOutlet(x.id) : (id==="renovate" ? doRenovate(x.id) : setTimeout(()=>UI.appointModalL3(x.id),0))}; });
+    const opts = S.biz.branches.filter(x => (id!=="close" || x.outlets>1) && (id!=="squat" || !x.squat)).map(x => { const m = person(x.mgr); return {t:`${x.name} · ${m?m.name:""}`, s:`${area(x.area).name} · ${x.outlets}个网点 · ${fmtYi1(x.dep)}`, odds: id==="squat" ? ODDS[3].squat(x) : undefined, fn:()=> id==="close" ? doCloseOutlet(x.id) : (id==="renovate" ? doRenovate(x.id) : (id==="squat" ? doSquatL3(x.id) : setTimeout(()=>UI.appointModalL3(x.id),0)))}; });
     opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长"}[id], body:"", opts});
+    UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长",squat:"去哪个支行蹲点"}[id], body:"", opts});
   },
   pickArea(){
     const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
@@ -6529,11 +6678,12 @@ Object.assign(UI, {
   areaModal(aid){
     const a = area(aid);
     UI.modal({kind:"pick", title:a.name, body:`${a.note}\n\n人口${a.pop}万，热度${Math.round(a.heat)}，同业竞争${a.comp}，口碑${Math.round(a.rep)}。`, opts:[
-      {t:"在这里开网点", s:`${B3().outlet.build}万 · 1点行动`, disabled:!canActL3("open").ok, fn:()=>doOpenOutlet(aid)}, {t:"关掉", s:""}]});
+      {t:"在这里开网点", s:`${B3().outlet.build}万 · ${apCost("open")}点行动`, disabled:!canActL3("open").ok, fn:()=>doOpenOutlet(aid)}, {t:"关掉", s:""}]});
   },
   branchModal(bid){
     const x = branch(bid), m = person(x.mgr);
     UI.modal({kind:"pick", title:x.name, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。`, opts:[
+      {t:"下去蹲点", s:"1点行动 · 这季存款长得快一点", odds:ODDS[3].squat(x), disabled:!canActL3("squat").ok || x.squat, fn:()=>doSquatL3(bid)},
       {t:"网点改造", s:`${B3().renovate.cost}万 · 1点行动`, disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
       {t:"撤一个网点", s:"1点行动 · 片区口碑掉", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
       {t:"换行长", s:"1点行动", disabled:!canActL3("appoint").ok, fn:()=>setTimeout(()=>UI.appointModalL3(bid),0)},
@@ -6558,7 +6708,7 @@ Object.assign(UI, {
 
   renderL4(){
     const dep = depTotalL4(), loans = loansL4(), npl = nplL4();
-    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.inst.map(x => `<tr class="${x.mine?"mine":""}" ${x.mine==="l3"?'id="l4wz"':""}><td>${x.name}${x.mine?' <small class="muted">你待过</small>':""}${x.focus?' <small class="tagx">倾斜</small>':""}</td>
       <td>${x.headName}</td><td class="num">${fmtYi0(x.dep)}</td><td class="num">${fmtYi0(x.loans)}</td><td class="num ${x.npl/x.loans>0.02?"neg":""}">${(x.npl/x.loans*100).toFixed(2)}%</td></tr>`).join("");
     const deps = S.biz.deputies.map(d => { const p = person(d.id), ln = LINES_L4.find(l=>l.id===d.line).name;
@@ -6626,7 +6776,7 @@ Object.assign(UI, {
 Object.assign(UI, {
   renderL5(){
     const b = B5(), B = S.biz;
-    const acts = L5_ACTIONS.map(a => { const ck = canActL5(a.id); return `<button class="act" data-act5="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = L5_ACTIONS.map(a => { const ck = canActL5(a.id); return `<button class="act" data-act5="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const dials = DIAL_DEF.map(d => `<div class="dial"><div class="dh"><b>${d.name}</b><span class="muted">${d.tip}</span></div>
       <div class="dr"><small>${d.lo}</small><input type="range" min="1" max="5" step="1" value="${B.dials[d.k]}" data-dial="${d.k}" aria-label="${d.name}"><small>${d.hi}</small><b class="num">${B.dials[d.k]}</b></div></div>`).join("");
     const peers = (S.kpi.table||[]).map((p,i) => `<tr class="${p.me?"me":""}"><td class="n">${i+1}</td><td>${p.name}</td><td class="s num">${fmtWy(p.score)}</td></tr>`).join("");

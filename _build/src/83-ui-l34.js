@@ -46,7 +46,7 @@ Object.assign(UI, {
   renderL3(){
     const b = B3();
     const dep = depTotal(), loans = loansTotalL3(), npl = nplL3();
-    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.branches.map(x => { const m = person(x.mgr), a = area(x.area);
       return `<tr data-branch="${x.id}" tabindex="0"><td>${x.name}<br><small class="muted">${a.name} · ${x.outlets}个网点${x.renov?` · 改造+${Math.round(x.renov*100)}%`:""}</small></td>
         <td>${m?m.name:"—"}<br><small class="muted">能力${m?m.skill:"—"}</small></td><td class="num">${fmtYi1(x.dep)}</td>
@@ -94,9 +94,9 @@ Object.assign(UI, {
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title:"资源往哪条线偏", body:"偏了一条，另外几条的老总心里有数。", opts}); return;
     }
-    const opts = S.biz.branches.filter(x => id!=="close" || x.outlets>1).map(x => { const m = person(x.mgr); return {t:`${x.name} · ${m?m.name:""}`, s:`${area(x.area).name} · ${x.outlets}个网点 · ${fmtYi1(x.dep)}`, fn:()=> id==="close" ? doCloseOutlet(x.id) : (id==="renovate" ? doRenovate(x.id) : setTimeout(()=>UI.appointModalL3(x.id),0))}; });
+    const opts = S.biz.branches.filter(x => (id!=="close" || x.outlets>1) && (id!=="squat" || !x.squat)).map(x => { const m = person(x.mgr); return {t:`${x.name} · ${m?m.name:""}`, s:`${area(x.area).name} · ${x.outlets}个网点 · ${fmtYi1(x.dep)}`, odds: id==="squat" ? ODDS[3].squat(x) : undefined, fn:()=> id==="close" ? doCloseOutlet(x.id) : (id==="renovate" ? doRenovate(x.id) : (id==="squat" ? doSquatL3(x.id) : setTimeout(()=>UI.appointModalL3(x.id),0)))}; });
     opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长"}[id], body:"", opts});
+    UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长",squat:"去哪个支行蹲点"}[id], body:"", opts});
   },
   pickArea(){
     const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
@@ -106,11 +106,12 @@ Object.assign(UI, {
   areaModal(aid){
     const a = area(aid);
     UI.modal({kind:"pick", title:a.name, body:`${a.note}\n\n人口${a.pop}万，热度${Math.round(a.heat)}，同业竞争${a.comp}，口碑${Math.round(a.rep)}。`, opts:[
-      {t:"在这里开网点", s:`${B3().outlet.build}万 · 1点行动`, disabled:!canActL3("open").ok, fn:()=>doOpenOutlet(aid)}, {t:"关掉", s:""}]});
+      {t:"在这里开网点", s:`${B3().outlet.build}万 · ${apCost("open")}点行动`, disabled:!canActL3("open").ok, fn:()=>doOpenOutlet(aid)}, {t:"关掉", s:""}]});
   },
   branchModal(bid){
     const x = branch(bid), m = person(x.mgr);
     UI.modal({kind:"pick", title:x.name, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。`, opts:[
+      {t:"下去蹲点", s:"1点行动 · 这季存款长得快一点", odds:ODDS[3].squat(x), disabled:!canActL3("squat").ok || x.squat, fn:()=>doSquatL3(bid)},
       {t:"网点改造", s:`${B3().renovate.cost}万 · 1点行动`, disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
       {t:"撤一个网点", s:"1点行动 · 片区口碑掉", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
       {t:"换行长", s:"1点行动", disabled:!canActL3("appoint").ok, fn:()=>setTimeout(()=>UI.appointModalL3(bid),0)},
@@ -135,7 +136,7 @@ Object.assign(UI, {
 
   renderL4(){
     const dep = depTotalL4(), loans = loansL4(), npl = nplL4();
-    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
+    const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.inst.map(x => `<tr class="${x.mine?"mine":""}" ${x.mine==="l3"?'id="l4wz"':""}><td>${x.name}${x.mine?' <small class="muted">你待过</small>':""}${x.focus?' <small class="tagx">倾斜</small>':""}</td>
       <td>${x.headName}</td><td class="num">${fmtYi0(x.dep)}</td><td class="num">${fmtYi0(x.loans)}</td><td class="num ${x.npl/x.loans>0.02?"neg":""}">${(x.npl/x.loans*100).toFixed(2)}%</td></tr>`).join("");
     const deps = S.biz.deputies.map(d => { const p = person(d.id), ln = LINES_L4.find(l=>l.id===d.line).name;

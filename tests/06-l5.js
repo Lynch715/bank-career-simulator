@@ -79,7 +79,7 @@ toL5(); const cap0 = S().biz.capital; half();
 T.ok("利润留存补资本", S().biz.capital > cap0);
 
 /* ---------- 行动 ---------- */
-toL5(); S().ap = 3;
+toL5(); S().ap = 6;
 A.survey("xn");
 T.ok("调研:片区两个半年长得快", S().biz.regions.find(r=>r.id==="xn").boost===B.survey.turns);
 A.reform();

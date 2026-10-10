@@ -191,6 +191,7 @@ function botPlayL3(mode){
       if(id==="open") doOpenOutlet(pick(S.biz.areas).id);
       else if(id==="close") doCloseOutlet(pick(S.biz.branches.filter(x=>x.outlets>1)).id);
       else if(id==="renovate") doRenovate(pick(S.biz.branches).id) || doReportUpL3();
+      else if(id==="squat") doSquatL3(pick(S.biz.branches.filter(x=>!x.squat)).id);
       else if(id==="tilt") doTilt(pick(LINES_L3).id) || doReportUpL3();
       else if(id==="appoint"){ const x = pick(S.biz.branches), c = appointCandsL3(x.id); if(c.length) doAppointL3(x.id, pick(c).id); else doReportUpL3() || apUse(1); }
       else if(id==="platform"){ doPlatform(); decidePlatform(R()<0.5); }
@@ -208,6 +209,7 @@ function botPlayL3(mode){
     if(!S.biz.reported && person("lu").fav < 65){ doReportUpL3(); continue; }
     if(canActL3("renovate").ok){ const x = S.biz.branches.filter(y=>y.renov<0.3).sort((a,c)=>c.dep-a.dep)[0]; if(x && doRenovate(x.id)) continue; }
     if(!S.biz.reported){ doReportUpL3(); continue; }
+    if(canActL3("squat").ok && !steady){ const x = S.biz.branches.filter(y=>!y.squat).sort((a,c)=>c.dep-a.dep)[0]; if(x && doSquatL3(x.id)) continue; }
     break;
   }
 }
@@ -320,7 +322,7 @@ function simGame(mode, seed, maxTurns, opts){
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
-  act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
+  act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,
     swap:doSwap, talk:doTalk, startProj:doStartProj, pushProj:doPushProj, focus:doFocus, quota:doQuota, regulator:doRegulator,
     maintain:doMaintain, hall:doHall, out:doOut, train:doTrain, rally:doRally, boss:doBoss, setRole,
@@ -329,7 +331,7 @@ const THSZ = {
   get S(){ return S; }, set S(v){ S = v; },
   setBot(m){ BOT = m ? BOTS[m] : null; },
   setHeadless(v){ FORCE_HL = !!v; },
-  internals:{ promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
+  internals:{ meetChain, meetSpec, meetPick, MEETINGS, apCost, promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
     EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, EVENT_ODDS, applyEventOdds, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };

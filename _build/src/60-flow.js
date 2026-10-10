@@ -136,6 +136,7 @@ function advance(){
   if(newYear) job(d => ask(kpiSpec(), d));
   if(newYear && S.lv===2) job(d => decompAsk(d));
   job(d => { rumorCheck(d); });
+  job(d => meetChain(d));
   job(d => eventChain(d));
   job(d => { computeCore(); save(); d(); });
 }

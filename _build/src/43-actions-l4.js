@@ -13,6 +13,7 @@ const ACTIONS_L4 = [
 function canActL4(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
+  if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
   const act = S.biz.projects.filter(p=>!p.done);
   if(id==="startp"){
     if(act.length >= B4().proj.max) return {ok:false, why:"手上已经有三个项目了"};
@@ -60,7 +61,7 @@ function doStartProj(pid){
   const i = S.biz.projQueue.indexOf(id); if(i<0) return null;
   const s = STRAT_L4.find(x=>x.id===id);
   if(capRoom() < s.rwa) return {noRoom:true};
-  apUse(1);
+  apUse(apCost("startp"));
   S.biz.projQueue.splice(i,1);
   S.biz.projects.push({id, prog:0, done:false, at:S.turn});
   log("", `<b>${s.name}</b>启动了。${s.what}。项目组的第一次会在分行十七楼开，${deputy("corp") ? deputy("corp").name : "分管副行长"}坐在长桌那头。`);
@@ -89,7 +90,7 @@ function doFocus(iid){
 function doQuota(){
   const ck = canActL4("quota"); if(!ck.ok) return null;
   const q = B4().askQuota;
-  apUse(1);
+  apUse(apCost("quota"));
   if(roll(ODDS[4].quota())){
     S.biz.capital += q.add; fav("lu", q.fav);
     log("good", `你在总行等了两天。第三天下午，陆明远把一份批复放在桌上：「就这一次。」<span class="num">资本额度+${fmtYi(q.add)}</span>`);

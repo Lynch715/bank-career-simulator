@@ -22,7 +22,7 @@ let sd3 = toLevel(3, 100);
 T.ok("进入 L3:七个支行、六个片区", S().biz.branches.length===7 && S().biz.areas.length===6);
 T.ok("万州存贷比七成", Math.abs(I.loansTotalL3()/I.depTotal() - 0.7) < 0.01, (I.loansTotalL3()/I.depTotal()).toFixed(3));
 T.ok("起始不良率约 1.8%", Math.abs(I.nplL3()/I.loansTotalL3()*100 - 1.8) < 0.15, (I.nplL3()/I.loansTotalL3()*100).toFixed(2));
-T.ok("L3 按季:开局在三月,行动点 4", S().m===3 && S().ap===4);
+T.ok("L3 按季:开局在三月,行动点 6", S().m===3 && S().ap===G.BALANCE.ap[3]);
 T.ok("考核卡 6 项,含网点效能", S().kpi.card.length===6 && S().kpi.card.some(x=>x.k==="eff"));
 const m0 = S().m; endQ();
 T.ok("一回合走三个月", S().m === m0 + 3, S().m);
