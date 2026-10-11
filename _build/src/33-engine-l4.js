@@ -104,7 +104,7 @@ function settleL4(){
   const b = B4(), M = S.month;
   const kR = lineK("retail"), kC = lineK("corp"), kRisk = lineK("risk"), kOps = lineK("ops");
   const room = capRoom();
-  let newNpl = 0;
+  let newNpl = M.eventNpl || 0;
   S.biz.inst.forEach(x => {
     const dk = 0.6 + x.skill/100*0.6;
     let inc = x.dep * b.growthQ * x.g * dk * kR * (x.focus ? b.focus : 1) + gauss()*x.dep*0.002;
@@ -112,16 +112,17 @@ function settleL4(){
     const want = Math.max(0, x.dep * x.ldr - x.loans) + x.loans * b.growthQ * 0.5 * kC;
     x.loans = Math.round(x.loans + (room > 0 ? want * 0.5 : 0));
     const nn = x.loans * b.nplRate / 4 / kRisk;
-    x.npl = Math.round(x.npl * (1 - b.nplResolveQ) + nn); newNpl += nn;
+    const eventNpl = x.id === "yyb" ? (M.eventNpl||0) : 0;
+    x.npl = Math.round((x.npl - eventNpl) * (1 - b.nplResolveQ) + nn) + eventNpl; newNpl += nn;
   });
   // 跨关旧账:南岸(L2)和万州(L3)批的贷款
   (S.loanBook||[]).forEach(l => {
     if(!l.def || l.done || S.monthAbs < l.defAt) return;
-    l.done = true;
-    const row = l.lv === 2 ? inst("na") : (l.lv === 3 ? inst("wz") : null);
+    const row = l.lv <= 2 ? inst("na") : (l.lv === 3 ? inst("wz") : (l.lv === 4 ? inst(l.institution || (l.id === "mb4" ? "yb" : "yyb")) : null));
     if(!row) return;
+    l.done = true;
     row.npl += l.amt; newNpl += l.amt; M.defaults.push(l);
-    log("bad", `${row.name}报上来一笔不良：<b>${l.name}</b>，${fmtWan(l.amt)}。${l.lv===2?"批的时候，南岸的行长是你。":"这笔是你在万州签的。"}`);
+    log("bad", `${row.name}报上来一笔不良：<b>${l.name}</b>，${fmtWan(l.amt)}。${l.lv<=2?"批的时候，你在南岸任职。":l.lv===3?"这笔是你在万州签的。":"这笔是在你任重庆分行行长时办的。"}`);
   });
   // 战略项目
   S.biz.projects.forEach(p => {

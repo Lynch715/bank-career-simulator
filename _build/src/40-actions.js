@@ -26,8 +26,15 @@ function canAct(id){
   return {ok:true};
 }
 
+function maintainQuote(c, prodId){
+  const cb = B1().card, P = B1().product[prodId];
+  if(!c || !P) return null;
+  const pull = Math.min(c.other, Math.round(c.other * (cb.pullBase + c.rel*cb.pullRel) * P.pull));
+  return {pull, fee:r2((c.own + pull) * P.fee + P.feeFix)};
+}
+
 function doMaintain(cardId, prodId){
-  const c = card(cardId); if(!c) return null;
+  const c = card(cardId); if(!c || c.maint) return null;
   const chk = canAct("maintain"); if(!chk.ok) return null;
   const b = B1(), cb = b.card, P = b.product[prodId];
   if(!P) return null;
@@ -48,10 +55,8 @@ function doMaintain(cardId, prodId){
     log("bad", `维护<b>${c.name}</b>：` + pick(lines) + (lost ? "第二天，账上转走了一笔。" : "") + ` <span class="num">没谈成${lost?" · 存款-"+fmtWan(lost):""}</span>`);
     return {pull:0, fee:0, viol:false, fail:true, lost};
   }
-  let pull = Math.round(c.other * (cb.pullBase + c.rel*cb.pullRel) * P.pull);
-  pull = Math.min(pull, c.other);
+  const {pull, fee} = maintainQuote(c, prodId);
   c.other -= pull; c.own += pull;
-  const fee = r2(c.own * P.fee + P.feeFix);
   if(fee) feeAdd(fee);
   c.rel = c100(c.rel + cb.relMaintain);
   const p = person(c.id); if(p) p.fav = c.rel;

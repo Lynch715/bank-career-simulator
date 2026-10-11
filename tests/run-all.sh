@@ -20,7 +20,7 @@ console.log(h===b ? "  ✓ 银行升职记.html 与 index.html 一致" : "  ✗ 
 process.exit(h===b?0:1);
 ' || FAIL=$((FAIL+1))
 echo
-for f in "01-headless.js $N" 02-promo.js 03-economy.js 04-l34.js 05-ui.js 06-l5.js 07-ui-l5.js "08-balance.js 300" 09-odds.js 10-ap.js; do
+for f in "01-headless.js $N" 02-promo.js 03-economy.js 04-l34.js 05-ui.js 06-l5.js 07-ui-l5.js "08-balance.js 300" 09-odds.js 10-ap.js 11-risk-settlement.js; do
   echo "── $f ────────────────────────────────"
   out="$(node $f 2>&1)"; code=$?; echo "$out"
   if [ $code -ne 0 ] || echo "$out" | grep -q "❌"; then FAIL=$((FAIL+1)); else PASS=$((PASS+1)); fi

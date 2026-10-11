@@ -118,7 +118,13 @@ function settleL5(){
   S.biz.loans = Math.round(S.biz.loans * (1 + loanG));
   S.biz.creditQ.push((D.credit-3)*d.credit.npl);
   const lagNpl = S.biz.creditQ.length > d.credit.lag ? S.biz.creditQ.shift() : 0;
-  const newNpl = S.biz.loans * (b.nplRate/2 + lagNpl/2) * (st.npl||1);
+  let newNpl = S.biz.loans * (b.nplRate/2 + lagNpl/2) * (st.npl||1);
+  M.defaults = [];
+  (S.loanBook||[]).forEach(l => {
+    if(!l.def || l.done || S.monthAbs < l.defAt) return;
+    l.done = true; newNpl += l.amt; M.defaults.push(l.name);
+    log("bad", `旧账报到了总行：<b>${l.name}</b>逾期，新增不良${fmtWan(l.amt)}，本期计提拨备。`);
+  });
   S.biz.npl = Math.round(S.biz.npl * (1 - b.nplResolveH) + newNpl);
   // 利润
   const expense = S.biz.dep * b.expenseRate / 2 * S.biz.expenseK * (1 - digiK) * (1 + (S.biz.outlets - b.outlets)/b.outlets * 0.8);
@@ -135,7 +141,7 @@ function settleL5(){
   S.track.scoreHistory.push(S.kpi.score);
   S.track.rankHistory.push(rankL5());
   S.report = {turn:S.turn, dep:S.biz.dep, dDep:S.biz.dep-M.dep0, loans:S.biz.loans, dLoan:S.biz.loans-M.loan0, profit, npl:S.biz.npl/S.biz.loans*100,
-    car:carL5(), rating:ratingL5(), rank:rankL5(), spread:lSpread, outlets:S.biz.outlets, digi:digiK};
+    car:carL5(), rating:ratingL5(), rank:rankL5(), spread:lSpread, outlets:S.biz.outlets, digi:digiK, defaults:M.defaults.slice()};
   return S.report;
 }
 function computeRankL5(){

@@ -55,7 +55,7 @@ const UI = {
     document.documentElement.style.setProperty("--toph", th + "px");
   },
   renderTop(){
-    const c = S.core, cw = BALANCE.core.cleanWarn;
+    const c = S.core;
     const apDots = Array.from({length:S.apMax}, (_,i)=>`<i class="${i<S.ap?"on":""}"></i>`).join("");
     const turnTxt = S.lv<=2 ? `${S.m}月 · 第${S.turn}回合` : (S.lv<=4 ? `${qName()} · 第${S.turn}回合` : `${S.m<=6?"上半年":"下半年"} · 第${S.turn}回合`);
     $("top").innerHTML = `
@@ -67,7 +67,7 @@ const UI = {
         <div class="core"><b class="num" data-roll="perf">${c.perf}</b><span>业绩</span></div>
         <div class="core"><b class="num" data-roll="rep">${c.rep}</b><span>口碑</span></div>
         <div class="core"><b class="num" data-roll="trust">${c.trust}</b><span>上级信任</span></div>
-        ${c.clean <= cw ? `<div class="clean-ico" title="有些事，经不起翻">🗂</div>` : ""}
+        <div class="core" title="越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。"><b class="num" data-roll="risk">${100-c.clean}</b><span>廉政风险</span></div>
         <button class="topbtn" id="btnPeople">人脉簿</button>
         <button class="topbtn" id="btnMenu">菜单</button>
       </div>`;
@@ -239,11 +239,9 @@ const UI = {
     const c = card(cardId);
     if(!canAct("maintain").ok){ UI.toast(canAct("maintain").why); return; }
     if(c.maint){ UI.toast("这位客户本月已经维护过了"); return; }
-    const b = B1();
     const opts = PRODUCTS.map(p => {
-      const P = b.product[p.id];
-      const fee = r2((c.own + c.other*(b.card.pullBase + c.rel*b.card.pullRel)*P.pull) * P.fee + P.feeFix);
-      let s = p.tip + (fee ? ` · 中收约${fmtWan(fee)}` : "");
+      const {pull, fee} = maintainQuote(c, p.id);
+      let s = p.tip + ` · 谈成预计转入${fmtWan(pull)}` + (fee ? ` · 中收${fmtWan(fee)}` : "");
       return {t:p.name, s, odds:ODDS[1].maintain(c, p.id), fn:()=>doMaintain(c.id, p.id)};
     });
     opts.push({t:"算了", s:"", cancel:true});
@@ -251,10 +249,20 @@ const UI = {
     UI.modal({kind:"pick", title:c.name,
       body:`${T.name} · 风险测评R${c.risk} · 本行${fmtWan(c.own)} · 他行${fmtWan(c.other)} · ${c.due===S.m?"本月到期":c.due+"月到期"}${c.note?"\n\n"+c.note:""}`, opts}, UI.after);
   },
-  after(){ UI.refresh(); },
+  after(){
+    computeCore();
+    UI.refresh();
+    const latest = S.log[0];
+    if(latest && latest !== UI.lastActionLog){
+      UI.lastActionLog = latest;
+      const text = document.createElement("div"); text.innerHTML = latest.html;
+      UI.toast(text.textContent, 6000);
+    }
+  },
 
   /* ---------- 弹窗 ---------- */
   modal(spec, done){
+    if(spec.kind === "pick" && S) UI.lastActionLog = S.log[0];
     const m = $("modal");
     let html = `<div class="modal"><h2>${esc(spec.title||"")}</h2>`;
     if(spec.kind === "report"){
@@ -285,9 +293,9 @@ const UI = {
       ms.forEach(x => UI.toast(`里程碑 · ${x.name}`));
     });
   },
-  toast(txt){
-    const t = document.createElement("div"); t.className = "toast"; t.textContent = txt;
-    document.body.appendChild(t); setTimeout(()=>t.remove(), 2700);
+  toast(txt, duration=2700){
+    const t = document.createElement("div"); t.className = "toast"; t.textContent = txt; t.style.animationDuration = duration + "ms";
+    document.body.appendChild(t); setTimeout(()=>t.remove(), duration);
   },
 
   /* ---------- 窄屏标签 ---------- */
@@ -317,7 +325,7 @@ const UI = {
     $("pClose").onclick = () => { st.classList.add("hidden"); if(UI.tab==="people") UI.showTab("colM"); };
   },
   showMenu(){
-    UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。\n\n遇到 bug、觉得哪里数值不对，或者想要什么新功能，加微信直接说：<b class="wx">lynchrrr</b>`, opts:[
+    UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。\n\n廉政风险：${100-S.core.clean}/100，越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。\n\n遇到 bug、觉得哪里数值不对，或者想要什么新功能，加微信直接说：<b class="wx">lynchrrr</b>`, opts:[
       {t:"切换亮色 / 暗色", s:"", fn:()=>{ const r = document.documentElement; const cur = r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); r.dataset.theme = cur==="dark"?"light":"dark"; }},
       {t:"复制微信号", s:"lynchrrr", fn:()=>{ const w = "lynchrrr"; (navigator.clipboard ? navigator.clipboard.writeText(w) : Promise.reject()).then(()=>UI.toast("微信号已复制"), ()=>UI.toast("微信号：lynchrrr")); }},
       {t:"放到桌面", s:"装好以后断网也能玩", fn:()=>INSTALL.show(true)},

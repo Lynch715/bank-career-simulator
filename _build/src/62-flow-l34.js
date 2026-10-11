@@ -41,7 +41,7 @@ function reportSpecL4(){
   const notes = [];
   if(r.capRoom < 0) notes.push("资本额度用满了，贷款停了下来。");
   else if(r.capRoom < 100000) notes.push(`资本额度只剩${fmtYi0(r.capRoom)}的空间。`);
-  if(r.defaults.length) notes.push(`旧账：${r.defaults.join("、")}。`);
+  if(r.defaults.length) notes.push(`贷款逾期：${r.defaults.join("、")}，已计入不良和本期拨备。`);
   const quiet = !r.ms.length && !notes.length;
   return {kind:"report", title:`${r.q} · 季报`, rows, ms:r.ms, notes, quiet: quiet ? pickLine("quietL4") : "", opts:[{t:S.m===12?"看年终考核":"下个季度"}]};
 }
@@ -68,6 +68,7 @@ function reportSpecL5(){
     ["同业规模排名", `第${r.rank}名`, ""],
   ];
   const notes = [`全国网点${r.outlets}个。`];
+  if(r.defaults && r.defaults.length) notes.push(`旧账逾期：${r.defaults.join("、")}，已计入不良和本期拨备。`);
   if(r.digi > 0.02) notes.push(`数字化省下来的费用，已经有${Math.round(r.digi*100)}个点。`);
   return {kind:"report", title:`${S.m===6?"上半年":"下半年"} · 报告`, rows, ms:r.ms||[], notes, quiet:"", opts:[{t:S.m===12?"看年终考核":"下半年"}]};
 }

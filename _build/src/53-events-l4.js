@@ -33,7 +33,7 @@ const EVENTS_L4 = [
  body:S=>`渝兴地产的董事长亲自来了，带着一份展期申请：三十亿，延两年。\n\n「不展，下个月就是不良，」他把茶杯捧在手里，「展了，我还有几个盘能卖。」\n\n杜衡坐在旁边，面前的本子上写了一个数，你看不清。`,
  opts:S=>[
   {t:"「展期，要追加抵押和实控人担保。」", s:"不良暂时不出 · 风险后移", fn:()=>{ S.loanBook.push({id:"yx", name:"渝兴地产", amt:300000, tier:"high", src:"event", lv:4, at:S.monthAbs, defAt:S.monthAbs+rint(9,18), def:R()<0.4, done:false}); log("", "追加的抵押物是两块还没开发的地。董事长签字的时候，手有点抖。"); }},
-  {t:"「不展。按合同走。」", s:"当期不良+30亿 · 干净", fn:()=>{ inst("yyb").npl += 300000; fav("gu",4); log("bad", "渝兴地产下个月就上了失信名单。杜衡把那个本子合上了，没说话。"); }},
+  {t:"「不展。按合同走。」", s:"当期不良+30亿 · 干净", fn:()=>{ inst("yyb").npl += 300000; S.month.eventNpl = (S.month.eventNpl||0) + 300000; fav("gu",4); log("bad", "渝兴地产下个月就上了失信名单。杜衡把那个本子合上了，没说话。"); }},
   {t:"「借新还旧，换个名目续上。」", s:"报表干净 · 留底", gray:true, fn:()=>{ dirt(10); S.loanBook.push({id:"yx", name:"渝兴地产", amt:300000, tier:"high", src:"event", lv:4, at:S.monthAbs, defAt:S.monthAbs+rint(6,12), def:R()<0.55, done:false}); log("warn", "新合同上的借款人换成了渝兴的一家子公司。蒋国栋在会签单上写了两个字：同意。字写得很小。"); }},
  ]},
 
