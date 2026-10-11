@@ -43,9 +43,7 @@ PROMO_TEXT[3] = {
   ],
   revealWin: "组长把结果装进信封。他站起来，跟你握手，手很干：「回主城，路就近了。」",
   revealLose: (w)=>`结果出来，回主城的是${w.name}。二级分行行长群里一排「恭喜」，你也发了个。`,
-  reportWhat: (S)=> S.biz.platformDone && S.loanBook.some(l=>l.src==="platform") ? "万州那几笔平台贷款"
-    : S.flags.mabenHelped ? "当年给渝北大户关联公司放的那笔八千万"
-    : "几笔说不清的贷款",
+  reportWhat: (S)=>publicityReason(),
   reportBody: (S,what)=>`公示第四天，分行纪委收到一封信，三页，没有署名。\n\n信里写的是${what}。`,
   shield: "顾清越把信要过去，调了万州三年的授信档案。一周后的核查意见写着：未发现违规。她没跟你提过。",
   defer: "任命暂缓。陆明远打来电话，只说：「万州再干一年。」",
@@ -136,7 +134,7 @@ PROMO_TEXT[4] = {
   ],
   revealWin: "结果是视频通知的。屏幕那头的人说完，画面黑了。你在会议室里坐了一会儿，窗外两江交汇的地方，起了雾。",
   revealLose: (w)=>`去北京的是${w.from}的${w.name}。一级分行行长群里一排「恭喜」，你也发了个。`,
-  reportWhat: (S)=> S.flags.xunshiBad ? "巡视时查出来的那几件事" : (S.flags.weiIPO==="loose" ? "渝江物流那份八十页的尽调报告" : "几笔说不清的贷款"),
+  reportWhat: (S)=>publicityReason(),
   reportBody: (S,what)=>`公示第四天，总行纪委收到一封信，从重庆寄的，挂号。\n\n信里写的是${what}。`,
   shield: "顾清越出了一份监管意见，写的是重庆分行近三年的风险处置。总行纪委看完，把信归了档。",
   defer: "任命暂缓。陆明远从北京打来电话：「再等等。」",

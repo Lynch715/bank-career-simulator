@@ -147,7 +147,21 @@ function fav(id, d){ setFav(id, relationshipValue(id) + d); }
 function sfav(id, d){ if(staff(id)) fav(id, d); }
 function allStaffFav(d){ S.staff.forEach(s => sfav(s.id, d)); }
 function meet(id){ const p = person(id); if(p && !p.met){ p.met = true; p.lvMet = S.lv; } }
-function dirt(n){ S.core.clean = c100(S.core.clean - n); S.flags.grayCount = (S.flags.grayCount||0)+1; }
+let riskContext = null;
+function withRiskContext(reason, fn){
+  const previous = riskContext; riskContext = reason;
+  try { return fn(); } finally { riskContext = previous; }
+}
+function dirt(n, reason){
+  const before = S.core.clean;
+  S.core.clean = c100(before - n); S.flags.grayCount = (S.flags.grayCount||0)+1;
+  const added = before - S.core.clean;
+  if(added > 0){
+    const entry = {lv:S.lv, turn:S.turn, monthAbs:S.monthAbs, added, reason:reason || riskContext || "此前需核查的合规事项（具体事项待核实）"};
+    (S.flags.riskLedger || (S.flags.riskLedger=[])).push(entry);
+    log("warn", `廉政风险+${r1(added)}：${entry.reason}。`);
+  }
+}
 function depAdd(v){ S.biz.base += v; }
 function feeAdd(v){ S.kpi.ytd.fee += v; S.month.fee += v; }
 function custAdd(v){ v = Math.round(v); S.kpi.ytd.cust += v; S.month.cust += v; }

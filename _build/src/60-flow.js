@@ -69,14 +69,18 @@ function pickEvents(){
   show.forEach(x => { if(!x.later){ S.evDone[x.id] = true; S.evLast[x.id] = S.turn; } });
   return show;
 }
+function eventWithRiskSource(spec){
+  if(!spec || !spec.opts) return spec;
+  return Object.assign({}, spec, {opts:spec.opts.map(o => !o.fn ? o : Object.assign({},o,{fn:()=>withRiskContext(`${spec.title}：${o.t}`, o.fn)}))});
+}
 function eventSpec(x){
-  if(x.crisis || x.id==="crisis") return crisisEventSpec();
+  if(x.crisis || x.id==="crisis") return eventWithRiskSource(crisisEventSpec());
   if(x.later){
     const L = EVENTS_LATER[x.id];
-    return applyEventOdds({kind:"event", id:x.id, title:L.title, body:L.body(S, x.data||{}), opts:L.opts(S, x.data||{})}, x.id, x.data);
+    return eventWithRiskSource(applyEventOdds({kind:"event", id:x.id, title:L.title, body:L.body(S, x.data||{}), opts:L.opts(S, x.data||{})}, x.id, x.data));
   }
   const e = evDef(x.id);
-  return applyEventOdds({kind:"event", id:x.id, title:e.title, body:e.body(S, x.data||{}), opts:e.opts(S, x.data||{})}, x.id, x.data);
+  return eventWithRiskSource(applyEventOdds({kind:"event", id:x.id, title:e.title, body:e.body(S, x.data||{}), opts:e.opts(S, x.data||{})}, x.id, x.data));
 }
 function addRookie(){
   if(S.staff.length >= STAFF_L1.length) return;
@@ -343,10 +347,26 @@ function promoFinal(votes, stmtIdx, answers){
   (S.track.promoLog = S.track.promoLog || []).push({lv:S.lv, turn:S.turn, total:mine.total, best:best.score, win});
   return res;
 }
+function publicityReason(){
+  const entries = S.flags.riskLedger || [];
+  if(entries.length) return entries.slice(-3).map(e=>e.reason).join("；");
+  // 旧档只根据明确的违规标记陈述，不凭正常贷款的存在推断违规。
+  if(S.flags.mabenHelped) return "给渝北大户关联公司违规放贷的事项";
+  if(S.flags.signedHuang) return "渝顺商贸那份贷后报告上的签名";
+  if(S.flags.ranFake) return "冉记老灶消费贷用途不实的事项";
+  if(S.flags.dirtyWealth) return "向风险测评不匹配的客户销售基金的事项";
+  if(S.flags.huangDeal) return "九月底临时冲量的存款事项";
+  if(S.flags.weiIPO === "loose") return "渝江物流尽调放宽的事项";
+  return "此前需核查的合规事项（具体事项待核实，不能据此认定某笔正常审批的贷款违规）";
+}
+function publicityRisk(){
+  const p = BALANCE.promo.report;
+  return clamp((p.from - S.core.clean) * p.k, 0, 1);
+}
 function promoPublicity(){
   const p = BALANCE.promo.report;
-  const prob = Math.max(0, (p.from - S.core.clean) * p.k);
-  const out = {prob, reported:false, result:"pass"};
+  const prob = publicityRisk();
+  const out = {prob, reason:publicityReason(), reported:false, result:"pass"};
   if(R() < prob){
     out.reported = true;
     const gu = person("gu");

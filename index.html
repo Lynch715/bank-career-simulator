@@ -67,7 +67,7 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;touch-action:manipulation}
-#app{position:fixed;inset:0}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
 html.iosfix,html.iosfix body{height:var(--apph);background:var(--card)}
 html.iosfix #app,html.iosfix .stage,html.iosfix .overlay{bottom:auto;height:var(--apph)}
 body{background:var(--paper);color:var(--text);font:14px/1.6 var(--font);-webkit-font-smoothing:antialiased;overflow:hidden}
@@ -78,7 +78,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .muted{color:var(--muted)}
 
 /* 顶栏 */
-#top{min-height:56px;background:var(--ink);color:#efe9da;display:flex;align-items:center;gap:14px;padding:env(safe-area-inset-top) calc(16px + env(safe-area-inset-right)) 0 calc(16px + env(safe-area-inset-left));position:relative;z-index:5}
+#top{flex-shrink:0;min-height:56px;background:var(--ink);color:#efe9da;display:flex;align-items:center;gap:14px;padding:env(safe-area-inset-top) calc(16px + env(safe-area-inset-right)) 0 calc(16px + env(safe-area-inset-left));position:relative;z-index:5}
 #top .who{font-family:var(--serif);font-size:18px;letter-spacing:1px;white-space:nowrap}
 #top .meta{font-size:12px;color:#c9c2ae;white-space:nowrap}
 #top .ap{display:flex;gap:4px;align-items:center}
@@ -94,7 +94,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .topbtn:hover{background:rgba(255,255,255,.08)}
 
 /* 三栏 */
-#main{display:grid;grid-template-columns:300px 1fr 300px;grid-template-rows:minmax(0,1fr);gap:14px;padding:14px;height:calc(100% - var(--toph,56px))}
+#main{display:grid;grid-template-columns:300px 1fr 300px;grid-template-rows:minmax(0,1fr);gap:14px;padding:14px;flex:1;min-height:0}
 .col{overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
 .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
 .box h3{margin:0 0 10px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:1px;display:flex;justify-content:space-between;align-items:baseline}
@@ -336,10 +336,10 @@ button:disabled{cursor:not-allowed;opacity:.45}
   #top .cores{margin-left:0;width:100%;justify-content:space-between}
   .core{flex:1;min-width:0;padding:3px 5px}
   .core span{font-size:11px;white-space:nowrap}
-  #main{display:block;padding:10px;height:calc(100% - var(--toph,96px) - 58px - env(safe-area-inset-bottom));overflow:hidden}
+  #main{display:block;padding:10px;min-height:0;overflow:hidden}
   #main .col{height:100%;display:none}
   #main .col.show{display:block}
-  #tabs{display:flex;position:absolute;left:0;right:0;bottom:0;height:calc(58px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+  #tabs{display:flex;position:relative;flex-shrink:0;height:calc(58px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);z-index:6;padding-bottom:env(safe-area-inset-bottom)}
   #tabs button{flex:1;min-height:58px;font-size:13px;color:var(--muted)}
   #tabs button.on{color:var(--ink);font-weight:700}
   .stats{grid-template-columns:repeat(3,1fr)}
@@ -958,7 +958,21 @@ function fav(id, d){ setFav(id, relationshipValue(id) + d); }
 function sfav(id, d){ if(staff(id)) fav(id, d); }
 function allStaffFav(d){ S.staff.forEach(s => sfav(s.id, d)); }
 function meet(id){ const p = person(id); if(p && !p.met){ p.met = true; p.lvMet = S.lv; } }
-function dirt(n){ S.core.clean = c100(S.core.clean - n); S.flags.grayCount = (S.flags.grayCount||0)+1; }
+let riskContext = null;
+function withRiskContext(reason, fn){
+  const previous = riskContext; riskContext = reason;
+  try { return fn(); } finally { riskContext = previous; }
+}
+function dirt(n, reason){
+  const before = S.core.clean;
+  S.core.clean = c100(before - n); S.flags.grayCount = (S.flags.grayCount||0)+1;
+  const added = before - S.core.clean;
+  if(added > 0){
+    const entry = {lv:S.lv, turn:S.turn, monthAbs:S.monthAbs, added, reason:reason || riskContext || "此前需核查的合规事项（具体事项待核实）"};
+    (S.flags.riskLedger || (S.flags.riskLedger=[])).push(entry);
+    log("warn", `廉政风险+${r1(added)}：${entry.reason}。`);
+  }
+}
 function depAdd(v){ S.biz.base += v; }
 function feeAdd(v){ S.kpi.ytd.fee += v; S.month.fee += v; }
 function custAdd(v){ v = Math.round(v); S.kpi.ytd.cust += v; S.month.cust += v; }
@@ -1281,7 +1295,7 @@ function doMaintain(cardId, prodId){
   if(prodId==="fund" && c.risk < P.riskLevel){
     viol = true;
     const v = b.violation;
-    dirt(v.clean);
+    dirt(v.clean, "向风险测评不匹配的客户销售权益基金");
     S.flags.dirtyWealth = (S.flags.dirtyWealth||0) + 1;
     const p = c.risk<=2 ? v.complainP : v.complainP*0.6;
     if(R() < p) schedule("complaintV", rint(v.delayMin, v.delayMax), {cardId:c.id});
@@ -2917,7 +2931,7 @@ function doVisit(pid, gift){
   apUse(1);
   if(gift){
     p.gift++; S.biz.budget = r1(S.biz.budget - b.giftCost); S.month.spent = (S.month.spent||0) + b.giftCost;
-    dirt(b.giftClean);
+    dirt(b.giftClean, `${d.name}项目审批前宴请送礼`);
     if(d.who) fav(d.who, 6);
     log("warn", `请${d.name}的人在南滨路吃了顿饭，后备箱里放了两瓶酒。${d.who==="weilc"?"魏临川喝到第三杯，开始叫你兄弟。":"对方临走说了句「贵行有诚意」。"}`);
   } else {
@@ -4355,9 +4369,7 @@ const PROMO_TEXT = {
     ],
     revealWin: "处长把结果装进牛皮纸袋，封口贴了一条胶带。黄世海先站起来，跟你握了一下手，手是凉的。",
     revealLose: (w)=>`结果出来那天，${w.name}在支行群里发了一句「感谢领导信任」。下面一排大拇指，你也点了个。`,
-    reportWhat: (S)=> S.flags.signedHuang ? "渝顺商贸那份贷后报告上的签名"
-      : S.flags.huangDeal ? "九月底那笔进了又走的三千万"
-      : (S.flags.dirtyWealth ? "给老年客户卖R4基金的事" : (S.flags.ranFake ? "冉记老灶那笔消费贷" : "几件说不清的事")),
+    reportWhat: (S)=>publicityReason(),
     reportBody: (S,what)=>`公示第四天，分行纪委收到一封信，没有署名，打印的，只有一页。\n\n信里写的是${what}。`,
     shield: "顾清越把信要了过去。三天后，核查意见上写着：反映问题不具体，不予立案。你是后来听蒋红说的。顾清越没提过这件事。",
     defer: "任命暂缓。黄世海打电话来，只说了一句：「等一等。」\n\n那个位子空了三个月，后来去了别人。",
@@ -4476,10 +4488,7 @@ PROMO_TEXT[2] = {
   ],
   revealWin: "组长把结果装进信封，封口用手指压了两遍。周启明先站起来，跟你握手：「万州，好好干。」",
   revealLose: (w)=>`结果出来，去万州的是${w.name}。行长群里一排「恭喜」，你也发了个。`,
-  reportWhat: (S)=> S.flags.mabenHelped ? "给渝北大户关联公司放的那笔八千万"
-    : (S.loanBook||[]).some(l=>l.name==="恒通商贸") ? "恒通商贸那笔三千万"
-    : S.flags.signedHuang ? "渝顺商贸那份贷后报告上的签名"
-    : "几笔说不清的贷款",
+  reportWhat: (S)=>publicityReason(),
   reportBody: (S,what)=>`公示第四天，分行纪委收到一封信，没有署名，打印的，两页。\n\n信里写的是${what}。`,
   shield: "顾清越把信要过去看了一下午。核查意见只有一行：所反映问题已在授信审查中说明。她后来没提过这件事。",
   defer: "任命暂缓。周启明打电话来，只说：「先把南岸管好。」\n\n万州那个位子，后来给了别人。",
@@ -4601,9 +4610,7 @@ PROMO_TEXT[3] = {
   ],
   revealWin: "组长把结果装进信封。他站起来，跟你握手，手很干：「回主城，路就近了。」",
   revealLose: (w)=>`结果出来，回主城的是${w.name}。二级分行行长群里一排「恭喜」，你也发了个。`,
-  reportWhat: (S)=> S.biz.platformDone && S.loanBook.some(l=>l.src==="platform") ? "万州那几笔平台贷款"
-    : S.flags.mabenHelped ? "当年给渝北大户关联公司放的那笔八千万"
-    : "几笔说不清的贷款",
+  reportWhat: (S)=>publicityReason(),
   reportBody: (S,what)=>`公示第四天，分行纪委收到一封信，三页，没有署名。\n\n信里写的是${what}。`,
   shield: "顾清越把信要过去，调了万州三年的授信档案。一周后的核查意见写着：未发现违规。她没跟你提过。",
   defer: "任命暂缓。陆明远打来电话，只说：「万州再干一年。」",
@@ -4694,7 +4701,7 @@ PROMO_TEXT[4] = {
   ],
   revealWin: "结果是视频通知的。屏幕那头的人说完，画面黑了。你在会议室里坐了一会儿，窗外两江交汇的地方，起了雾。",
   revealLose: (w)=>`去北京的是${w.from}的${w.name}。一级分行行长群里一排「恭喜」，你也发了个。`,
-  reportWhat: (S)=> S.flags.xunshiBad ? "巡视时查出来的那几件事" : (S.flags.weiIPO==="loose" ? "渝江物流那份八十页的尽调报告" : "几笔说不清的贷款"),
+  reportWhat: (S)=>publicityReason(),
   reportBody: (S,what)=>`公示第四天，总行纪委收到一封信，从重庆寄的，挂号。\n\n信里写的是${what}。`,
   shield: "顾清越出了一份监管意见，写的是重庆分行近三年的风险处置。总行纪委看完，把信归了档。",
   defer: "任命暂缓。陆明远从北京打来电话：「再等等。」",
@@ -5135,14 +5142,18 @@ function pickEvents(){
   show.forEach(x => { if(!x.later){ S.evDone[x.id] = true; S.evLast[x.id] = S.turn; } });
   return show;
 }
+function eventWithRiskSource(spec){
+  if(!spec || !spec.opts) return spec;
+  return Object.assign({}, spec, {opts:spec.opts.map(o => !o.fn ? o : Object.assign({},o,{fn:()=>withRiskContext(`${spec.title}：${o.t}`, o.fn)}))});
+}
 function eventSpec(x){
-  if(x.crisis || x.id==="crisis") return crisisEventSpec();
+  if(x.crisis || x.id==="crisis") return eventWithRiskSource(crisisEventSpec());
   if(x.later){
     const L = EVENTS_LATER[x.id];
-    return applyEventOdds({kind:"event", id:x.id, title:L.title, body:L.body(S, x.data||{}), opts:L.opts(S, x.data||{})}, x.id, x.data);
+    return eventWithRiskSource(applyEventOdds({kind:"event", id:x.id, title:L.title, body:L.body(S, x.data||{}), opts:L.opts(S, x.data||{})}, x.id, x.data));
   }
   const e = evDef(x.id);
-  return applyEventOdds({kind:"event", id:x.id, title:e.title, body:e.body(S, x.data||{}), opts:e.opts(S, x.data||{})}, x.id, x.data);
+  return eventWithRiskSource(applyEventOdds({kind:"event", id:x.id, title:e.title, body:e.body(S, x.data||{}), opts:e.opts(S, x.data||{})}, x.id, x.data));
 }
 function addRookie(){
   if(S.staff.length >= STAFF_L1.length) return;
@@ -5409,10 +5420,26 @@ function promoFinal(votes, stmtIdx, answers){
   (S.track.promoLog = S.track.promoLog || []).push({lv:S.lv, turn:S.turn, total:mine.total, best:best.score, win});
   return res;
 }
+function publicityReason(){
+  const entries = S.flags.riskLedger || [];
+  if(entries.length) return entries.slice(-3).map(e=>e.reason).join("；");
+  // 旧档只根据明确的违规标记陈述，不凭正常贷款的存在推断违规。
+  if(S.flags.mabenHelped) return "给渝北大户关联公司违规放贷的事项";
+  if(S.flags.signedHuang) return "渝顺商贸那份贷后报告上的签名";
+  if(S.flags.ranFake) return "冉记老灶消费贷用途不实的事项";
+  if(S.flags.dirtyWealth) return "向风险测评不匹配的客户销售基金的事项";
+  if(S.flags.huangDeal) return "九月底临时冲量的存款事项";
+  if(S.flags.weiIPO === "loose") return "渝江物流尽调放宽的事项";
+  return "此前需核查的合规事项（具体事项待核实，不能据此认定某笔正常审批的贷款违规）";
+}
+function publicityRisk(){
+  const p = BALANCE.promo.report;
+  return clamp((p.from - S.core.clean) * p.k, 0, 1);
+}
 function promoPublicity(){
   const p = BALANCE.promo.report;
-  const prob = Math.max(0, (p.from - S.core.clean) * p.k);
-  const out = {prob, reported:false, result:"pass"};
+  const prob = publicityRisk();
+  const out = {prob, reason:publicityReason(), reported:false, result:"pass"};
   if(R() < prob){
     out.reported = true;
     const gu = person("gu");
@@ -6109,11 +6136,33 @@ const UI = {
   refresh(){
     if(!S) return;
     if(S.phase === "over"){ UI.showEnding(); return; }
-    UI.relationshipFeedback();
+    try { UI.relationshipFeedback(); } catch(error){ console.error("关系提示恢复失败",error); UI.relationshipSnapshot=null; }
     $("app").classList.remove("hidden");
-    UI.renderTop(); UI.renderLeft(); UI.renderMid(); UI.renderLog();
+    UI.renderTop();
+    UI.renderPanel("colM", ()=>UI.renderMid());
+    UI.renderPanel("colL", ()=>UI.renderLeft());
+    UI.renderPanel("colR", ()=>UI.renderLog());
+    UI.showTab(UI.tab);
     const th = $("top").getBoundingClientRect().height;
     document.documentElement.style.setProperty("--toph", th + "px");
+  },
+  renderPanel(id, render){
+    const panel = $(id);
+    try { render(); delete panel.dataset.renderError; }
+    catch(error){
+      console.error(`面板渲染失败 ${id}`, error);
+      panel.dataset.renderError = String(error.message || error);
+      panel.innerHTML = `<div class="box"><h3>页面显示遇到问题</h3><p>当前进度仍在，请勿清除存档。可以重试显示，或复制存档用于排查。</p><p class="muted">${esc(panel.dataset.renderError)}</p><button class="btn" data-retry-panel>重试显示</button><button class="btn ghost" data-copy-save>复制当前存档</button></div>`;
+      panel.querySelector('[data-retry-panel]').onclick = ()=>UI.refresh();
+      panel.querySelector('[data-copy-save]').onclick = ()=>UI.copySave();
+    }
+  },
+  copySave(){
+    const text = JSON.stringify(S);
+    const box = document.createElement("textarea"); box.value=text; document.body.appendChild(box); box.select();
+    try { if(!document.execCommand('copy')) throw new Error('copy'); UI.toast('存档已复制，可以粘贴发来排查'); }
+    catch(e){ UI.modal({title:"当前存档",body:"复制下方内容用于排查。",opts:[{t:"关闭"}]}); const area=document.createElement('textarea'); area.value=text; area.style.cssText='width:100%;height:200px'; $("modal").querySelector('.body').appendChild(area); }
+    finally { box.remove(); }
   },
   relationshipFeedback(){
     const values = {};
@@ -6149,7 +6198,7 @@ const UI = {
   },
   renderLeft(){
     const cap = BALANCE.kpiCap;
-    const items = S.kpi.card.map(it => {
+    const items = (Array.isArray(S.kpi.card)?S.kpi.card:[]).filter(Boolean).map(it => {
       const pct = clamp(it.done/cap, 0, 1)*100;
       const pace = it.kind==="flow" ? clamp((S.m/12)/cap, 0, 1)*100 : clamp(1/cap,0,1)*100;
       if(it.kind==="lower") it.done = it.pace;
@@ -6161,17 +6210,17 @@ const UI = {
       return `<div class="kpi-it"><div class="l"><span>${it.name} <small>${it.w}</small></span><span class="num">${act} <small>/ ${tgt}</small></span></div>
         <div class="bar"><i class="${cls}" style="width:${pct}%"></i><span class="pace" style="left:${pace}%"></span></div></div>`;
     }).join("");
-    const first = !S.track.scoreHistory.length;
-    let t = S.kpi.table || [];
+    const first = !(S.track.scoreHistory||[]).length;
+    let t = Array.isArray(S.kpi.table) ? S.kpi.table.filter(Boolean) : [];
     if(first && S.lv<=2) t = t.filter(r=>!r.me).concat([{name:S.lv===2?"南岸支行":"弹子石网点", boss:S.player.sur+S.player.given, score:null, me:true}]);
     const rows = t.map((r,i) => {
       let arr = "";
       if(r.me && S.kpi.prevRank){ const d = S.kpi.prevRank - S.kpi.rank; arr = d>0?`<span class="arr-up">↑${d}</span>`:(d<0?`<span class="arr-dn">↓${-d}</span>`:""); }
-      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${r.boss}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):r.score.toFixed(1))} ${first?"":arr}</td></tr>`;
+      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${r.boss}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):Number(r.score).toFixed(1))} ${first?"":arr}</td></tr>`;
     }).join("");
     $("colL").innerHTML = `
       <div class="box"><h3>考核卡 <em>入行第${S.careerYear}年</em></h3>${items}
-        <div class="score"><span class="muted">综合得分</span><b class="num" data-roll="score">${S.track.scoreHistory.length?S.kpi.score.toFixed(1):"—"}</b></div>
+        <div class="score"><span class="muted">综合得分</span><b class="num" data-roll="score">${S.track.scoreHistory.length?Number(S.kpi.score).toFixed(1):"—"}</b></div>
         <p class="hint" style="margin-top:6px">金线是时序进度。完成率封顶${Math.round(cap*100)}%。</p></div>
       <div class="box"><h3>${[null,"支行","分行","二级分行","全国一级分行","同业规模"][S.lv]}排名 <em>${first?(S.lv===5?"半年后出排名":"月底出排名"):"第"+S.kpi.rank+"名"}</em></h3><table class="rank-t">${rows}</table></div>`;
     UI.rollAll();
@@ -6373,6 +6422,7 @@ const UI = {
   /* ---------- 窄屏标签 ---------- */
   showTab(t){
     if(t === "people"){ UI.showPeople(); return; }
+    if(!["colL","colM","colR"].includes(t)) t = "colM";
     UI.tab = t;
     ["colL","colM","colR"].forEach(id => $(id).classList.toggle("show", id===t));
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t===t));
@@ -6400,6 +6450,8 @@ const UI = {
     UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。\n\n廉政风险：${100-S.core.clean}/100，越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。\n\n遇到 bug、觉得哪里数值不对，或者想要什么新功能，加微信直接说：<b class="wx">lynchrrr</b>`, opts:[
       {t:"切换亮色 / 暗色", s:"", fn:()=>{ const r = document.documentElement; const cur = r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); r.dataset.theme = cur==="dark"?"light":"dark"; }},
       {t:"复制微信号", s:"lynchrrr", fn:()=>{ const w = "lynchrrr"; (navigator.clipboard ? navigator.clipboard.writeText(w) : Promise.reject()).then(()=>UI.toast("微信号已复制"), ()=>UI.toast("微信号：lynchrrr")); }},
+      {t:"查看廉政风险来源", s:"累计风险及公示核查依据", fn:()=>setTimeout(()=>UI.modal({title:"廉政风险来源",body:`当前风险 ${100-S.core.clean}/100，公示举报概率 ${Math.round(publicityRisk()*100)}%。\n\n${publicityReason()}\n\n正常审批贷款、贷款经营损失本身不会增加廉政风险。`,opts:[{t:"关闭"}]}),0)},
+      {t:"复制当前存档", s:"保留进度或反馈问题", fn:()=>UI.copySave()},
       {t:"放到桌面", s:"装好以后断网也能玩", fn:()=>INSTALL.show(true)},
       {t:"重新开一局", s:"当前进度会被覆盖", fn:()=>{ clearSave(); UI.start(); }},
       {t:"回到游戏", s:""},
@@ -6428,7 +6480,9 @@ const UI = {
     };
   },
   resume(){
-    UI.rolls = {};
+    UI.rolls = {}; UI.relationshipSnapshot = null;
+    $("stage").classList.add("hidden"); $("modal").classList.add("hidden");
+    UI.showTab("colM"); $("colM").scrollTop = 0;
     if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play") advance(); d(); }); runJobs(); return; }
     UI.refresh();
   },
@@ -6912,7 +6966,7 @@ UI.promoFlow = function(done){
   const st = $("stage");
   const show = (html) => { st.innerHTML = `<div class="inner">${html}</div>`; st.classList.remove("hidden"); st.scrollTop = 0; };
   const btn = (id, txt, cls) => `<button class="btn ${cls||""}" id="${id}">${txt}</button>`;
-  const finish = () => { st.classList.add("hidden"); st.innerHTML = ""; S.promo.stage = null; save(); UI.refresh(); done(); };
+  const finish = () => { st.classList.add("hidden"); st.innerHTML = ""; S.promo.stage = null; UI.showTab("colM"); $("colM").scrollTop = 0; save(); UI.refresh(); done(); };
 
   const votes = promoVotes();
   const stmts = promoStatements();
@@ -7005,7 +7059,7 @@ UI.promoFlow = function(done){
       if(d >= stopAt){
         if(pub.reported){
           $("d4").classList.add("alarm");
-          $("pubtxt").innerHTML = paras(T.reportBody(S, T.reportWhat(S)));
+          $("pubtxt").innerHTML = paras(T.reportBody(S, pub.reason)) + `<p class="hint">公示核查基于累计廉政风险 ${100-S.core.clean}/100，本次举报概率 ${Math.round(pub.prob*100)}%。正常贷款审批与贷款经营损失本身不增加廉政风险。</p>`;
           $("pbtn").innerHTML = btn("n6","然后");
           $("n6").onclick = () => {
             if(pub.result === "shield"){ $("pubtxt").innerHTML += paras(T.shield); $("pbtn").innerHTML = btn("n7","任命","gold"); $("n7").onclick = stepAppoint; }

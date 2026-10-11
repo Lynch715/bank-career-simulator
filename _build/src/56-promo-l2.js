@@ -42,10 +42,7 @@ PROMO_TEXT[2] = {
   ],
   revealWin: "组长把结果装进信封，封口用手指压了两遍。周启明先站起来，跟你握手：「万州，好好干。」",
   revealLose: (w)=>`结果出来，去万州的是${w.name}。行长群里一排「恭喜」，你也发了个。`,
-  reportWhat: (S)=> S.flags.mabenHelped ? "给渝北大户关联公司放的那笔八千万"
-    : (S.loanBook||[]).some(l=>l.name==="恒通商贸") ? "恒通商贸那笔三千万"
-    : S.flags.signedHuang ? "渝顺商贸那份贷后报告上的签名"
-    : "几笔说不清的贷款",
+  reportWhat: (S)=>publicityReason(),
   reportBody: (S,what)=>`公示第四天，分行纪委收到一封信，没有署名，打印的，两页。\n\n信里写的是${what}。`,
   shield: "顾清越把信要过去看了一下午。核查意见只有一行：所反映问题已在授信审查中说明。她后来没提过这件事。",
   defer: "任命暂缓。周启明打电话来，只说：「先把南岸管好。」\n\n万州那个位子，后来给了别人。",

@@ -1,0 +1,25 @@
+const {load,runner,GAME}=require('./lib'),fs=require('fs');
+const {G}=load({patch:s=>s.replace('internals:{ maintainQuote,','internals:{ publicityReason, publicityRisk, seedRng, maintainQuote,')});const I=G.internals,T=runner('13-publicity-resume');G.setHeadless(true);
+function init(lv=2){G.newGame({seed:417});G.S.carry={};if(lv>1){G.S.lv=lv;I['initL'+lv]();}return G.S;}
+let s=init();for(let i=0;i<30;i++){s.biz.queue.push({id:'safe'+i,name:'正常经营客户',amt:100,tier:'low'});G.act.decideLoan('safe'+i,true);}T.ok('正常审批不会增加廉政风险',s.core.clean===100&&!s.flags.riskLedger);
+T.ok('合规审批公示不被举报',Array.from({length:100},()=>I.promoPublicity()).every(x=>!x.reported&&x.result==='pass'));
+s.core.clean=62;T.ok('风险38对应27%举报概率',Math.abs(I.publicityRisk()-.27)<1e-9);T.ok('旧档未知原因不凭空指控贷款',I.publicityReason().includes('具体事项待核实')&&!I.publicityReason().includes('几笔说不清'));
+s=init(3);s.biz.platformDone=['normal'];s.loanBook=[{name:'正规平台贷款',src:'platform'}];T.ok('正常平台贷款也不能当作举报依据',!G.TEXT().PROMO_TEXT[3].reportWhat(s).includes('那几笔平台贷款'));
+s=init();G.act.visit('yujiang',true);T.ok('宴请送礼记录实际风险来源',s.flags.riskLedger.some(e=>e.reason.includes('宴请送礼')&&e.added===3));T.ok('公示原因引用风险来源',I.promoPublicity().reason.includes('宴请送礼'));
+s=init(1);const ev=I.eventSpec({id:'sdx'});ev.opts[1].fn();T.ok('事件及失败分支带上来源',s.flags.riskLedger.some(e=>e.reason.includes('适当性')));G.save();G.load();T.ok('风险来源随存档保留',G.S.flags.riskLedger.length>0);
+const {JSDOM}=require('jsdom');const html=fs.readFileSync(GAME,'utf8');
+const options={runScripts:'dangerously',pretendToBeVisual:true,url:'http://localhost/'};
+let dom=new JSDOM(html,options),H=dom.window.THSZ;H.newGame({seed:417});H.S.carry={};H.S.lv=2;H.internals.initL2('xiaoman');H.S.turn=61;H.S.m=1;H.S.year=6;H.S.core.clean=62;H.save();const raw=dom.window.localStorage.getItem(H.BALANCE.saveKey);dom.window.close();
+dom=new JSDOM(html,{...options,beforeParse(w){w.localStorage.setItem('thsz_save',raw);}});H=dom.window.THSZ;
+dom.window.document.getElementById('btnCont').click();
+T.ok('真正重载后继续第61回合',H.S.turn===61&&dom.window.document.querySelectorAll('[data-outlet]').length===4);
+T.ok('恢复后经营面板被选中',dom.window.document.querySelector('#colM').classList.contains('show'));
+T.ok('继续游戏不会扣点或推进月份',H.S.ap===JSON.parse(raw).ap&&H.S.monthAbs===JSON.parse(raw).monthAbs);
+const saved=H.UI.renderLeft;H.UI.renderLeft=()=>{throw new Error('模拟旧考核字段异常');};const errors=[];dom.window.console.error=(...v)=>errors.push(v.join(' '));H.UI.refresh();
+T.ok('考核报错不阻断经营面板与日志',dom.window.document.querySelectorAll('[data-outlet]').length===4&&dom.window.document.querySelector('#colR').textContent.includes('日志与消息'));
+T.ok('出错区域有可恢复入口',dom.window.document.querySelector('#colL [data-retry-panel]')&&dom.window.document.querySelector('#colL [data-copy-save]'));
+H.UI.renderLeft=saved;dom.window.document.querySelector('#colL [data-retry-panel]').click();T.ok('重试能恢复考核',!dom.window.document.querySelector('#colL').dataset.renderError);
+H.UI.showTab('invalid');T.ok('异常标签回落到经营面板',H.UI.tab==='colM'&&dom.window.document.querySelector('#colM').classList.contains('show'));
+H.S.kpi.table=[{name:'旧档同业',score:'80.4',me:false}];H.UI.refresh();T.ok('旧档数字字符串不会打断渲染',!dom.window.document.querySelector('#colL').dataset.renderError);
+H.UI.showMenu();T.ok('菜单能检查风险来源与复制存档',dom.window.document.querySelector('#modal').textContent.includes('查看廉政风险来源')&&dom.window.document.querySelector('#modal').textContent.includes('复制当前存档'));
+dom.window.close();T.done();

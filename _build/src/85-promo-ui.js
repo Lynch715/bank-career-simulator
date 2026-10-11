@@ -8,7 +8,7 @@ UI.promoFlow = function(done){
   const st = $("stage");
   const show = (html) => { st.innerHTML = `<div class="inner">${html}</div>`; st.classList.remove("hidden"); st.scrollTop = 0; };
   const btn = (id, txt, cls) => `<button class="btn ${cls||""}" id="${id}">${txt}</button>`;
-  const finish = () => { st.classList.add("hidden"); st.innerHTML = ""; S.promo.stage = null; save(); UI.refresh(); done(); };
+  const finish = () => { st.classList.add("hidden"); st.innerHTML = ""; S.promo.stage = null; UI.showTab("colM"); $("colM").scrollTop = 0; save(); UI.refresh(); done(); };
 
   const votes = promoVotes();
   const stmts = promoStatements();
@@ -101,7 +101,7 @@ UI.promoFlow = function(done){
       if(d >= stopAt){
         if(pub.reported){
           $("d4").classList.add("alarm");
-          $("pubtxt").innerHTML = paras(T.reportBody(S, T.reportWhat(S)));
+          $("pubtxt").innerHTML = paras(T.reportBody(S, pub.reason)) + `<p class="hint">公示核查基于累计廉政风险 ${100-S.core.clean}/100，本次举报概率 ${Math.round(pub.prob*100)}%。正常贷款审批与贷款经营损失本身不增加廉政风险。</p>`;
           $("pbtn").innerHTML = btn("n6","然后");
           $("n6").onclick = () => {
             if(pub.result === "shield"){ $("pubtxt").innerHTML += paras(T.shield); $("pbtn").innerHTML = btn("n7","任命","gold"); $("n7").onclick = stepAppoint; }

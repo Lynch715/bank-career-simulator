@@ -49,11 +49,33 @@ const UI = {
   refresh(){
     if(!S) return;
     if(S.phase === "over"){ UI.showEnding(); return; }
-    UI.relationshipFeedback();
+    try { UI.relationshipFeedback(); } catch(error){ console.error("关系提示恢复失败",error); UI.relationshipSnapshot=null; }
     $("app").classList.remove("hidden");
-    UI.renderTop(); UI.renderLeft(); UI.renderMid(); UI.renderLog();
+    UI.renderTop();
+    UI.renderPanel("colM", ()=>UI.renderMid());
+    UI.renderPanel("colL", ()=>UI.renderLeft());
+    UI.renderPanel("colR", ()=>UI.renderLog());
+    UI.showTab(UI.tab);
     const th = $("top").getBoundingClientRect().height;
     document.documentElement.style.setProperty("--toph", th + "px");
+  },
+  renderPanel(id, render){
+    const panel = $(id);
+    try { render(); delete panel.dataset.renderError; }
+    catch(error){
+      console.error(`面板渲染失败 ${id}`, error);
+      panel.dataset.renderError = String(error.message || error);
+      panel.innerHTML = `<div class="box"><h3>页面显示遇到问题</h3><p>当前进度仍在，请勿清除存档。可以重试显示，或复制存档用于排查。</p><p class="muted">${esc(panel.dataset.renderError)}</p><button class="btn" data-retry-panel>重试显示</button><button class="btn ghost" data-copy-save>复制当前存档</button></div>`;
+      panel.querySelector('[data-retry-panel]').onclick = ()=>UI.refresh();
+      panel.querySelector('[data-copy-save]').onclick = ()=>UI.copySave();
+    }
+  },
+  copySave(){
+    const text = JSON.stringify(S);
+    const box = document.createElement("textarea"); box.value=text; document.body.appendChild(box); box.select();
+    try { if(!document.execCommand('copy')) throw new Error('copy'); UI.toast('存档已复制，可以粘贴发来排查'); }
+    catch(e){ UI.modal({title:"当前存档",body:"复制下方内容用于排查。",opts:[{t:"关闭"}]}); const area=document.createElement('textarea'); area.value=text; area.style.cssText='width:100%;height:200px'; $("modal").querySelector('.body').appendChild(area); }
+    finally { box.remove(); }
   },
   relationshipFeedback(){
     const values = {};
@@ -89,7 +111,7 @@ const UI = {
   },
   renderLeft(){
     const cap = BALANCE.kpiCap;
-    const items = S.kpi.card.map(it => {
+    const items = (Array.isArray(S.kpi.card)?S.kpi.card:[]).filter(Boolean).map(it => {
       const pct = clamp(it.done/cap, 0, 1)*100;
       const pace = it.kind==="flow" ? clamp((S.m/12)/cap, 0, 1)*100 : clamp(1/cap,0,1)*100;
       if(it.kind==="lower") it.done = it.pace;
@@ -101,17 +123,17 @@ const UI = {
       return `<div class="kpi-it"><div class="l"><span>${it.name} <small>${it.w}</small></span><span class="num">${act} <small>/ ${tgt}</small></span></div>
         <div class="bar"><i class="${cls}" style="width:${pct}%"></i><span class="pace" style="left:${pace}%"></span></div></div>`;
     }).join("");
-    const first = !S.track.scoreHistory.length;
-    let t = S.kpi.table || [];
+    const first = !(S.track.scoreHistory||[]).length;
+    let t = Array.isArray(S.kpi.table) ? S.kpi.table.filter(Boolean) : [];
     if(first && S.lv<=2) t = t.filter(r=>!r.me).concat([{name:S.lv===2?"南岸支行":"弹子石网点", boss:S.player.sur+S.player.given, score:null, me:true}]);
     const rows = t.map((r,i) => {
       let arr = "";
       if(r.me && S.kpi.prevRank){ const d = S.kpi.prevRank - S.kpi.rank; arr = d>0?`<span class="arr-up">↑${d}</span>`:(d<0?`<span class="arr-dn">↓${-d}</span>`:""); }
-      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${r.boss}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):r.score.toFixed(1))} ${first?"":arr}</td></tr>`;
+      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${r.boss}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):Number(r.score).toFixed(1))} ${first?"":arr}</td></tr>`;
     }).join("");
     $("colL").innerHTML = `
       <div class="box"><h3>考核卡 <em>入行第${S.careerYear}年</em></h3>${items}
-        <div class="score"><span class="muted">综合得分</span><b class="num" data-roll="score">${S.track.scoreHistory.length?S.kpi.score.toFixed(1):"—"}</b></div>
+        <div class="score"><span class="muted">综合得分</span><b class="num" data-roll="score">${S.track.scoreHistory.length?Number(S.kpi.score).toFixed(1):"—"}</b></div>
         <p class="hint" style="margin-top:6px">金线是时序进度。完成率封顶${Math.round(cap*100)}%。</p></div>
       <div class="box"><h3>${[null,"支行","分行","二级分行","全国一级分行","同业规模"][S.lv]}排名 <em>${first?(S.lv===5?"半年后出排名":"月底出排名"):"第"+S.kpi.rank+"名"}</em></h3><table class="rank-t">${rows}</table></div>`;
     UI.rollAll();
@@ -313,6 +335,7 @@ const UI = {
   /* ---------- 窄屏标签 ---------- */
   showTab(t){
     if(t === "people"){ UI.showPeople(); return; }
+    if(!["colL","colM","colR"].includes(t)) t = "colM";
     UI.tab = t;
     ["colL","colM","colR"].forEach(id => $(id).classList.toggle("show", id===t));
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t===t));
@@ -340,6 +363,8 @@ const UI = {
     UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。\n\n廉政风险：${100-S.core.clean}/100，越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。\n\n遇到 bug、觉得哪里数值不对，或者想要什么新功能，加微信直接说：<b class="wx">lynchrrr</b>`, opts:[
       {t:"切换亮色 / 暗色", s:"", fn:()=>{ const r = document.documentElement; const cur = r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); r.dataset.theme = cur==="dark"?"light":"dark"; }},
       {t:"复制微信号", s:"lynchrrr", fn:()=>{ const w = "lynchrrr"; (navigator.clipboard ? navigator.clipboard.writeText(w) : Promise.reject()).then(()=>UI.toast("微信号已复制"), ()=>UI.toast("微信号：lynchrrr")); }},
+      {t:"查看廉政风险来源", s:"累计风险及公示核查依据", fn:()=>setTimeout(()=>UI.modal({title:"廉政风险来源",body:`当前风险 ${100-S.core.clean}/100，公示举报概率 ${Math.round(publicityRisk()*100)}%。\n\n${publicityReason()}\n\n正常审批贷款、贷款经营损失本身不会增加廉政风险。`,opts:[{t:"关闭"}]}),0)},
+      {t:"复制当前存档", s:"保留进度或反馈问题", fn:()=>UI.copySave()},
       {t:"放到桌面", s:"装好以后断网也能玩", fn:()=>INSTALL.show(true)},
       {t:"重新开一局", s:"当前进度会被覆盖", fn:()=>{ clearSave(); UI.start(); }},
       {t:"回到游戏", s:""},
@@ -368,7 +393,9 @@ const UI = {
     };
   },
   resume(){
-    UI.rolls = {};
+    UI.rolls = {}; UI.relationshipSnapshot = null;
+    $("stage").classList.add("hidden"); $("modal").classList.add("hidden");
+    UI.showTab("colM"); $("colM").scrollTop = 0;
     if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play") advance(); d(); }); runJobs(); return; }
     UI.refresh();
   },

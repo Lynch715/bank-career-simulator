@@ -70,7 +70,7 @@ function doMaintain(cardId, prodId){
   if(prodId==="fund" && c.risk < P.riskLevel){
     viol = true;
     const v = b.violation;
-    dirt(v.clean);
+    dirt(v.clean, "向风险测评不匹配的客户销售权益基金");
     S.flags.dirtyWealth = (S.flags.dirtyWealth||0) + 1;
     const p = c.risk<=2 ? v.complainP : v.complainP*0.6;
     if(R() < p) schedule("complaintV", rint(v.delayMin, v.delayMax), {cardId:c.id});

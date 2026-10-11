@@ -44,9 +44,7 @@ const PROMO_TEXT = {
     ],
     revealWin: "处长把结果装进牛皮纸袋，封口贴了一条胶带。黄世海先站起来，跟你握了一下手，手是凉的。",
     revealLose: (w)=>`结果出来那天，${w.name}在支行群里发了一句「感谢领导信任」。下面一排大拇指，你也点了个。`,
-    reportWhat: (S)=> S.flags.signedHuang ? "渝顺商贸那份贷后报告上的签名"
-      : S.flags.huangDeal ? "九月底那笔进了又走的三千万"
-      : (S.flags.dirtyWealth ? "给老年客户卖R4基金的事" : (S.flags.ranFake ? "冉记老灶那笔消费贷" : "几件说不清的事")),
+    reportWhat: (S)=>publicityReason(),
     reportBody: (S,what)=>`公示第四天，分行纪委收到一封信，没有署名，打印的，只有一页。\n\n信里写的是${what}。`,
     shield: "顾清越把信要了过去。三天后，核查意见上写着：反映问题不具体，不予立案。你是后来听蒋红说的。顾清越没提过这件事。",
     defer: "任命暂缓。黄世海打电话来，只说了一句：「等一等。」\n\n那个位子空了三个月，后来去了别人。",

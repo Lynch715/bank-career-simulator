@@ -69,7 +69,7 @@ function doVisit(pid, gift){
   apUse(1);
   if(gift){
     p.gift++; S.biz.budget = r1(S.biz.budget - b.giftCost); S.month.spent = (S.month.spent||0) + b.giftCost;
-    dirt(b.giftClean);
+    dirt(b.giftClean, `${d.name}项目审批前宴请送礼`);
     if(d.who) fav(d.who, 6);
     log("warn", `请${d.name}的人在南滨路吃了顿饭，后备箱里放了两瓶酒。${d.who==="weilc"?"魏临川喝到第三杯，开始叫你兄弟。":"对方临走说了句「贵行有诚意」。"}`);
   } else {
