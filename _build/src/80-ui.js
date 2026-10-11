@@ -49,10 +49,22 @@ const UI = {
   refresh(){
     if(!S) return;
     if(S.phase === "over"){ UI.showEnding(); return; }
+    UI.relationshipFeedback();
     $("app").classList.remove("hidden");
     UI.renderTop(); UI.renderLeft(); UI.renderMid(); UI.renderLog();
     const th = $("top").getBoundingClientRect().height;
     document.documentElement.style.setProperty("--toph", th + "px");
+  },
+  relationshipFeedback(){
+    const values = {};
+    S.people.filter(p=>p.met).forEach(p => { values['p:'+p.id] = {name:p.name+'好感', value:relationshipValue(p.id)}; });
+    if(S.lv===2) S.biz.outlets.forEach(o => { values['m:'+o.id] = {name:o.name+'士气', value:o.morale}; });
+    const old = UI.relationshipSnapshot;
+    UI.relationshipSnapshot = {state:S, lv:S.lv, values};
+    if(!old || old.state!==S || old.lv!==S.lv) return;
+    const changes = Object.entries(values).filter(([id,x]) => old.values[id] && Math.abs(x.value-old.values[id].value)>=0.05)
+      .map(([id,x]) => { const delta=r1(x.value-old.values[id].value); return `${x.name}${delta>0?'+':''}${delta}（${r1(old.values[id].value)}→${r1(x.value)}）`; });
+    if(changes.length) log("", '数值变化：'+changes.join(' · '));
   },
   renderTop(){
     const c = S.core;
@@ -172,7 +184,7 @@ const UI = {
         <div class="top"><b>${s.name}</b><select data-staff="${s.id}" ${S.phase!=="play"?"disabled":""}>${roles}</select></div>
         <div class="attrs">营销 <b>${s.mk}</b> 业务 <b>${s.op}</b> 合规 <b>${s.cp}</b></div>
         <div class="mini">倦怠<div class="bar"><i class="${s.fatigue>70?"lo":""}" style="width:${s.fatigue}%"></i></div></div>
-        <div class="mini">好感<div class="bar"><i class="ok" style="width:${s.fav}%"></i></div></div>
+        <div class="mini">好感 ${r1(relationshipValue(s.id))}/100<div class="bar"><i class="ok" style="width:${s.fav}%"></i></div></div>
         ${s.off===S.turn?'<small class="muted">本月休假</small>':`<small class="muted">${ROLE_DESC[s.role]}</small>`}
       </div>`;
     }).join("");
@@ -316,7 +328,7 @@ const UI = {
       html += `<div class="pgroup">${lvName[lv]}</div><div class="pgrid">` + groups[lv].map(p => `
         <div class="pc"><b>${p.name}</b> <span class="muted">${p.group||""}</span>
           <div class="pos">${p.pos}</div>
-          <div class="mini">好感<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div>
+          <div class="mini">好感 ${r1(relationshipValue(p.id))}/100<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div>
           <div class="muted" style="margin-top:4px">${esc(p.recent || p.note || "")}</div></div>`).join("") + `</div>`;
     });
     const st = $("stage");

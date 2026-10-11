@@ -153,9 +153,7 @@ Object.assign(UI, {
 
   decompModal(done){
     const f = decompFair(), step = f.step;
-    const alloc = decompProportional().map((x,i)=> i===0 ? x : x);
-    // 初始给平均数,让玩家自己拆
-    const even = Math.round(f.total/4/step)*step; alloc.fill(even); alloc[0] += f.total - even*4;
+    const alloc = decompProportional();
     const m = $("modal");
     const render = () => {
       const left = f.total - alloc.reduce((a,b)=>a+b,0);

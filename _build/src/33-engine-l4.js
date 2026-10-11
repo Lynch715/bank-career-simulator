@@ -139,7 +139,7 @@ function settleL4(){
   S.kpi.comp = c100(S.kpi.comp + (kOps - 1) * 10);
   S.biz.unity = c100(S.biz.unity + (60 - S.biz.unity)*0.05);
   S.biz.csat = c100(S.biz.csat + (60 - S.biz.csat)*0.1 - (S.biz.crisisAdj||0)*2);
-  subsL4().forEach(p => { p.fav = c100(p.fav + (55 - p.fav)*0.03); });
+  subsL4().forEach(p => { fav(p.id, (55 - p.fav)*0.03); });
   computeKpi(S.m);
   stepRivals(false);
   computeRank();

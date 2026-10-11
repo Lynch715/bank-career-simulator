@@ -122,6 +122,7 @@ function applyDecomp(alloc){
     o.target = alloc[i];
     const r = f.fair[i] > 0 ? alloc[i] / f.fair[i] : 1;
     o.ratio = r2(r);
+    o.overload = false;
     let mor = d.moraleFit, mult = 1;
     if(r > d.over){ mor = d.moraleOver; o.overload = true; }
     else if(r > d.high){ mor = d.moraleHigh; mult = 1 + d.stretch; }
@@ -250,7 +251,7 @@ function settleL2(){
   S.biz.ytd.profit += profit; M.profit = profit; S.biz.lastProfit = profit;
   // 6 回归
   S.biz.csat = c100(S.biz.csat + (b.csatHome - S.biz.csat) * b.csatRevert);
-  subsL2().forEach(p => { p.fav = c100(p.fav + (b.favHome - p.fav) * b.favRevert); });
+  subsL2().forEach(p => { fav(p.id, (b.favHome - p.fav) * b.favRevert); });
   // 7 考核
   computeKpi(S.m);
   stepRivals(false);

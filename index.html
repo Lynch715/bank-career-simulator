@@ -540,10 +540,10 @@ const BALANCE = {
     growth: 0.0038,             // 网点存款月度自然增长潜力(占存款)
     noise: 0.0015,
     deleg: { base:0.6, k:0.6 }, // 委托:产出 × (0.6 + skill/100 × 0.6)
-    morale: { base:0.7, k:0.6, home:60, revert:0.05, start:60 },
+    morale: { base:0.7, k:0.6, home:60, revert:0.12, start:60 },
     favHome: 55, favRevert: 0.03,
     supervise: { mult:1.5, morale:4, fav:{狼性:-3, 稳健:1, 关系:2, 新手:4, 老实:2} },
-    campaign: { cost:12, depK:0.0025, morale:-2, fav:-1 },
+    campaign: { cost:12, depK:0.0025, morale:-1, fav:0 },
     reportUp: { fav:4 },
     appoint: { cost:1, oldFavHit:-20, newFav:10, moraleReset:55, othersMorale:-3 },
     feeRate: 0.00013,
@@ -937,13 +937,25 @@ function log(cls, html){
   S.log.unshift({t:S.turn, y:S.year, cy:S.careerYear, m:S.m, lv:S.lv, cls, html});
   if(S.log.length > 160) S.log.length = 160;
 }
-function fav(id, d){
-  const p = person(id); if(!p) return;
-  p.fav = c100(p.fav + d);
-  const s = staff(id); if(s) s.fav = p.fav;
-  const c = card(id); if(c) c.rel = p.fav;
+// L1 的客户卡/员工是经营中的真实值；升职后以人脉簿为准。
+function relationshipValue(id){
+  const c = card(id), s = staff(id), p = person(id);
+  if(S.lv === 1 && c) return c.rel;
+  if(S.lv === 1 && s) return s.fav;
+  return p ? p.fav : (c ? c.rel : (s ? s.fav : 50));
 }
-function sfav(id, d){ const s = staff(id); if(!s) return; s.fav = c100(s.fav + d); const p = person(id); if(p) p.fav = s.fav; }
+function setFav(id, value){
+  const v = c100(value), p = person(id), s = staff(id), c = card(id);
+  if(p) p.fav = v;
+  if(s) s.fav = v;
+  if(c) c.rel = v;
+}
+function syncRelationships(){
+  const ids = new Set(S.people.map(p=>p.id).concat((S.staff||[]).map(s=>s.id), (S.biz.cards||[]).map(c=>c.id)));
+  ids.forEach(id => setFav(id, relationshipValue(id)));
+}
+function fav(id, d){ setFav(id, relationshipValue(id) + d); }
+function sfav(id, d){ if(staff(id)) fav(id, d); }
 function allStaffFav(d){ S.staff.forEach(s => sfav(s.id, d)); }
 function meet(id){ const p = person(id); if(p && !p.met){ p.met = true; p.lvMet = S.lv; } }
 function dirt(n){ S.core.clean = c100(S.core.clean - n); S.flags.grayCount = (S.flags.grayCount||0)+1; }
@@ -1104,10 +1116,10 @@ function settleL1(){
       if(R() > keep){
         const out = Math.round(c.own * cb.leaveShare);
         c.own -= out; c.other += out; M.lost += out;
-        c.rel = c100(c.rel - 5);
+        fav(c.id, -5);
       }
     }
-    if(!c.maint) c.rel = c100(c.rel - cb.relDecay*0.3);
+    if(!c.maint) fav(c.id, -cb.relDecay*0.3);
     c.other = Math.round(c.other * (1 + cb.otherRegrow));
   });
   // 3 自然流动 + 代发沉淀
@@ -1127,8 +1139,7 @@ function settleL1(){
   // 7 员工恢复
   S.staff.forEach(s => {
     s.fatigue = c100(s.fatigue - b.fatigueRecover + (S.biz.rallied ? 0 : 0));
-    s.fav = c100(s.fav + (b.favHome - s.fav) * 0.02);
-    const p = person(s.id); if(p) p.fav = s.fav;
+    sfav(s.id, (b.favHome - s.fav) * 0.02);
   });
   // 8 考核
   const newYear = false;
@@ -1242,7 +1253,7 @@ function doMaintain(cardId, prodId){
   const isDue = (c.due === S.m);
   const K = BALANCE.odds.L1.maintain;
   if(!roll(ODDS[1].maintain(c, prodId))){
-    c.maint = true; c.rel = c100(c.rel + 1);
+    c.maint = true; fav(c.id, 1);
     let lost = 0;
     if(isDue && R() >= P.retain) lost = Math.round(c.own*cb.leaveShare*0.5);
     else if(c.other > 0 && R() < K.poach) lost = Math.round(c.own*K.poachShare);
@@ -1258,8 +1269,7 @@ function doMaintain(cardId, prodId){
   const {pull, fee} = maintainQuote(c, prodId);
   c.other -= pull; c.own += pull;
   if(fee) feeAdd(fee);
-  c.rel = c100(c.rel + cb.relMaintain);
-  const p = person(c.id); if(p) p.fav = c.rel;
+  fav(c.id, cb.relMaintain);
   // 保险对退休客户略减满意
   if(prodId==="insure" && c.type==="retire") csatAdd(P.oldCsat);
   // 续存:到期卡按产品保留率
@@ -1806,6 +1816,7 @@ function applyDecomp(alloc){
     o.target = alloc[i];
     const r = f.fair[i] > 0 ? alloc[i] / f.fair[i] : 1;
     o.ratio = r2(r);
+    o.overload = false;
     let mor = d.moraleFit, mult = 1;
     if(r > d.over){ mor = d.moraleOver; o.overload = true; }
     else if(r > d.high){ mor = d.moraleHigh; mult = 1 + d.stretch; }
@@ -1934,7 +1945,7 @@ function settleL2(){
   S.biz.ytd.profit += profit; M.profit = profit; S.biz.lastProfit = profit;
   // 6 回归
   S.biz.csat = c100(S.biz.csat + (b.csatHome - S.biz.csat) * b.csatRevert);
-  subsL2().forEach(p => { p.fav = c100(p.fav + (b.favHome - p.fav) * b.favRevert); });
+  subsL2().forEach(p => { fav(p.id, (b.favHome - p.fav) * b.favRevert); });
   // 7 考核
   computeKpi(S.m);
   stepRivals(false);
@@ -2177,7 +2188,7 @@ function settleL3(){
   // 8 条线倾斜的持续效果
   if(tilt === "ops") S.kpi.comp = c100(S.kpi.comp + t.opsComp);
   if(tilt === "hr") S.biz.branches.forEach(x => { const p = person(x.mgr); if(p) p.skill = Math.min(90, (p.skill||50) + t.hrSkill); });
-  subsL3().forEach(p => { p.fav = c100(p.fav + (55 - p.fav) * 0.03); });
+  subsL3().forEach(p => { fav(p.id, (55 - p.fav) * 0.03); });
   S.biz.csat = Math.round(S.biz.areas.reduce((a,x)=>a+x.rep,0) / S.biz.areas.length);
   settleChalGeneric();
   // 9 考核
@@ -2341,7 +2352,7 @@ function settleL4(){
   S.kpi.comp = c100(S.kpi.comp + (kOps - 1) * 10);
   S.biz.unity = c100(S.biz.unity + (60 - S.biz.unity)*0.05);
   S.biz.csat = c100(S.biz.csat + (60 - S.biz.csat)*0.1 - (S.biz.crisisAdj||0)*2);
-  subsL4().forEach(p => { p.fav = c100(p.fav + (55 - p.fav)*0.03); });
+  subsL4().forEach(p => { fav(p.id, (55 - p.fav)*0.03); });
   computeKpi(S.m);
   stepRivals(false);
   computeRank();
@@ -2692,7 +2703,7 @@ function spotlight(){
     const cd = S.biz.cards.filter(x => x.own > 50).sort((a,b)=>b.own-a.own)[0];
     if(!cd) return;
     const out = Math.round(cd.own * c.poach1);
-    cd.own -= out; cd.other += out; cd.rel = c100(cd.rel - 5);
+    cd.own -= out; cd.other += out; fav(cd.id, -5);
     log("bad", `${cd.name}的外孙女在他行上班。这个月，${cd.name}把一笔定期转过去了。 <span class="num">存款-${fmtWan(out)}</span>`);
   } else {
     const cut = Math.round(depTotal() * c.poach);
@@ -2843,7 +2854,7 @@ const ACTIONS_L2 = [
   {id:"push",      name:"推进对公项目", desc:"项目往前走一格；到了审批就上会"},
   {id:"visit",     name:"拜访客户",   desc:"登门拜访或请顿饭，项目过会的把握大一些"},
   {id:"appoint",   name:"人事任免",   desc:"换一个网点的负责人"},
-  {id:"campaign",  name:"营销战役",   desc:"全支行一起冲存款，花营销费用"},
+  {id:"campaign",  name:"营销战役",   desc:"全支行一起冲存款，费用12万，各网点士气−1"},
   {id:"reportup",  name:"向上汇报",   desc:"去分行找周启明汇报工作"},
 ];
 
@@ -2946,12 +2957,13 @@ function doCampaign(){
   apUse(1);
   S.biz.campaignDone = true;
   S.biz.budget = r1(S.biz.budget - b.cost); S.month.spent = (S.month.spent||0) + b.cost;
+  S.biz.outlets.forEach(o => { o.morale = c100(o.morale + b.morale); });
   const ok = roll(ODDS[2].campaign()), kk = ok ? 1 : BALANCE.odds.L2.campaign.flop;
   let tot = 0;
   if(!ok){ S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr) * kk); o.dep += add; tot += add; if(o.mgr) fav(o.mgr, b.fav); });
     log("bad", `全支行搞了一场「南岸存款月」。拱门扎起来了，来的人不多。${pick(["隔壁行同一周在送油。","那半个月一直下雨。","几个网点的人各干各的，没拧成一股。"])}<span class="num">存款+${fmtWan(tot)}</span>`);
     return {tot, fail:true}; }
-  S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr)); o.dep += add; tot += add; o.morale = c100(o.morale + b.morale); if(o.mgr) fav(o.mgr, b.fav); });
+  S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr)); o.dep += add; tot += add; if(o.mgr) fav(o.mgr, b.fav); });
   log("good", `全支行搞了一场「南岸存款月」。四个网点门口的拱门是同一家公司扎的。<span class="num">存款+${fmtWan(tot)}</span>`);
   return {tot};
 }
@@ -5577,6 +5589,7 @@ function load(){
     const o = JSON.parse(raw);
     if(!o || o.ver !== BALANCE.ver) return null;
     S = o;
+    syncRelationships();
     seedRng((S.seed + S.turn*7919) >>> 0);
     return S;
   } catch(e){ return null; }
@@ -6096,10 +6109,22 @@ const UI = {
   refresh(){
     if(!S) return;
     if(S.phase === "over"){ UI.showEnding(); return; }
+    UI.relationshipFeedback();
     $("app").classList.remove("hidden");
     UI.renderTop(); UI.renderLeft(); UI.renderMid(); UI.renderLog();
     const th = $("top").getBoundingClientRect().height;
     document.documentElement.style.setProperty("--toph", th + "px");
+  },
+  relationshipFeedback(){
+    const values = {};
+    S.people.filter(p=>p.met).forEach(p => { values['p:'+p.id] = {name:p.name+'好感', value:relationshipValue(p.id)}; });
+    if(S.lv===2) S.biz.outlets.forEach(o => { values['m:'+o.id] = {name:o.name+'士气', value:o.morale}; });
+    const old = UI.relationshipSnapshot;
+    UI.relationshipSnapshot = {state:S, lv:S.lv, values};
+    if(!old || old.state!==S || old.lv!==S.lv) return;
+    const changes = Object.entries(values).filter(([id,x]) => old.values[id] && Math.abs(x.value-old.values[id].value)>=0.05)
+      .map(([id,x]) => { const delta=r1(x.value-old.values[id].value); return `${x.name}${delta>0?'+':''}${delta}（${r1(old.values[id].value)}→${r1(x.value)}）`; });
+    if(changes.length) log("", '数值变化：'+changes.join(' · '));
   },
   renderTop(){
     const c = S.core;
@@ -6219,7 +6244,7 @@ const UI = {
         <div class="top"><b>${s.name}</b><select data-staff="${s.id}" ${S.phase!=="play"?"disabled":""}>${roles}</select></div>
         <div class="attrs">营销 <b>${s.mk}</b> 业务 <b>${s.op}</b> 合规 <b>${s.cp}</b></div>
         <div class="mini">倦怠<div class="bar"><i class="${s.fatigue>70?"lo":""}" style="width:${s.fatigue}%"></i></div></div>
-        <div class="mini">好感<div class="bar"><i class="ok" style="width:${s.fav}%"></i></div></div>
+        <div class="mini">好感 ${r1(relationshipValue(s.id))}/100<div class="bar"><i class="ok" style="width:${s.fav}%"></i></div></div>
         ${s.off===S.turn?'<small class="muted">本月休假</small>':`<small class="muted">${ROLE_DESC[s.role]}</small>`}
       </div>`;
     }).join("");
@@ -6363,7 +6388,7 @@ const UI = {
       html += `<div class="pgroup">${lvName[lv]}</div><div class="pgrid">` + groups[lv].map(p => `
         <div class="pc"><b>${p.name}</b> <span class="muted">${p.group||""}</span>
           <div class="pos">${p.pos}</div>
-          <div class="mini">好感<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div>
+          <div class="mini">好感 ${r1(relationshipValue(p.id))}/100<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div>
           <div class="muted" style="margin-top:4px">${esc(p.recent || p.note || "")}</div></div>`).join("") + `</div>`;
     });
     const st = $("stage");
@@ -6566,9 +6591,7 @@ Object.assign(UI, {
 
   decompModal(done){
     const f = decompFair(), step = f.step;
-    const alloc = decompProportional().map((x,i)=> i===0 ? x : x);
-    // 初始给平均数,让玩家自己拆
-    const even = Math.round(f.total/4/step)*step; alloc.fill(even); alloc[0] += f.total - even*4;
+    const alloc = decompProportional();
     const m = $("modal");
     const render = () => {
       const left = f.total - alloc.reduce((a,b)=>a+b,0);

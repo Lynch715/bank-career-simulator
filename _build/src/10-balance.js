@@ -149,10 +149,10 @@ const BALANCE = {
     growth: 0.0038,             // 网点存款月度自然增长潜力(占存款)
     noise: 0.0015,
     deleg: { base:0.6, k:0.6 }, // 委托:产出 × (0.6 + skill/100 × 0.6)
-    morale: { base:0.7, k:0.6, home:60, revert:0.05, start:60 },
+    morale: { base:0.7, k:0.6, home:60, revert:0.12, start:60 },
     favHome: 55, favRevert: 0.03,
     supervise: { mult:1.5, morale:4, fav:{狼性:-3, 稳健:1, 关系:2, 新手:4, 老实:2} },
-    campaign: { cost:12, depK:0.0025, morale:-2, fav:-1 },
+    campaign: { cost:12, depK:0.0025, morale:-1, fav:0 },
     reportUp: { fav:4 },
     appoint: { cost:1, oldFavHit:-20, newFav:10, moraleReset:55, othersMorale:-3 },
     feeRate: 0.00013,

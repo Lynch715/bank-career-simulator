@@ -45,7 +45,7 @@ function spotlight(){
     const cd = S.biz.cards.filter(x => x.own > 50).sort((a,b)=>b.own-a.own)[0];
     if(!cd) return;
     const out = Math.round(cd.own * c.poach1);
-    cd.own -= out; cd.other += out; cd.rel = c100(cd.rel - 5);
+    cd.own -= out; cd.other += out; fav(cd.id, -5);
     log("bad", `${cd.name}的外孙女在他行上班。这个月，${cd.name}把一笔定期转过去了。 <span class="num">存款-${fmtWan(out)}</span>`);
   } else {
     const cut = Math.round(depTotal() * c.poach);

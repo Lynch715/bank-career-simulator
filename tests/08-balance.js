@@ -1,4 +1,4 @@
-// 校准:多策略机器人各跑 N 局(默认 300),对照施工规范第 10 节的目标
+// 校准:多策略机器人各跑 N 局(默认 300),对照经营目标及 2026-10-11 士气调整后的中期目标（见 docs/13-好感与士气修复.md）
 const {load, runner, pct} = require("./lib");
 const N = +process.argv[2] || 300;
 const {G} = load(); G.setHeadless(true);
@@ -16,8 +16,8 @@ show("balanced", b); show("clean", c); show("greedy", g);
 console.log(`  · ${N*3} 局用时 ${((Date.now()-t0)/1000).toFixed(0)} 秒`);
 const inTol = (v, t, tol) => Math.abs(v - t) <= tol;
 T.ok("balanced 到支行 90% ±4", inTol(pct(b.l2,b.n), 90, 4), pct(b.l2,b.n)+"%");
-T.ok("balanced 到二级分行 60% ±5", inTol(pct(b.l3,b.n), 60, 5), pct(b.l3,b.n)+"%");
-T.ok("balanced 到一级分行 28% ±5", inTol(pct(b.l4,b.n), 28, 5), pct(b.l4,b.n)+"%");
+T.ok("balanced 到二级分行 70% ±5", inTol(pct(b.l3,b.n), 70, 5), pct(b.l3,b.n)+"%");
+T.ok("balanced 到一级分行 38% ±5", inTol(pct(b.l4,b.n), 38, 5), pct(b.l4,b.n)+"%");
 T.ok("balanced 到总行 9% ±4", inTol(pct(b.l5,b.n), 9, 4), pct(b.l5,b.n)+"%");
 T.ok("greedy 出事 ≥40%", pct(g.caught,g.n) >= 40, pct(g.caught,g.n)+"%");
 T.ok("clean 到一级分行 ≥ balanced 的 80%", c.l4 >= b.l4*0.8, pct(c.l4,c.n)+"% vs "+pct(b.l4,b.n)+"%");

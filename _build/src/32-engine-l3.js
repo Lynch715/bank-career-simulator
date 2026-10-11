@@ -179,7 +179,7 @@ function settleL3(){
   // 8 条线倾斜的持续效果
   if(tilt === "ops") S.kpi.comp = c100(S.kpi.comp + t.opsComp);
   if(tilt === "hr") S.biz.branches.forEach(x => { const p = person(x.mgr); if(p) p.skill = Math.min(90, (p.skill||50) + t.hrSkill); });
-  subsL3().forEach(p => { p.fav = c100(p.fav + (55 - p.fav) * 0.03); });
+  subsL3().forEach(p => { fav(p.id, (55 - p.fav) * 0.03); });
   S.biz.csat = Math.round(S.biz.areas.reduce((a,x)=>a+x.rep,0) / S.biz.areas.length);
   settleChalGeneric();
   // 9 考核

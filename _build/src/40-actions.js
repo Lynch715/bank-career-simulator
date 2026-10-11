@@ -42,7 +42,7 @@ function doMaintain(cardId, prodId){
   const isDue = (c.due === S.m);
   const K = BALANCE.odds.L1.maintain;
   if(!roll(ODDS[1].maintain(c, prodId))){
-    c.maint = true; c.rel = c100(c.rel + 1);
+    c.maint = true; fav(c.id, 1);
     let lost = 0;
     if(isDue && R() >= P.retain) lost = Math.round(c.own*cb.leaveShare*0.5);
     else if(c.other > 0 && R() < K.poach) lost = Math.round(c.own*K.poachShare);
@@ -58,8 +58,7 @@ function doMaintain(cardId, prodId){
   const {pull, fee} = maintainQuote(c, prodId);
   c.other -= pull; c.own += pull;
   if(fee) feeAdd(fee);
-  c.rel = c100(c.rel + cb.relMaintain);
-  const p = person(c.id); if(p) p.fav = c.rel;
+  fav(c.id, cb.relMaintain);
   // 保险对退休客户略减满意
   if(prodId==="insure" && c.type==="retire") csatAdd(P.oldCsat);
   // 续存:到期卡按产品保留率

@@ -523,6 +523,7 @@ function load(){
     const o = JSON.parse(raw);
     if(!o || o.ver !== BALANCE.ver) return null;
     S = o;
+    syncRelationships();
     seedRng((S.seed + S.turn*7919) >>> 0);
     return S;
   } catch(e){ return null; }

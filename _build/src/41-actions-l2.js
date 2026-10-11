@@ -6,7 +6,7 @@ const ACTIONS_L2 = [
   {id:"push",      name:"推进对公项目", desc:"项目往前走一格；到了审批就上会"},
   {id:"visit",     name:"拜访客户",   desc:"登门拜访或请顿饭，项目过会的把握大一些"},
   {id:"appoint",   name:"人事任免",   desc:"换一个网点的负责人"},
-  {id:"campaign",  name:"营销战役",   desc:"全支行一起冲存款，花营销费用"},
+  {id:"campaign",  name:"营销战役",   desc:"全支行一起冲存款，费用12万，各网点士气−1"},
   {id:"reportup",  name:"向上汇报",   desc:"去分行找周启明汇报工作"},
 ];
 
@@ -109,12 +109,13 @@ function doCampaign(){
   apUse(1);
   S.biz.campaignDone = true;
   S.biz.budget = r1(S.biz.budget - b.cost); S.month.spent = (S.month.spent||0) + b.cost;
+  S.biz.outlets.forEach(o => { o.morale = c100(o.morale + b.morale); });
   const ok = roll(ODDS[2].campaign()), kk = ok ? 1 : BALANCE.odds.L2.campaign.flop;
   let tot = 0;
   if(!ok){ S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr) * kk); o.dep += add; tot += add; if(o.mgr) fav(o.mgr, b.fav); });
     log("bad", `全支行搞了一场「南岸存款月」。拱门扎起来了，来的人不多。${pick(["隔壁行同一周在送油。","那半个月一直下雨。","几个网点的人各干各的，没拧成一股。"])}<span class="num">存款+${fmtWan(tot)}</span>`);
     return {tot, fail:true}; }
-  S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr)); o.dep += add; tot += add; o.morale = c100(o.morale + b.morale); if(o.mgr) fav(o.mgr, b.fav); });
+  S.biz.outlets.forEach(o => { const add = Math.round(o.dep * b.depK * delegK(o.mgr)); o.dep += add; tot += add; if(o.mgr) fav(o.mgr, b.fav); });
   log("good", `全支行搞了一场「南岸存款月」。四个网点门口的拱门是同一家公司扎的。<span class="num">存款+${fmtWan(tot)}</span>`);
   return {tot};
 }

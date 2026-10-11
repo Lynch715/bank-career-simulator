@@ -126,13 +126,25 @@ function log(cls, html){
   S.log.unshift({t:S.turn, y:S.year, cy:S.careerYear, m:S.m, lv:S.lv, cls, html});
   if(S.log.length > 160) S.log.length = 160;
 }
-function fav(id, d){
-  const p = person(id); if(!p) return;
-  p.fav = c100(p.fav + d);
-  const s = staff(id); if(s) s.fav = p.fav;
-  const c = card(id); if(c) c.rel = p.fav;
+// L1 的客户卡/员工是经营中的真实值；升职后以人脉簿为准。
+function relationshipValue(id){
+  const c = card(id), s = staff(id), p = person(id);
+  if(S.lv === 1 && c) return c.rel;
+  if(S.lv === 1 && s) return s.fav;
+  return p ? p.fav : (c ? c.rel : (s ? s.fav : 50));
 }
-function sfav(id, d){ const s = staff(id); if(!s) return; s.fav = c100(s.fav + d); const p = person(id); if(p) p.fav = s.fav; }
+function setFav(id, value){
+  const v = c100(value), p = person(id), s = staff(id), c = card(id);
+  if(p) p.fav = v;
+  if(s) s.fav = v;
+  if(c) c.rel = v;
+}
+function syncRelationships(){
+  const ids = new Set(S.people.map(p=>p.id).concat((S.staff||[]).map(s=>s.id), (S.biz.cards||[]).map(c=>c.id)));
+  ids.forEach(id => setFav(id, relationshipValue(id)));
+}
+function fav(id, d){ setFav(id, relationshipValue(id) + d); }
+function sfav(id, d){ if(staff(id)) fav(id, d); }
 function allStaffFav(d){ S.staff.forEach(s => sfav(s.id, d)); }
 function meet(id){ const p = person(id); if(p && !p.met){ p.met = true; p.lvMet = S.lv; } }
 function dirt(n){ S.core.clean = c100(S.core.clean - n); S.flags.grayCount = (S.flags.grayCount||0)+1; }
@@ -293,10 +305,10 @@ function settleL1(){
       if(R() > keep){
         const out = Math.round(c.own * cb.leaveShare);
         c.own -= out; c.other += out; M.lost += out;
-        c.rel = c100(c.rel - 5);
+        fav(c.id, -5);
       }
     }
-    if(!c.maint) c.rel = c100(c.rel - cb.relDecay*0.3);
+    if(!c.maint) fav(c.id, -cb.relDecay*0.3);
     c.other = Math.round(c.other * (1 + cb.otherRegrow));
   });
   // 3 自然流动 + 代发沉淀
@@ -316,8 +328,7 @@ function settleL1(){
   // 7 员工恢复
   S.staff.forEach(s => {
     s.fatigue = c100(s.fatigue - b.fatigueRecover + (S.biz.rallied ? 0 : 0));
-    s.fav = c100(s.fav + (b.favHome - s.fav) * 0.02);
-    const p = person(s.id); if(p) p.fav = s.fav;
+    sfav(s.id, (b.favHome - s.fav) * 0.02);
   });
   // 8 考核
   const newYear = false;
