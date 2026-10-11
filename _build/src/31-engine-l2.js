@@ -313,3 +313,28 @@ function yearEndL2(){
   S.biz.allHit = all;
   S.biz.outlets.forEach(o => o.overload = false);
 }
+
+// 二期项目的定义原先只在内存中；旧档可按编号中的轮次逐层恢复。
+function restoreL2ProjectDefinitions(){
+  if(S.lv!==2 || !S.biz) return;
+  const saved=S.biz.projectDefinitions || {};
+  function restore(id){
+    const existing=PROJ_L2.find(p=>p.id===id);
+    if(existing) return existing;
+    if(typeof id!=="string") return null;
+    let d=saved[id];
+    if(!d){
+      const match=id.match(/^(.+)_([0-9]+)$/);
+      const parent=match && restore(match[1]);
+      if(!parent) return null;
+      d=Object.assign({},parent,{id,name:parent.name.replace(/(二期)*$/,"")+"二期",dep:Math.round(parent.dep*0.7),loan:Math.round(parent.loan*0.7),who:null});
+    }
+    PROJ_L2.push(Object.assign({},d,{id}));
+    return PROJ_L2[PROJ_L2.length-1];
+  }
+  [...S.biz.projects.map(p=>p.id),...S.biz.projQueue].forEach(restore);
+}
+function saveL2ProjectDefinitions(){
+  if(S.lv!==2 || !S.biz) return;
+  S.biz.projectDefinitions=Object.fromEntries([...S.biz.projects.map(p=>p.id),...S.biz.projQueue].map(id=>[id,PROJ_L2.find(p=>p.id===id)]).filter(([,d])=>d));
+}

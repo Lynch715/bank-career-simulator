@@ -534,7 +534,7 @@ function decompAsk(d){
 /* ---------- 存档 ---------- */
 function save(){
   if(!S) return;
-  try { localStorage.setItem(BALANCE.saveKey, JSON.stringify(S)); } catch(e){}
+  try { saveL2ProjectDefinitions(); localStorage.setItem(BALANCE.saveKey, JSON.stringify(S)); } catch(e){}
 }
 function load(){
   try {
@@ -543,6 +543,7 @@ function load(){
     const o = JSON.parse(raw);
     if(!o || o.ver !== BALANCE.ver) return null;
     S = o;
+    restoreL2ProjectDefinitions();
     syncRelationships();
     seedRng((S.seed + S.turn*7919) >>> 0);
     return S;

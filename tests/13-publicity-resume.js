@@ -22,4 +22,18 @@ H.UI.renderLeft=saved;dom.window.document.querySelector('#colL [data-retry-panel
 H.UI.showTab('invalid');T.ok('异常标签回落到经营面板',H.UI.tab==='colM'&&dom.window.document.querySelector('#colM').classList.contains('show'));
 H.S.kpi.table=[{name:'旧档同业',score:'80.4',me:false}];H.UI.refresh();T.ok('旧档数字字符串不会打断渲染',!dom.window.document.querySelector('#colL').dataset.renderError);
 H.UI.showMenu();T.ok('菜单能检查风险来源与复制存档',dom.window.document.querySelector('#modal').textContent.includes('查看廉政风险来源')&&dom.window.document.querySelector('#modal').textContent.includes('复制当前存档'));
+dom.window.close();
+const legacy=JSON.parse(raw);
+legacy.biz.projects.push({id:'yujiang_40',stage:2,prog:0,visits:0,gift:0,lost:false});
+legacy.biz.projects.push({id:'hospital_42',stage:3,prog:0,visits:0,gift:0,lost:true});
+legacy.biz.projQueue=['yujiang_40_60'];
+delete legacy.biz.projectDefinitions;
+dom=new JSDOM(html,{...options,beforeParse(w){w.localStorage.setItem('thsz_save',JSON.stringify(legacy));}});H=dom.window.THSZ;
+dom.window.document.getElementById('btnCont').click();
+T.ok('旧档二期项目刷新后恢复面板',!dom.window.document.querySelector('#colM').dataset.renderError&&dom.window.document.querySelector('[data-proj="yujiang_40"]'));
+T.ok('丢失项目也能恢复名称',dom.window.document.querySelector('#colM').textContent.includes('南岸二院二期'));
+H.UI.projModal('yujiang_40');T.ok('二期项目详情可打开',dom.window.document.querySelector('#modal').textContent.includes('渝江物流二期'));
+H.save();const savedDefs=JSON.parse(dom.window.localStorage.getItem('thsz_save')).biz.projectDefinitions;
+T.ok('项目定义写入存档并保留额度',savedDefs.yujiang_40.dep===3500&&savedDefs.yujiang_40.loan===5600);
+T.ok('待生成的多轮二期项目完整恢复',savedDefs.yujiang_40_60.dep===2450&&savedDefs.yujiang_40_60.loan===3920);
 dom.window.close();T.done();
