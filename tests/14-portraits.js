@@ -1,0 +1,51 @@
+// Portrait identity, save compatibility, asset integrity and UI action isolation.
+const fs=require('fs'),path=require('path');
+const {load,GAME,runner}=require('./lib');
+const T=runner('14-portraits'),{G}=load(),P=G.Portraits;
+const root=path.dirname(GAME);
+const inventory=JSON.parse(fs.readFileSync(path.join(root,'assets/portraits/inventory.json')));
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'assets/portraits/web/manifest.json')));
+T.ok('80 张立绘均有两个运行资源',Object.keys(manifest).length===80&&Object.values(manifest).every(p=>fs.existsSync(path.join(root,p.small))&&fs.existsSync(path.join(root,p.large))));
+T.ok('70 位具名或固定称谓角色没有缺图',inventory.characters.filter(c=>!c.sources.includes('random-customer-archetype')&&!c.sources.includes('player-avatar')).length===70&&inventory.characters.every(c=>c.status==='ready'));
+const precache=fs.readFileSync(path.join(root,'assets/portraits/precache.js'),'utf8');
+T.ok('离线清单覆盖全部大小图',Object.values(manifest).every(p=>precache.includes(p.small)&&precache.includes(p.large)));
+T.ok('跨关卡同名人物、别名和角色 ID 始终用同一张图',P.key({name:'周启明',id:'zhouqm'})===P.key('zhouqm')&&P.key({name:'马奔',id:'rival_yubei'})===P.key('maben'));
+G.newGame({seed:718,sur:'李',given:'然'});
+const before=JSON.stringify(G.S);
+const keys=G.S.staff.concat(G.S.people,G.S.biz.cards).map(p=>P.key(p));
+T.ok('当前所有员工、人脉和随机客户都有立绘',keys.every(Boolean));
+T.ok('查询立绘不改写状态、不消耗游戏随机数',JSON.stringify(G.S)===before);
+const customers=G.S.biz.cards.map(c=>[c.id,P.key(c)]);
+delete G.S.player.portrait;G.save();G.load();
+T.ok('缺少头像字段的旧存档能继续，客户形象稳定',!G.S.player.portrait&&customers.every(([id,k])=>P.key(G.S.biz.cards.find(c=>c.id===id))===k));
+G.newGame({seed:718,portrait:'player_f'});G.save();G.load();
+T.ok('玩家形象随存档保存和恢复',G.S.player.portrait==='player_f');
+T.ok('动态员工事件取实际主体，未猜测正文里的其他姓名',P.event({id:'lizhi',data:{sid:'suxw'}}).id==='suxw'&&P.event({id:'not-defined'})===null);
+const {JSDOM,VirtualConsole}=require('jsdom'),vc=new VirtualConsole(),errors=[];
+vc.on('jsdomError',e=>{if(!/Not implemented/.test(e.message))errors.push(e.message);});
+const dom=new JSDOM(fs.readFileSync(GAME,'utf8'),{runScripts:'dangerously',pretendToBeVisual:true,url:'http://localhost/',virtualConsole:vc});
+const w=dom.window,d=w.document,UI=w.THSZ.UI;
+d.querySelector('[data-appearance="player_f"]').click();d.querySelector('#btnNew').click();d.querySelector('#modal .opt').click();
+T.ok('开局选定形象进入游戏',w.THSZ.S.player.portrait==='player_f');
+T.ok('员工卡各有自己的完整立绘且保留调岗控件',d.querySelectorAll('.sc .portrait-card').length===5&&d.querySelectorAll('[data-staff]').length===5);
+const ap=w.THSZ.S.ap,state=JSON.stringify(w.THSZ.S);
+d.querySelector('[data-view-portrait="xiaoman"]').click();
+T.ok('点击员工能查看大图，身份正确',!!d.querySelector('#modal .portrait-detail [data-portrait="xiaoman"]'));
+T.ok('查看立绘不占行动、不改变存档',w.THSZ.S.ap===ap&&JSON.stringify(w.THSZ.S)===state);
+d.querySelector('#modal .opt').click();UI.showPeople();
+T.ok('人脉簿全部已认识人物都有立绘',d.querySelectorAll('#stage .person-card .portrait').length===w.THSZ.S.people.filter(p=>p.met).length);
+d.querySelector('#stage [data-view-portrait="huang"]').click();
+T.ok('人物簿的大图弹窗显示在人物簿上方',Number(w.getComputedStyle(d.querySelector('#modal')).zIndex)>Number(w.getComputedStyle(d.querySelector('#stage')).zIndex));
+d.querySelector('#modal .opt').click();
+const c=w.THSZ.S.biz.cards.find(c=>!c.maint);UI.pickProduct(c.id);
+T.ok('客户维护的大图和客户卡映射一致',d.querySelector('#modal .portrait-large').dataset.portrait===w.THSZ.Portraits.key(c));
+const image=d.querySelector('#modal .portrait img');image.dispatchEvent(new w.Event('error'));
+T.ok('图片加载失败时回退，不阻断选择产品',image.closest('.portrait').classList.contains('portrait-unavailable')&&d.querySelectorAll('#modal .opt').length>0);
+for(const level of [3,4]){
+  const H=w.THSZ;H.setHeadless(true);
+  for(let seed=100;seed<240;seed++){H.simGame('balanced',seed,600,{until:'l'+level});if(H.S.lv===level&&H.S.phase==='play')break;}
+  H.setBot(null);H.setHeadless(false);d.querySelector('#stage').classList.add('hidden');d.querySelector('#modal').classList.add('hidden');UI.refresh();
+  T.ok('L'+level+' 负责人立绘接入且面板正常',H.S.lv===level&&!d.querySelector('#colM').dataset.renderError&&d.querySelectorAll('#colM .portrait').length>=(level===3?7:10));
+}
+T.ok('界面无脚本错误',errors.length===0,errors.join(' / '));
+dom.window.close();T.done();

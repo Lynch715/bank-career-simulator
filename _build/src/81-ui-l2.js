@@ -46,7 +46,7 @@ Object.assign(UI, {
       const got = o.dep - o.y0, pct = o.target ? Math.round(got/o.target*100) : null;
       return `<tr class="${o.id==="dzs"?"mine":""}" ${o.id==="dzs"?'id="l2mine"':""} data-outlet="${o.id}" tabindex="0">
         <td>${o.name}${o.id==="dzs"?' <small class="muted">你待过</small>':""}${o.supervised?' <small class="tagx">督导中</small>':""}</td>
-        <td>${m?m.name:'<span class="neg">空缺</span>'}${m?`<br><small class="muted">能力${m.skill}</small>`:""}</td>
+        <td>${m?PORTRAITS.inline(m):'<span class="neg">空缺</span>'}${m?`<br><small class="muted">能力${m.skill}</small>`:""}</td>
         <td class="num">${fmtYi(o.dep)}</td>
         <td class="num ${o.lastInc<0?"neg":""}">${S.track.scoreHistory.length?sgn(Math.round(o.lastInc), fmtWan):"—"}</td>
         <td class="num">${pct==null?"—":pct+"%"}</td>
@@ -117,7 +117,7 @@ Object.assign(UI, {
   },
   visitModal(pid){
     const b = B2().project, d = PROJ_L2.find(x=>x.id===pid);
-    UI.modal({kind:"pick", title:d.name, body:d.note, opts:[
+    UI.modal({kind:"pick", title:d.name, portrait:d.who, body:d.note, opts:[
       {t:"登门拜访，把方案过一遍", s:"过会把握大一点", fn:()=>doVisit(pid,false)},
       {t:"请对方吃顿饭，带两瓶酒", s:`营销费用-${b.giftCost}万 · 过会把握大不少 · 留底`, disabled:S.biz.budget<b.giftCost, fn:()=>doVisit(pid,true)},
       {t:"算了", s:""},
@@ -126,7 +126,7 @@ Object.assign(UI, {
   projModal(pid){
     const p = project(pid), d = PROJ_L2.find(x=>x.id===pid);
     const tierTxt = {low:"风险部看着没什么问题", mid:"风险部有保留意见", high:"风险部意见很大"}[d.tier];
-    UI.modal({kind:"pick", title:d.name, body:`${d.what}。${d.note}\n\n现在在「${PROJ_STAGES[p.stage]}」。${tierTxt}。`, opts:[
+    UI.modal({kind:"pick", title:d.name, portrait:d.who, body:`${d.what}。${d.note}\n\n现在在「${PROJ_STAGES[p.stage]}」。${tierTxt}。`, opts:[
       {t:p.stage===2?"上贷审会":"推进一步", s:"1点行动", disabled:!canActL2("push").ok || p.stage>=3 || p.lost, fn:()=>doPush(pid)},
       {t:"去拜访", s:"1点行动", disabled:!canActL2("visit").ok || p.stage>=3 || p.lost, fn:()=>setTimeout(()=>UI.visitModal(pid),0)},
       {t:"关掉", s:""},
@@ -136,7 +136,7 @@ Object.assign(UI, {
     const o = outlet(oid), m = o.mgr ? person(o.mgr) : null;
     const got = o.dep - o.y0;
     const body = `${m?`负责人${m.name}，能力${m.skill}，${m.trait||""}。${m.note||m.recent||""}`:"负责人空缺，网点只能维持。"}\n\n存款${fmtYi(o.dep)}，今年净增${fmtWan(got)}${o.target?`，任务${fmtWan(o.target)}`:""}。士气${Math.round(o.morale)}。`;
-    UI.modal({kind:"pick", title:o.name, body, opts:[
+    UI.modal({kind:"pick", title:o.name, portrait:m, body, opts:[
       {t:"下去督导", s:"1点行动 · 本月产出和士气上去", disabled:!canActL2("supervise").ok || o.supervised, fn:()=>doSupervise(oid)},
       {t:"换负责人", s:"1点行动", disabled:!canActL2("appoint").ok, fn:()=>setTimeout(()=>UI.appointModal(oid),0)},
       {t:"关掉", s:""},
@@ -160,7 +160,7 @@ Object.assign(UI, {
       const rows = S.biz.outlets.map((o,i) => {
         const mg = o.mgr ? person(o.mgr) : null, r = alloc[i]/f.fair[i];
         const tag = r > BALANCE.L2.decomp.over ? '<span class="neg">压太重</span>' : (r > BALANCE.L2.decomp.high ? '<span class="warnx">偏重</span>' : (r < BALANCE.L2.decomp.low ? '<span class="muted">偏松</span>' : '<span class="okx">合适</span>'));
-        return `<div class="dc"><div><b>${o.name}</b><br><small class="muted">${mg?mg.name:"空缺"} · 去年规模${fmtYi(o.dep)}</small></div>
+        return `<div class="dc"><div><b>${o.name}</b><br><small class="muted">${mg?PORTRAITS.inline(mg):"空缺"} · 去年规模${fmtYi(o.dep)}</small></div>
           <div class="dcb"><button class="btn sm ghost" data-d="${i}" data-v="-1" aria-label="减">−</button><b class="num">${fmtWan(alloc[i])}</b><button class="btn sm ghost" data-d="${i}" data-v="1" aria-label="加">＋</button></div>
           <div class="dct">${tag}</div></div>`;
       }).join("");

@@ -367,6 +367,58 @@ html.iosfix #installBar{margin-bottom:0}
 input[type=range]{height:32px}
 small{font-size:max(12px,.85em)}
 .wx{font-family:ui-monospace,Menlo,monospace;color:var(--goldt);font-size:16px}
+/* 人物立绘 */
+.overlay.portrait-overlay{z-index:75}
+.portrait{margin:0;flex-shrink:0;position:relative;min-width:0}
+.portrait img{display:block;max-width:100%;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+.portrait-small{width:65px;height:76px;float:left;margin:0 10px 4px 0}
+.portrait-tiny{width:30px;height:36px;display:inline-block;vertical-align:middle}
+.portrait-card{width:100%;height:164px;background:linear-gradient(145deg,var(--paper2),var(--card));border-bottom:1px solid var(--line)}
+.portrait-large{width:150px;height:224px;max-width:100%}
+.portrait-large figcaption{text-align:center;font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px}
+.portrait-choice{width:90px;height:125px}
+.portrait-unavailable{background:var(--paper2);border-radius:5px}
+.portrait-unavailable img{visibility:hidden}
+.portrait-unavailable::after{content:'暂无图像';position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:11px}
+.player-chip{float:right;margin:0 4px 0 10px}
+.player-chip .portrait-tiny{width:38px;height:46px}
+.person-inline{display:inline-flex;align-items:center;gap:6px;vertical-align:middle;max-width:100%}
+.person-inline>span{min-width:0;overflow-wrap:anywhere}
+.character-card{padding:0;overflow:hidden}
+.character-copy{padding:9px 10px}
+.character-card .top{gap:5px;flex-wrap:wrap}
+.cc{overflow:hidden}
+.cc .rel{clear:both}
+.cc .rk{z-index:1}
+.character-intro{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:start}
+.character-intro>div{min-width:0}
+.character-intro .portrait{margin-bottom:22px}
+.person-option{padding-left:54px;position:relative}
+.person-option .portrait-tiny{position:absolute;left:12px;top:10px}
+.person-card{padding:0;overflow:hidden}
+.person-copy{padding:10px 12px}
+.portrait-open{padding:0;width:100%;border:0;background:transparent;cursor:pointer;display:block}
+.portrait-open:focus-visible{outline:2px solid var(--gold);outline-offset:-3px}
+.portrait-detail{display:flex;flex-direction:column;align-items:center;text-align:center}
+.portrait-detail .portrait-large{width:min(100%,320px);height:min(55vh,440px)}
+.appearance-choices{display:flex;justify-content:center;gap:14px;margin:14px 0 18px}
+.appearance-choice{padding:8px 12px;background:var(--paper2);border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:12px;color:var(--muted)}
+.appearance-choice.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold);color:var(--goldt)}
+.vote .portrait-tiny{width:36px;height:42px;margin:0 auto 4px;display:block}
+@media(max-width:760px){
+  .portrait-card{height:146px}
+  .pgrid:not(.dex){grid-template-columns:repeat(2,minmax(0,1fr))}
+  .person-copy{padding:9px 10px}
+  .character-intro{grid-template-columns:112px minmax(0,1fr);gap:12px}
+  .character-intro .portrait-large{width:112px;height:170px}
+  .portrait-small{width:48px;height:64px;margin-right:7px}
+  .appearance-choice .portrait-choice{width:76px;height:106px}
+}
+@media(max-width:359px){
+  .character-intro{grid-template-columns:90px minmax(0,1fr);gap:9px}
+  .character-intro .portrait-large{width:90px;height:140px}
+  .staffs,.pgrid:not(.dex){grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>

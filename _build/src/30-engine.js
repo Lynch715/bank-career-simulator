@@ -38,7 +38,7 @@ function newGame(opts){
   const b = B1();
   S = {
     ver: BALANCE.ver, seed,
-    player: { sur: opts.sur || "李", given: opts.given || "然" },
+    player: { sur: opts.sur || "李", given: opts.given || "然", portrait: opts.portrait==='player_f'?'player_f':'player_m' },
     lv: 1, phase: "play",
     turn: 1, monthAbs: 0, m: 1, year: 1,
     age: BALANCE.start.age, careerYear: BALANCE.start.careerYear,

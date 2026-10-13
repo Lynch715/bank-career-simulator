@@ -61,7 +61,7 @@ const UI = {
   },
   renderPanel(id, render){
     const panel = $(id);
-    try { render(); delete panel.dataset.renderError; }
+    try { render(); PORTRAITS.bind(panel); delete panel.dataset.renderError; }
     catch(error){
       console.error(`面板渲染失败 ${id}`, error);
       panel.dataset.renderError = String(error.message || error);
@@ -93,7 +93,7 @@ const UI = {
     const apDots = Array.from({length:S.apMax}, (_,i)=>`<i class="${i<S.ap?"on":""}"></i>`).join("");
     const turnTxt = S.lv<=2 ? `${S.m}月 · 第${S.turn}回合` : (S.lv<=4 ? `${qName()} · 第${S.turn}回合` : `${S.m<=6?"上半年":"下半年"} · 第${S.turn}回合`);
     $("top").innerHTML = `
-      <div class="who">${esc(titleOf(S))}</div>
+      <div class="player-chip">${PORTRAITS.markup(S.player.portrait||'player_m','tiny')}</div><div class="who">${esc(titleOf(S))}</div>
       <div class="meta">${S.age}岁 · 入行第${S.careerYear}年 · ${turnTxt}</div>
       ${S.phase==="play" ? `<div class="ap" title="行动点">${apDots}</div>` : ""}
       ${S.promo.rumored && S.phase==="play" ? `<div class="win-badge" title="升职窗口">窗口 · ${Math.max(0,S.promo.windowAt - S.turn)}月后考察</div>` : ""}
@@ -107,6 +107,7 @@ const UI = {
       </div>`;
     $("btnPeople").onclick = UI.showPeople;
     $("btnMenu").onclick = UI.showMenu;
+    PORTRAITS.bind($("top"));
     UI.rollAll();
   },
   renderLeft(){
@@ -129,7 +130,7 @@ const UI = {
     const rows = t.map((r,i) => {
       let arr = "";
       if(r.me && S.kpi.prevRank){ const d = S.kpi.prevRank - S.kpi.rank; arr = d>0?`<span class="arr-up">↑${d}</span>`:(d<0?`<span class="arr-dn">↓${-d}</span>`:""); }
-      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${r.boss}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):Number(r.score).toFixed(1))} ${first?"":arr}</td></tr>`;
+      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${PORTRAITS.inline(r.me?(S.player.portrait||'player_m'):r.boss,r.boss)}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):Number(r.score).toFixed(1))} ${first?"":arr}</td></tr>`;
     }).join("");
     $("colL").innerHTML = `
       <div class="box"><h3>考核卡 <em>入行第${S.careerYear}年</em></h3>${items}
@@ -185,7 +186,7 @@ const UI = {
       const due = c.due === S.m;
       return `<button class="cc ${due?"due":""} ${c.maint?"done":""}" data-card="${c.id}">
         <span class="rk ${c.risk<=2?"":"hi"}">R${c.risk}</span>
-        <b>${c.name}</b> <span class="muted">${CUST_TYPES[c.type].name}</span><br>
+        ${PORTRAITS.markup(c)}<b>${c.name}</b> <span class="muted">${CUST_TYPES[c.type].name}</span><br>
         本行 <span class="num">${fmtWan(c.own)}</span> · 他行 <span class="num">${fmtWan(c.other)}</span><br>
         <span class="tag ${c.complain && S.turn-c.complain<=6?"bad":""}">${c.maint?"本月已维护":(due?"本月到期":`${c.due}月到期`)}${c.complain && S.turn-c.complain<=6?" · 投诉过":""}</span>
         <div class="rel"><i style="width:${c.rel}%"></i></div></button>`;
@@ -196,22 +197,25 @@ const UI = {
   },
   bindCust(){
     const box = $("custBox"); if(!box) return;
+    PORTRAITS.bind(box);
     box.querySelectorAll("[data-ct]").forEach(el => el.onclick = () => { UI.custTab = el.dataset.ct; box.innerHTML = UI.custHtml(); UI.bindCust(); });
     box.querySelectorAll("[data-card]").forEach(el => el.onclick = () => UI.pickProduct(el.dataset.card));
   },
   staffHtml(){
     return S.staff.map(s => {
       const roles = Object.keys(ROLE_NAME).map(r=>`<option value="${r}" ${s.role===r?"selected":""}>${ROLE_NAME[r]}</option>`).join("");
-      return `<div class="sc ${s.off===S.turn?"off":""}" title="${esc(s.note)}">
+      return `<div class="sc character-card ${s.off===S.turn?"off":""}" title="${esc(s.note)}">
+        <button class="portrait-open" data-view-portrait="${s.id}" aria-label="查看${s.name}立绘">${PORTRAITS.markup(s,'card')}</button><div class="character-copy">
         <div class="top"><b>${s.name}</b><select data-staff="${s.id}" ${S.phase!=="play"?"disabled":""}>${roles}</select></div>
         <div class="attrs">营销 <b>${s.mk}</b> 业务 <b>${s.op}</b> 合规 <b>${s.cp}</b></div>
         <div class="mini">倦怠<div class="bar"><i class="${s.fatigue>70?"lo":""}" style="width:${s.fatigue}%"></i></div></div>
         <div class="mini">好感 ${r1(relationshipValue(s.id))}/100<div class="bar"><i class="ok" style="width:${s.fav}%"></i></div></div>
         ${s.off===S.turn?'<small class="muted">本月休假</small>':`<small class="muted">${ROLE_DESC[s.role]}</small>`}
-      </div>`;
+      </div></div>`;
     }).join("");
   },
   bindStaff(){
+    $("colM").querySelectorAll('[data-view-portrait]').forEach(el=>el.onclick=()=>UI.showCharacter(staff(el.dataset.viewPortrait)));
     $("colM").querySelectorAll("[data-staff]").forEach(el => el.onchange = () => { setRole(el.dataset.staff, el.value); log("", `${staff(el.dataset.staff).name}调到${ROLE_NAME[el.value]}岗。`); UI.refresh(); });
   },
   renderLog(){
@@ -280,7 +284,7 @@ const UI = {
     });
     opts.push({t:"算了", s:"", cancel:true});
     const T = CUST_TYPES[c.type];
-    UI.modal({kind:"pick", title:c.name,
+    UI.modal({kind:"pick", title:c.name, portrait:c,
       body:`${T.name} · 风险测评R${c.risk} · 本行${fmtWan(c.own)} · 他行${fmtWan(c.other)} · ${c.due===S.m?"本月到期":c.due+"月到期"}${c.note?"\n\n"+c.note:""}`, opts}, UI.after);
   },
   after(){
@@ -298,8 +302,12 @@ const UI = {
   modal(spec, done){
     if(spec.kind === "pick" && S) UI.lastActionLog = S.log[0];
     const m = $("modal");
+    m.classList.toggle('portrait-overlay',spec.kind==='portrait');
+    const portrait=spec.portrait||PORTRAITS.key(spec.title);
     let html = `<div class="modal"><h2>${esc(spec.title||"")}</h2>`;
-    if(spec.kind === "report"){
+    if(spec.kind === "portrait"){
+      html+=`<div class="portrait-detail">${PORTRAITS.markup(portrait,'large')}<p class="muted">${esc(spec.role||'')}</p>${paras(esc(spec.body||''))}</div>`;
+    } else if(spec.kind === "report"){
       html += `<table class="rtab">${spec.rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num muted">${r[2]}</td></tr>`).join("")}</table>`;
       (spec.ms||[]).forEach(ms => html += `<div class="ms"><b>里程碑 · ${ms.name}</b><br>${ms.ceremony}</div>`);
       if(spec.notes.length) html += `<div class="body">${spec.notes.map(n=>`<p class="muted" style="font-size:14px">${n}</p>`).join("")}</div>`;
@@ -310,11 +318,12 @@ const UI = {
       html += `<div class="body">${paras(spec.body)}</div><table class="rtab">${spec.rec.items.map(i=>`<tr><td>${i.name}</td><td class="num">${Math.round(i.done*100)}%</td><td></td></tr>`).join("")}
         <tr><td><b>综合得分</b></td><td class="num"><b>${spec.rec.score.toFixed(1)}</b></td><td class="num">第${spec.rec.rank}名</td></tr></table>`;
     } else {
-      html += `<div class="body">${paras(spec.body||"")}</div>`;
+      html += `<div class="body ${portrait?'character-intro':''}">${portrait?PORTRAITS.markup(portrait,'large',true):''}<div>${paras(spec.body||"")}</div></div>`;
     }
     const opts = spec.opts || [{t:"好"}];
-    html += `<div class="opts">${opts.map((o,i)=>`<button class="opt" data-i="${i}" ${o.disabled?"disabled":""} ${spec.compact?'style="min-height:40px;padding:6px 12px"':""}><b>${esc(o.t)}${o.odds!=null?oddsChip(o.odds):""}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}</div></div>`;
+    html += `<div class="opts">${opts.map((o,i)=>`<button class="opt ${PORTRAITS.option(o)?'person-option':''}" data-i="${i}" ${o.disabled?"disabled":""} ${spec.compact?'style="min-height:40px;padding:6px 12px"':""}>${PORTRAITS.markup(PORTRAITS.option(o),'tiny')}<b>${esc(o.t)}${o.odds!=null?oddsChip(o.odds):""}</b>${o.s?`<small>${esc(o.s)}</small>`:""}</button>`).join("")}</div></div>`;
     m.innerHTML = html;
+    PORTRAITS.bind(m);
     m.classList.remove("hidden");
     m.scrollTop = 0;
     m.querySelectorAll(".opt").forEach(el => el.onclick = () => {
@@ -349,19 +358,22 @@ const UI = {
     let html = "";
     Object.keys(groups).sort().forEach(lv => {
       html += `<div class="pgroup">${lvName[lv]}</div><div class="pgrid">` + groups[lv].map(p => `
-        <div class="pc"><b>${p.name}</b> <span class="muted">${p.group||""}</span>
+        <div class="pc person-card"><button class="portrait-open" data-view-portrait="${p.id}" aria-label="查看${p.name}立绘">${PORTRAITS.markup(p,'card')}</button><div class="person-copy"><b>${p.name}</b> <span class="muted">${p.group||""}</span>
           <div class="pos">${p.pos}</div>
           <div class="mini">好感 ${r1(relationshipValue(p.id))}/100<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div>
-          <div class="muted" style="margin-top:4px">${esc(p.recent || p.note || "")}</div></div>`).join("") + `</div>`;
+          <div class="muted" style="margin-top:4px">${esc(p.recent || p.note || "")}</div></div></div>`).join("") + `</div>`;
     });
     const st = $("stage");
     st.innerHTML = `<div class="inner"><h1>人脉簿</h1>${html}<div class="next"><button class="btn" id="pClose">合上</button></div></div>`;
     st.classList.remove("hidden"); st.scrollTop = 0;
+    PORTRAITS.bind(st);
+    st.querySelectorAll('[data-view-portrait]').forEach(el=>el.onclick=()=>UI.showCharacter(person(el.dataset.viewPortrait)));
     $("pClose").onclick = () => { st.classList.add("hidden"); if(UI.tab==="people") UI.showTab("colM"); };
   },
   showMenu(){
     UI.modal({kind:"pick", title:"菜单", body:`存档会自动保存。\n\n廉政风险：${100-S.core.clean}/100，越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。\n\n遇到 bug、觉得哪里数值不对，或者想要什么新功能，加微信直接说：<b class="wx">lynchrrr</b>`, opts:[
       {t:"切换亮色 / 暗色", s:"", fn:()=>{ const r = document.documentElement; const cur = r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); r.dataset.theme = cur==="dark"?"light":"dark"; }},
+      {t:"更换人物形象", s:"只更换立绘，保留当前进度", fn:()=>setTimeout(()=>UI.chooseAppearance(),0)},
       {t:"复制微信号", s:"lynchrrr", fn:()=>{ const w = "lynchrrr"; (navigator.clipboard ? navigator.clipboard.writeText(w) : Promise.reject()).then(()=>UI.toast("微信号已复制"), ()=>UI.toast("微信号：lynchrrr")); }},
       {t:"查看廉政风险来源", s:"累计风险及公示核查依据", fn:()=>setTimeout(()=>UI.modal({title:"廉政风险来源",body:`当前风险 ${100-S.core.clean}/100，公示举报概率 ${Math.round(publicityRisk()*100)}%。\n\n${publicityReason()}\n\n正常审批贷款、贷款经营损失本身不会增加廉政风险。`,opts:[{t:"关闭"}]}),0)},
       {t:"复制当前存档", s:"保留进度或反馈问题", fn:()=>UI.copySave()},
@@ -369,6 +381,14 @@ const UI = {
       {t:"重新开一局", s:"当前进度会被覆盖", fn:()=>{ clearSave(); UI.start(); }},
       {t:"回到游戏", s:""},
     ]});
+  },
+
+  showCharacter(p){
+    if(!p) return;
+    UI.modal({kind:'portrait',title:p.name,portrait:p,role:p.pos||ROLE_NAME[p.role]||p.role,body:p.note||'',opts:[{t:'合上'}]});
+  },
+  chooseAppearance(){
+    UI.modal({title:'更换人物形象',body:'选择你的形象。',opts:['player_m','player_f'].map((key,i)=>({t:i===0?'形象一':'形象二',portrait:key,s:S.player.portrait===key?'当前形象':'',fn:()=>{S.player.portrait=key;save();UI.refresh();}})).concat([{t:'返回'}])});
   },
 
   /* ---------- 开局 ---------- */
@@ -380,15 +400,22 @@ const UI = {
     s.innerHTML = `<div class="start"><h1>银行升职记</h1><div class="sub">泰和银行 · 从网点到总行</div>
       <p class="muted" style="font-size:14px;line-height:1.9">入行第八年，三十岁。<br>你被派到南岸区弹子石网点当负责人。</p>
       <div class="nm"><input id="inSur" maxlength="2" value="李" aria-label="姓"><input id="inGiven" maxlength="2" value="然" aria-label="名"></div>
+      <div class="appearance-choices" role="group" aria-label="人物形象">${['player_m','player_f'].map((key,i)=>`<button type="button" class="appearance-choice ${i===0?'on':''}" data-appearance="${key}" aria-pressed="${i===0}">${PORTRAITS.markup(key,'choice')}<span>${i===0?'形象一':'形象二'}</span></button>`).join('')}</div>
       <div class="btns">${has?'<button class="btn gold" id="btnCont">继续上次</button>':""}<button class="btn" id="btnNew">${has?"重新开始":"上班"}</button></div>
       <p style="margin-top:18px"><button class="btn ghost" id="btnDex">图鉴</button></p>
       <p class="muted" style="font-size:12px;margin-top:30px">虚构银行，真实地名。离线可玩，自动存档。</p></div>`;
     s.classList.remove("hidden");
+    PORTRAITS.bind(s);
+    let appearance='player_m';
+    s.querySelectorAll('[data-appearance]').forEach(el=>el.onclick=()=>{
+      appearance=el.dataset.appearance;
+      s.querySelectorAll('[data-appearance]').forEach(b=>{b.classList.toggle('on',b===el);b.setAttribute('aria-pressed',String(b===el));});
+    });
     $("btnDex").onclick = () => { s.classList.add("hidden"); UI.showDex(true); };
     if(has) $("btnCont").onclick = () => { if(load()){ s.classList.add("hidden"); UI.resume(); } };
     $("btnNew").onclick = () => {
       const sur = ($("inSur").value||"李").trim().slice(0,2) || "李", given = ($("inGiven").value||"然").trim().slice(0,2) || "然";
-      newGame({sur, given}); s.classList.add("hidden"); UI.rolls = {}; save(); UI.refresh();
+      newGame({sur, given, portrait:appearance}); s.classList.add("hidden"); UI.rolls = {}; save(); UI.refresh();
       job(d => ask(kpiSpec(), d)); runJobs();
     };
   },

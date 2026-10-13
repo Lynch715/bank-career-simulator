@@ -1,0 +1,12 @@
+# Local source art and QA outputs
+.DS_Store
+assets/portraits/source/
+assets/portraits/generated-log.jsonl
+outputs/
+# Generated companion entrypoint and historic copies
+银行升职记.html
+index.P*前备份.html
+optimization-mobile.jpg
+# Local test dependencies
+tests/node_modules/
+tests/package-lock.json

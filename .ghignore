@@ -1,0 +1,11 @@
+docs/
+index.P*前备份.html
+银行升职记.html
+tools_dumptext.js
+tools_textcheck.py
+tests/node_modules/
+tests/package-lock.json
+
+assets/portraits/source/
+assets/portraits/generated-log.jsonl
+outputs/

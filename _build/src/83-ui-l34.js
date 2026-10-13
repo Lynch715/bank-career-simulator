@@ -49,7 +49,7 @@ Object.assign(UI, {
     const acts = ACTIONS_L3.map(a => { const ck = canActL3(a.id); return `<button class="act" data-act3="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.branches.map(x => { const m = person(x.mgr), a = area(x.area);
       return `<tr data-branch="${x.id}" tabindex="0"><td>${x.name}<br><small class="muted">${a.name} · ${x.outlets}个网点${x.renov?` · 改造+${Math.round(x.renov*100)}%`:""}</small></td>
-        <td>${m?m.name:"—"}<br><small class="muted">能力${m?m.skill:"—"}</small></td><td class="num">${fmtYi1(x.dep)}</td>
+        <td>${m?PORTRAITS.inline(m):"—"}<br><small class="muted">能力${m?m.skill:"—"}</small></td><td class="num">${fmtYi1(x.dep)}</td>
         <td class="num ${x.lastInc<0?"neg":""}">${S.track.scoreHistory.length?sgn(Math.round(x.lastInc), fmtYi1):"—"}</td></tr>`; }).join("");
     const newRows = S.biz.newOutlets.map(o => `<tr><td>${area(o.area).name}新网点<br><small class="muted">开了${o.age}个季度</small></td><td>—</td><td class="num">${fmtYi1(o.dep)}</td><td class="num">${o.paid?'<span class="okx">已回本</span>':`<small class="muted">还差${fmtWan(Math.max(0,-o.earned))}</small>`}</td></tr>`).join("");
     const L = S.biz.loans, lt = L.corp+L.micro+L.retail;
@@ -110,7 +110,7 @@ Object.assign(UI, {
   },
   branchModal(bid){
     const x = branch(bid), m = person(x.mgr);
-    UI.modal({kind:"pick", title:x.name, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。`, opts:[
+    UI.modal({kind:"pick", title:x.name, portrait:m, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。`, opts:[
       {t:"下去蹲点", s:"1点行动 · 这季存款长得快一点", odds:ODDS[3].squat(x), disabled:!canActL3("squat").ok || x.squat, fn:()=>doSquatL3(bid)},
       {t:"网点改造", s:`${B3().renovate.cost}万 · 1点行动`, disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
       {t:"撤一个网点", s:"1点行动 · 片区口碑掉", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
@@ -138,11 +138,11 @@ Object.assign(UI, {
     const dep = depTotalL4(), loans = loansL4(), npl = nplL4();
     const acts = ACTIONS_L4.map(a => { const ck = canActL4(a.id); return `<button class="act" data-act4="${a.id}" ${ck.ok?"":"disabled"} title="${esc(ck.ok?a.desc:ck.why)}"><b>${a.name}${apCostTag(a.id)}${oddsChip(actOdds(a.id))}</b><small>${a.desc}</small></button>`; }).join("");
     const rows = S.biz.inst.map(x => `<tr class="${x.mine?"mine":""}" ${x.mine==="l3"?'id="l4wz"':""}><td>${x.name}${x.mine?' <small class="muted">你待过</small>':""}${x.focus?' <small class="tagx">倾斜</small>':""}</td>
-      <td>${x.headName}</td><td class="num">${fmtYi0(x.dep)}</td><td class="num">${fmtYi0(x.loans)}</td><td class="num ${x.npl/x.loans>0.02?"neg":""}">${(x.npl/x.loans*100).toFixed(2)}%</td></tr>`).join("");
+      <td>${PORTRAITS.inline(x.headName,x.headName)}</td><td class="num">${fmtYi0(x.dep)}</td><td class="num">${fmtYi0(x.loans)}</td><td class="num ${x.npl/x.loans>0.02?"neg":""}">${(x.npl/x.loans*100).toFixed(2)}%</td></tr>`).join("");
     const deps = S.biz.deputies.map(d => { const p = person(d.id), ln = LINES_L4.find(l=>l.id===d.line).name;
-      return `<div class="sc"><div class="top"><b>${d.name}</b><span class="muted">分管${ln}</span></div>
+      return `<div class="sc character-card">${PORTRAITS.markup(p,'card')}<div class="character-copy"><div class="top"><b>${d.name}</b><span class="muted">分管${ln}</span></div>
         <div class="attrs fitrow">${LINES_L4.map(l=>`<span class="${d.line===l.id?"cur":""}">${l.name}<b>${d.fit[l.id]}</b></span>`).join("")}</div>
-        <div class="mini">好感<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div><small class="muted">${esc(p.note||"")}</small></div>`; }).join("");
+        <div class="mini">好感<div class="bar"><i class="ok" style="width:${p.fav}%"></i></div></div><small class="muted">${esc(p.note||"")}</small></div></div>`; }).join("");
     const act = S.biz.projects.filter(p=>!p.done), done = S.biz.projects.filter(p=>p.done);
     const pj = act.map(p => { const s = STRAT_L4.find(x=>x.id===p.id); return `<div class="pj tier-mid"><b>${s.name}</b><small>${s.what}</small><div class="dots">${Array.from({length:s.q},(_,i)=>`<i class="${i<p.prog?"on":""}"></i>`).join("")}</div><small class="muted">占资本${fmtYi0(s.rwa)}</small></div>`; }).join("")
       + done.map(p => `<div class="pj tier-low"><b>${STRAT_L4.find(x=>x.id===p.id).name}</b><small class="okx">已落地</small></div>`).join("");

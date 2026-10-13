@@ -22,7 +22,7 @@ UI.promoFlow = function(done){
   function stepVotes(){
     const cards = votes.voters.map((v,i)=>`<div class="vote" id="v${i}"><div class="in">
       <div class="f"><b>${i+1}</b>测评表</div>
-      <div class="b"><span class="muted">${v.name} · ${v.role}</span><b class="v-${v.vote}">${{good:"优秀",ok:"称职",bad:"不称职"}[v.vote]}</b></div></div></div>`).join("");
+      <div class="b">${PORTRAITS.markup(v,'tiny')}<span class="muted">${v.name} · ${v.role}</span><b class="v-${v.vote}">${{good:"优秀",ok:"称职",bad:"不称职"}[v.vote]}</b></div></div></div>`).join("");
     show(`<h1>民主测评</h1><div class="lead"><p>测评表一张张翻过来。</p></div><div class="votes">${cards}</div><p class="tally" id="tally">&nbsp;</p><div class="next">${btn("n2","竞聘陈述")}</div>`);
     $("n2").disabled = true;
     let i = 0;

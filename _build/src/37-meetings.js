@@ -108,7 +108,8 @@ function meetPick(){
 }
 function meetSpec(m){
   const can = S.ap >= 1;
-  return {kind:"event", id:m.id, title:m.title, body:m.body + "<br><small class=\"muted\">推不掉的会：去要占 1 个行动点。</small>", opts:[
+  const hosts={m2_jyfx:'zhouqm',m2_hanghang:'zhouqm',m3_jyfx:'lu',m4_zonghang:'songwy',m4_jianguanju:'gu',m5_dongshi:'lu',m5_jianguan:'gu'};
+  return {kind:"event", id:m.id, portrait:hosts[m.id]||null, title:m.title, body:m.body + "<br><small class=\"muted\">推不掉的会：去要占 1 个行动点。</small>", opts:[
     {t:"「我去。」", s:"占1点 · " + m.go.s, disabled:!can, fn:()=>{ apUse(1); m.go.fn(); log("", m.go.log); S.track.meetGo = (S.track.meetGo||0)+1; }},
     {t:m.skip.t, s:m.skip.s, fn:()=>{ m.skip.fn(); log("warn", m.skip.log); S.track.meetSkip = (S.track.meetSkip||0)+1; }},
   ]};
