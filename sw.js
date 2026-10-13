@@ -1,5 +1,5 @@
 // 银行升职记:离线缓存。代码走网络优先,图片走缓存优先。
-const VER = "thsz-v15-portraits-20261013";
+const VER = "thsz-v16-portrait-layout-20261013";
 importScripts('./assets/portraits/precache.js');
 const SHELL = ["./", "./index.html", "./site.webmanifest", "./favicon.ico", "./icon/icon-192.png", "./icon/icon-512.png", "./icon/icon-64.png", "./icon/icon-180.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VER).then(c => c.addAll(SHELL.concat(PORTRAIT_PRECACHE)))); });

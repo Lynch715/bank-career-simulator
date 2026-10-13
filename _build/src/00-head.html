@@ -373,6 +373,9 @@ small{font-size:max(12px,.85em)}
 .portrait img{display:block;max-width:100%;width:100%;height:100%;object-fit:contain;object-position:center bottom}
 .portrait-small{width:65px;height:76px;float:left;margin:0 10px 4px 0}
 .portrait-tiny{width:30px;height:36px;display:inline-block;vertical-align:middle}
+/* 半身缩略图填满竖向头像框，避免等比缩小后沉在底部。 */
+.portrait-small,.portrait-tiny{overflow:hidden}
+.portrait-small img,.portrait-tiny img{object-fit:cover;object-position:center top}
 .portrait-card{width:100%;height:164px;background:linear-gradient(145deg,var(--paper2),var(--card));border-bottom:1px solid var(--line)}
 .portrait-large{width:150px;height:224px;max-width:100%}
 .portrait-large figcaption{text-align:center;font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px}
