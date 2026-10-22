@@ -850,102 +850,6 @@
     "thumbWidth": 240,
     "thumbHeight": 150
   },
-  "customer_retire_f": {
-    "name": "退休客户女",
-    "ids": [
-      "customer_retire_f"
-    ],
-    "small": "assets/portraits/web/customer_retire_f-s.webp",
-    "large": "assets/portraits/web/customer_retire_f-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_retire_m": {
-    "name": "退休客户男",
-    "ids": [
-      "customer_retire_m"
-    ],
-    "small": "assets/portraits/web/customer_retire_m-s.webp",
-    "large": "assets/portraits/web/customer_retire_m-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_worker_f": {
-    "name": "上班族客户女",
-    "ids": [
-      "customer_worker_f"
-    ],
-    "small": "assets/portraits/web/customer_worker_f-s.webp",
-    "large": "assets/portraits/web/customer_worker_f-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_worker_m": {
-    "name": "上班族客户男",
-    "ids": [
-      "customer_worker_m"
-    ],
-    "small": "assets/portraits/web/customer_worker_m-s.webp",
-    "large": "assets/portraits/web/customer_worker_m-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_self_f": {
-    "name": "个体经营客户女",
-    "ids": [
-      "customer_self_f"
-    ],
-    "small": "assets/portraits/web/customer_self_f-s.webp",
-    "large": "assets/portraits/web/customer_self_f-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_self_m": {
-    "name": "个体经营客户男",
-    "ids": [
-      "customer_self_m"
-    ],
-    "small": "assets/portraits/web/customer_self_m-s.webp",
-    "large": "assets/portraits/web/customer_self_m-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_boss_f": {
-    "name": "企业主客户女",
-    "ids": [
-      "customer_boss_f"
-    ],
-    "small": "assets/portraits/web/customer_boss_f-s.webp",
-    "large": "assets/portraits/web/customer_boss_f-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
-  "customer_boss_m": {
-    "name": "企业主客户男",
-    "ids": [
-      "customer_boss_m"
-    ],
-    "small": "assets/portraits/web/customer_boss_m-s.webp",
-    "large": "assets/portraits/web/customer_boss_m-l.webp",
-    "width": 540,
-    "height": 720,
-    "thumbWidth": 240,
-    "thumbHeight": 150
-  },
   "player_m": {
     "name": "玩家形象男",
     "ids": [
@@ -965,6 +869,462 @@
     ],
     "small": "assets/portraits/web/player_f-s.webp",
     "large": "assets/portraits/web/player_f-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_01": {
+    "name": "王德明",
+    "ids": [
+      "customer_person_01"
+    ],
+    "small": "assets/portraits/web/customer_person_01-s.webp",
+    "large": "assets/portraits/web/customer_person_01-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_02": {
+    "name": "刘桂兰",
+    "ids": [
+      "customer_person_02"
+    ],
+    "small": "assets/portraits/web/customer_person_02-s.webp",
+    "large": "assets/portraits/web/customer_person_02-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_03": {
+    "name": "杨淑芬",
+    "ids": [
+      "customer_person_03"
+    ],
+    "small": "assets/portraits/web/customer_person_03-s.webp",
+    "large": "assets/portraits/web/customer_person_03-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_04": {
+    "name": "赵建华",
+    "ids": [
+      "customer_person_04"
+    ],
+    "small": "assets/portraits/web/customer_person_04-s.webp",
+    "large": "assets/portraits/web/customer_person_04-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_05": {
+    "name": "黄丽",
+    "ids": [
+      "customer_person_05"
+    ],
+    "small": "assets/portraits/web/customer_person_05-s.webp",
+    "large": "assets/portraits/web/customer_person_05-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_06": {
+    "name": "周国平",
+    "ids": [
+      "customer_person_06"
+    ],
+    "small": "assets/portraits/web/customer_person_06-s.webp",
+    "large": "assets/portraits/web/customer_person_06-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_07": {
+    "name": "吴晓燕",
+    "ids": [
+      "customer_person_07"
+    ],
+    "small": "assets/portraits/web/customer_person_07-s.webp",
+    "large": "assets/portraits/web/customer_person_07-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_08": {
+    "name": "郑大勇",
+    "ids": [
+      "customer_person_08"
+    ],
+    "small": "assets/portraits/web/customer_person_08-s.webp",
+    "large": "assets/portraits/web/customer_person_08-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_09": {
+    "name": "孙玉梅",
+    "ids": [
+      "customer_person_09"
+    ],
+    "small": "assets/portraits/web/customer_person_09-s.webp",
+    "large": "assets/portraits/web/customer_person_09-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_10": {
+    "name": "马俊",
+    "ids": [
+      "customer_person_10"
+    ],
+    "small": "assets/portraits/web/customer_person_10-s.webp",
+    "large": "assets/portraits/web/customer_person_10-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_11": {
+    "name": "胡秋菊",
+    "ids": [
+      "customer_person_11"
+    ],
+    "small": "assets/portraits/web/customer_person_11-s.webp",
+    "large": "assets/portraits/web/customer_person_11-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_12": {
+    "name": "朱永红",
+    "ids": [
+      "customer_person_12"
+    ],
+    "small": "assets/portraits/web/customer_person_12-s.webp",
+    "large": "assets/portraits/web/customer_person_12-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_13": {
+    "name": "何家伟",
+    "ids": [
+      "customer_person_13"
+    ],
+    "small": "assets/portraits/web/customer_person_13-s.webp",
+    "large": "assets/portraits/web/customer_person_13-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_14": {
+    "name": "郭春燕",
+    "ids": [
+      "customer_person_14"
+    ],
+    "small": "assets/portraits/web/customer_person_14-s.webp",
+    "large": "assets/portraits/web/customer_person_14-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_15": {
+    "name": "林涛",
+    "ids": [
+      "customer_person_15"
+    ],
+    "small": "assets/portraits/web/customer_person_15-s.webp",
+    "large": "assets/portraits/web/customer_person_15-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_16": {
+    "name": "谢红",
+    "ids": [
+      "customer_person_16"
+    ],
+    "small": "assets/portraits/web/customer_person_16-s.webp",
+    "large": "assets/portraits/web/customer_person_16-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_17": {
+    "name": "邱志强",
+    "ids": [
+      "customer_person_17"
+    ],
+    "small": "assets/portraits/web/customer_person_17-s.webp",
+    "large": "assets/portraits/web/customer_person_17-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_18": {
+    "name": "梁晓敏",
+    "ids": [
+      "customer_person_18"
+    ],
+    "small": "assets/portraits/web/customer_person_18-s.webp",
+    "large": "assets/portraits/web/customer_person_18-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_19": {
+    "name": "宋文斌",
+    "ids": [
+      "customer_person_19"
+    ],
+    "small": "assets/portraits/web/customer_person_19-s.webp",
+    "large": "assets/portraits/web/customer_person_19-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_20": {
+    "name": "唐秀英",
+    "ids": [
+      "customer_person_20"
+    ],
+    "small": "assets/portraits/web/customer_person_20-s.webp",
+    "large": "assets/portraits/web/customer_person_20-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_21": {
+    "name": "许志刚",
+    "ids": [
+      "customer_person_21"
+    ],
+    "small": "assets/portraits/web/customer_person_21-s.webp",
+    "large": "assets/portraits/web/customer_person_21-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_22": {
+    "name": "韩梅",
+    "ids": [
+      "customer_person_22"
+    ],
+    "small": "assets/portraits/web/customer_person_22-s.webp",
+    "large": "assets/portraits/web/customer_person_22-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_23": {
+    "name": "冯建军",
+    "ids": [
+      "customer_person_23"
+    ],
+    "small": "assets/portraits/web/customer_person_23-s.webp",
+    "large": "assets/portraits/web/customer_person_23-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_24": {
+    "name": "曹玉兰",
+    "ids": [
+      "customer_person_24"
+    ],
+    "small": "assets/portraits/web/customer_person_24-s.webp",
+    "large": "assets/portraits/web/customer_person_24-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_25": {
+    "name": "彭勇",
+    "ids": [
+      "customer_person_25"
+    ],
+    "small": "assets/portraits/web/customer_person_25-s.webp",
+    "large": "assets/portraits/web/customer_person_25-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_26": {
+    "name": "曾晓红",
+    "ids": [
+      "customer_person_26"
+    ],
+    "small": "assets/portraits/web/customer_person_26-s.webp",
+    "large": "assets/portraits/web/customer_person_26-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_27": {
+    "name": "蒋德福",
+    "ids": [
+      "customer_person_27"
+    ],
+    "small": "assets/portraits/web/customer_person_27-s.webp",
+    "large": "assets/portraits/web/customer_person_27-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_28": {
+    "name": "田秀珍",
+    "ids": [
+      "customer_person_28"
+    ],
+    "small": "assets/portraits/web/customer_person_28-s.webp",
+    "large": "assets/portraits/web/customer_person_28-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_29": {
+    "name": "钟建国",
+    "ids": [
+      "customer_person_29"
+    ],
+    "small": "assets/portraits/web/customer_person_29-s.webp",
+    "large": "assets/portraits/web/customer_person_29-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_30": {
+    "name": "廖小琴",
+    "ids": [
+      "customer_person_30"
+    ],
+    "small": "assets/portraits/web/customer_person_30-s.webp",
+    "large": "assets/portraits/web/customer_person_30-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_31": {
+    "name": "范明",
+    "ids": [
+      "customer_person_31"
+    ],
+    "small": "assets/portraits/web/customer_person_31-s.webp",
+    "large": "assets/portraits/web/customer_person_31-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_32": {
+    "name": "汪丽萍",
+    "ids": [
+      "customer_person_32"
+    ],
+    "small": "assets/portraits/web/customer_person_32-s.webp",
+    "large": "assets/portraits/web/customer_person_32-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_33": {
+    "name": "邹强",
+    "ids": [
+      "customer_person_33"
+    ],
+    "small": "assets/portraits/web/customer_person_33-s.webp",
+    "large": "assets/portraits/web/customer_person_33-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_34": {
+    "name": "熊春华",
+    "ids": [
+      "customer_person_34"
+    ],
+    "small": "assets/portraits/web/customer_person_34-s.webp",
+    "large": "assets/portraits/web/customer_person_34-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_35": {
+    "name": "万国庆",
+    "ids": [
+      "customer_person_35"
+    ],
+    "small": "assets/portraits/web/customer_person_35-s.webp",
+    "large": "assets/portraits/web/customer_person_35-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_36": {
+    "name": "雷敏",
+    "ids": [
+      "customer_person_36"
+    ],
+    "small": "assets/portraits/web/customer_person_36-s.webp",
+    "large": "assets/portraits/web/customer_person_36-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_37": {
+    "name": "龙泽",
+    "ids": [
+      "customer_person_37"
+    ],
+    "small": "assets/portraits/web/customer_person_37-s.webp",
+    "large": "assets/portraits/web/customer_person_37-l.webp",
+    "width": 540,
+    "height": 720,
+    "thumbWidth": 240,
+    "thumbHeight": 150
+  },
+  "customer_person_38": {
+    "name": "袁淑华",
+    "ids": [
+      "customer_person_38"
+    ],
+    "small": "assets/portraits/web/customer_person_38-s.webp",
+    "large": "assets/portraits/web/customer_person_38-l.webp",
     "width": 540,
     "height": 720,
     "thumbWidth": 240,

@@ -17,11 +17,11 @@ HTML 主文件配人物立绘资源，离线可玩，自动存档。手机上可
 
 ## 人物立绘
 
-80 张透明立绘：70 张角色图、8 张随机客户范式、2 张玩家形象。员工、人脉、客户、排名、负责人和明确主体的事件使用固定身份映射；开局和菜单可选择玩家形象。点击员工或人物簿里的图片可以查看大图。
+110 张透明立绘：70 张原有角色图、38 张客户专属图、2 张玩家形象。客户姓名池逐人绑定，单局 40 位客户均有独立立绘，取消按职业和性别共用模板。员工、人脉、客户、排名、负责人和明确主体的事件使用固定身份映射；开局和菜单可选择玩家形象。点击员工或人物簿里的图片可以查看大图。旧存档按原有姓名直接识别，无需重开。
 
 - 原图：`assets/portraits/source/`；内置 image_gen 制作，PNG 原图保留在本地美术目录。仓库提供运行 WebP、清单和出图提示词。
 - 运行资源：`assets/portraits/web/`，完整立绘和头像缩略图各一份。
-- 名单和出图提示词：`assets/portraits/inventory.json`、`production-prompts.json`、`style-prompts-v1.json`。
+- 名单和出图提示词：`assets/portraits/inventory.json`、`production-prompts.json`、`unique-customer-prompts-v2.json`、`style-prompts-v1.json`。8 张旧客户模板已退役，原始 PNG 保留本地。
 - 本地画册：`portraits.html`，可搜索人物并查看大图。
 
 在保留 PNG 原图的本地美术目录中构建资源：`python3 _build/build_portraits.py`。然后执行 `bash _build/build.sh` 和 `cp index.html 银行升职记.html`。画册用 `python3 _build/portrait_overview.py` 重建。立绘回归检查：`node tests/14-portraits.js`。

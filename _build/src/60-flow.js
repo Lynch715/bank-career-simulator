@@ -84,7 +84,8 @@ function eventSpec(x){
 }
 function addRookie(){
   if(S.staff.length >= STAFF_L1.length) return;
-  const base = S.staff.some(s=>s.id===ROOKIE_L1.id) ? Object.assign({}, ROOKIE_L1, {id:"rk"+S.turn, name:pick(["吴悠","马晓","孙一","钱朵"])}) : Object.assign({}, ROOKIE_L1);
+  const availableNames = ["吴悠","马晓","孙一","钱朵"].filter(name=>!S.staff.some(s=>s.name===name));
+  const base = S.staff.some(s=>s.id===ROOKIE_L1.id) ? Object.assign({}, ROOKIE_L1, {id:"rk"+S.turn, name:pick(availableNames)}) : Object.assign({}, ROOKIE_L1);
   S.staff.push(Object.assign({off:0, trained:0}, base));
   S.people.push({id:base.id, name:base.name, role:ROLE_NAME[base.role], group:"部下", lvMet:S.lv, pos:"弹子石网点"+ROLE_NAME[base.role], fav:base.fav, note:base.note, met:true, recent:"", kind:"staff", alive:true});
   log("", `新人${base.name}到岗。${base.note}`);

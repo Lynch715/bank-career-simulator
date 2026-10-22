@@ -3,8 +3,8 @@
   "style": "清爽日漫",
   "stage": "integrated",
   "fixedCount": 35,
-  "namedCount": 70,
-  "coverageNote": "70 张具名角色或固定称谓角色专属图，8 张随机客户年龄职业性别范式，2 张可选玩家形象；不新增游戏剧情角色。",
+  "namedCount": 108,
+  "coverageNote": "70 位原有角色、38 位客户姓名池人物各自使用专属立绘，另有 2 张玩家形象。8 张客户模板已退役，不再参与运行映射。",
   "characters": [
     {
       "name": "周小满",
@@ -1640,6 +1640,1008 @@
       "sha256": "20bad43ae96b1634c8989519e61c85aaa1d7efc87ad5708f0b7ab1597f585db9"
     },
     {
+      "name": "玩家形象男",
+      "key": "player_m",
+      "ids": [
+        "player_m"
+      ],
+      "sources": [
+        "player-avatar"
+      ],
+      "role": "玩家",
+      "sex": "m",
+      "visualAge": 32,
+      "appearance": "neat short textured black hair, intelligent warm brown eyes, clear adult jawline, calm aspiring professional expression",
+      "outfit": "tailored deep green business suit, ivory open-collar shirt, charcoal trousers",
+      "prop": "closed plain notebook",
+      "note": "",
+      "status": "ready",
+      "asset": "assets/portraits/source/player_m.png",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "4dbe4ba08ed1b9e8bc376d203758dbd40bca40232c21445ae389f3605092e7a7"
+    },
+    {
+      "name": "玩家形象女",
+      "key": "player_f",
+      "ids": [
+        "player_f"
+      ],
+      "sources": [
+        "player-avatar"
+      ],
+      "role": "玩家",
+      "sex": "f",
+      "visualAge": 32,
+      "appearance": "dark hair in neat low ponytail, warm intelligent adult face, focused hopeful eyes, composed gentle smile",
+      "outfit": "tailored deep green business suit, ivory open-collar shirt, charcoal trousers",
+      "prop": "closed plain notebook",
+      "note": "",
+      "status": "ready",
+      "asset": "assets/portraits/source/player_f.png",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "ed9cc7d358cbac29f63ebfe8bb962caf5d3c232d3abfca71f51c167c9109c0ec"
+    },
+    {
+      "key": "customer_person_01",
+      "name": "王德明",
+      "ids": [
+        "customer_person_01"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "m",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_01.png",
+      "visualAge": 28,
+      "appearance": "long narrow face, prominent straight nose, close-cropped black hair, thin rectangular glasses",
+      "outfit": "slate blue rolled-sleeve shirt, charcoal trousers",
+      "prop": "holding a closed cream laptop sleeve",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "fc6aa794b2859fa0a920ad0cb27ddb9388cbba7424ddb15f14d2d129062cb04a"
+    },
+    {
+      "key": "customer_person_02",
+      "name": "刘桂兰",
+      "ids": [
+        "customer_person_02"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_02.png",
+      "visualAge": 29,
+      "appearance": "round face, soft cheeks, short rounded black bob with straight fringe, warm smile",
+      "outfit": "dusty rose knitted cardigan, cream blouse, navy skirt",
+      "prop": "hands loosely clasped at waist",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "b5b6d8d2970b564e161c6c1af89163e405c8a8e13bef672ab82bd47230630cd1"
+    },
+    {
+      "key": "customer_person_03",
+      "name": "杨淑芬",
+      "ids": [
+        "customer_person_03"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_03.png",
+      "visualAge": 30,
+      "appearance": "angular heart-shaped face, fine arched eyebrows, shoulder-length wavy dark hair, focused gaze",
+      "outfit": "ochre buttoned blouse and dark olive trousers",
+      "prop": "holding a small blank zipped purse",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "2a22209d57183f03143fad98c31ebd5bf49d1dbbe3b85a18709dfe41c9cf4fab"
+    },
+    {
+      "key": "customer_person_04",
+      "name": "赵建华",
+      "ids": [
+        "customer_person_04"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "m",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_04.png",
+      "visualAge": 39,
+      "appearance": "square jaw, broad nose, medium tan skin, wavy side-combed black hair, small moustache",
+      "outfit": "rust-brown casual jacket, ecru T-shirt, dark jeans",
+      "prop": "one hand resting on a canvas satchel strap",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "6714e276ff52fc36b320900cc8cbb00de2163013df9f0ed001a4941a0e7a5a1c"
+    },
+    {
+      "key": "customer_person_05",
+      "name": "黄丽",
+      "ids": [
+        "customer_person_05"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "f",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_05.png",
+      "visualAge": 40,
+      "appearance": "oval face, high cheekbones, long black braid over shoulder, bright attentive eyes",
+      "outfit": "teal patterned collarless blouse, beige trousers",
+      "prop": "holding a closed neutral sample book",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "ef63fa5d3dff9691da122196f5e0135a2f9347bafdf5fe396f519fc03258d386"
+    },
+    {
+      "key": "customer_person_06",
+      "name": "周国平",
+      "ids": [
+        "customer_person_06"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "企业主客户",
+      "customerType": "boss",
+      "sex": "m",
+      "note": "企业主客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_06.png",
+      "visualAge": 41,
+      "appearance": "wide face, strong brow, thick short salt-and-pepper hair swept back, stocky build",
+      "outfit": "dark chocolate casual blazer, forest green shirt, beige trousers",
+      "prop": "holding a closed leather document case",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "df55c40fafecec5eb939cb7493db49db2d3e44b11159d77dcda6095a28a2d97a"
+    },
+    {
+      "key": "customer_person_07",
+      "name": "吴晓燕",
+      "ids": [
+        "customer_person_07"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "f",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_07.png",
+      "visualAge": 67,
+      "appearance": "older long face, pronounced smile lines, silver hair in low chignon, oval wire glasses",
+      "outfit": "muted plum cardigan over cream floral blouse, grey trousers",
+      "prop": "holding a plain folded cloth shopping bag",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "ad9836ac0375d7fe4f74e2c316cbf7ef71228bcf86abb19b32f76ac41eb6060e"
+    },
+    {
+      "key": "customer_person_08",
+      "name": "郑大勇",
+      "ids": [
+        "customer_person_08"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "m",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_08.png",
+      "visualAge": 35,
+      "appearance": "slender face, straight low eyebrows, textured black crew cut, tall lean build",
+      "outfit": "pale blue short-sleeved office shirt, navy trousers, simple wristwatch",
+      "prop": "one hand holding a plain takeaway tumbler",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "4bfb8f589f777047cd8ae50d66741d4350be08613283bb64cb85a6bf7bc20684"
+    },
+    {
+      "key": "customer_person_09",
+      "name": "孙玉梅",
+      "ids": [
+        "customer_person_09"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "f",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_09.png",
+      "visualAge": 44,
+      "appearance": "broad face, small smiling eyes, short wavy auburn-black hair, strong forearms",
+      "outfit": "brick-red apron over cream striped long-sleeved top, dark trousers",
+      "prop": "holding a closed small order notebook",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "fef2c31ef44ff9124f187c47104a87ae56130c6e3be03dbf2619c4378c0b8660"
+    },
+    {
+      "key": "customer_person_10",
+      "name": "马俊",
+      "ids": [
+        "customer_person_10"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "m",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_10.png",
+      "visualAge": 70,
+      "appearance": "older square face, bushy grey brows, short silver crew cut, visible laugh lines, sturdy build",
+      "outfit": "moss green zip cardigan over pale check shirt, taupe trousers",
+      "prop": "hands lightly folded over a plain cloth pouch",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "5842a28ee4fc2192e29dc37a0d9eb5b2dcc20c684476732ee81b3b4ea1bc66f3"
+    },
+    {
+      "key": "customer_person_11",
+      "name": "胡秋菊",
+      "ids": [
+        "customer_person_11"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_11.png",
+      "visualAge": 38,
+      "appearance": "soft triangular face, fine freckles across cheeks, chin-length black hair tucked behind ears",
+      "outfit": "warm blue round-neck knit top, grey pleated skirt",
+      "prop": "holding a folded ivory rain jacket",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "abc9aa609fbea12e3009e236cf79e27540288b7369c06cffbb0bedc73a683eb4"
+    },
+    {
+      "key": "customer_person_12",
+      "name": "朱永红",
+      "ids": [
+        "customer_person_12"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "企业主客户",
+      "customerType": "boss",
+      "sex": "f",
+      "note": "企业主客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_12.png",
+      "visualAge": 47,
+      "appearance": "diamond face, defined cheekbones, voluminous black curled bob, confident wide smile",
+      "outfit": "muted burgundy pantsuit with ivory silk blouse, small pearl earrings",
+      "prop": "holding a structured tan handbag by handles",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "84081d9742f02338e3d058005bfcea3ec3983c18785bb8570aa235e5941a0cd1"
+    },
+    {
+      "key": "customer_person_13",
+      "name": "何家伟",
+      "ids": [
+        "customer_person_13"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "m",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_13.png",
+      "visualAge": 61,
+      "appearance": "older lean face, short white hair receding at temples, round rimless glasses, gentle smile",
+      "outfit": "navy sleeveless knitted vest, ivory shirt, grey trousers",
+      "prop": "holding a closed blank newspaper folder",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "2917cad50b86a043be90bff587df669fe2665eaab26143820d15b2715a6fb2b4"
+    },
+    {
+      "key": "customer_person_14",
+      "name": "郭春燕",
+      "ids": [
+        "customer_person_14"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "f",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_14.png",
+      "visualAge": 62,
+      "appearance": "older round face, short salt-and-pepper soft curls, plump cheeks, deep smile lines",
+      "outfit": "ochre knitted cardigan, teal blouse, charcoal trousers",
+      "prop": "hands resting on a folded cloth tote",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "b0ae3b24f9041abadd74dca6beb62441722e6bd046262c4e5831767c13a3c27d"
+    },
+    {
+      "key": "customer_person_15",
+      "name": "林涛",
+      "ids": [
+        "customer_person_15"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "m",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_15.png",
+      "visualAge": 63,
+      "appearance": "older angular face, medium tan skin, grey flat-top hair, pronounced cheekbones, clean shaven",
+      "outfit": "light taupe field jacket, dark navy polo shirt, brown trousers",
+      "prop": "holding a plain insulated steel flask",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "ded849d47e66519355503f5eaf2bd63c3ed068f05983404580550619cc30de98"
+    },
+    {
+      "key": "customer_person_16",
+      "name": "谢红",
+      "ids": [
+        "customer_person_16"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_16.png",
+      "visualAge": 43,
+      "appearance": "slim oval face, slightly wide-set eyes, short pixie black cut with side fringe",
+      "outfit": "sage green long-sleeved blouse, stone grey trousers",
+      "prop": "one palm open gently, other holding a closed slim notebook",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "9182dd831c0117812c8740ffeb0ab0e0a74a57b545d3ccd86a2812565741527c"
+    },
+    {
+      "key": "customer_person_17",
+      "name": "邱志强",
+      "ids": [
+        "customer_person_17"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "m",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_17.png",
+      "visualAge": 44,
+      "appearance": "round face, slightly upturned nose, thick tousled dark hair, round dark glasses, broad build",
+      "outfit": "muted ochre overshirt over white T-shirt, dark chinos",
+      "prop": "holding a closed blue laptop sleeve against hip",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "def2f80d83a216293b00639971d18e5985582ecbf39d9f4daef5fe511c5f3df8"
+    },
+    {
+      "key": "customer_person_18",
+      "name": "梁晓敏",
+      "ids": [
+        "customer_person_18"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_18.png",
+      "visualAge": 28,
+      "appearance": "long face, soft drooping brows, black hair in high bun, thoughtful smile",
+      "outfit": "dusty lilac cardigan over ivory shirt, ink blue skirt",
+      "prop": "holding a small blank phone low at waist",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "5282aab193dbfbdb4bd8520be74e8b271e1cd94e18f923390450acab11ed37db"
+    },
+    {
+      "key": "customer_person_19",
+      "name": "宋文斌",
+      "ids": [
+        "customer_person_19"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "m",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_19.png",
+      "visualAge": 36,
+      "appearance": "rectangular face, pronounced chin, thick eyebrows, black hair with shaved sides and wavy top",
+      "outfit": "olive work jacket over cream henley shirt, brown trousers",
+      "prop": "holding a plain canvas tool roll closed",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "416edbb831a4fa6626e227e69adee864084376ceb8cfb9e179d4e8a67dd8b1aa"
+    },
+    {
+      "key": "customer_person_20",
+      "name": "唐秀英",
+      "ids": [
+        "customer_person_20"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "f",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_20.png",
+      "visualAge": 37,
+      "appearance": "broad oval face, confident narrow eyes, black hair in a low loose braid, sturdy build",
+      "outfit": "warm mustard blouse, dark brown sleeveless vest, charcoal trousers",
+      "prop": "hands gently clasping a cloth market bag",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "c3c0f2497a3a4e9aa15799443c3bf59b0dabfd934749bdde2c383d374443c31f"
+    },
+    {
+      "key": "customer_person_21",
+      "name": "许志刚",
+      "ids": [
+        "customer_person_21"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "企业主客户",
+      "customerType": "boss",
+      "sex": "m",
+      "note": "企业主客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_21.png",
+      "visualAge": 38,
+      "appearance": "angular face, cropped black hair with greying temples, deep-set eyes, broad shoulders",
+      "outfit": "muted midnight blue suit with open-collar light tan shirt",
+      "prop": "holding a thin blank portfolio under arm",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "8fd1be30065ae0de05d1779638ebd7c31b6f56f26524b5b065bc9f3e4c693c90"
+    },
+    {
+      "key": "customer_person_22",
+      "name": "韩梅",
+      "ids": [
+        "customer_person_22"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "f",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_22.png",
+      "visualAge": 70,
+      "appearance": "older heart-shaped face, visible wrinkles, silver chin-length bob, narrow oval spectacles",
+      "outfit": "dusty pink Chinese-collar jacket, navy trousers, small jade brooch",
+      "prop": "holding a closed unmarked passbook sleeve",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "c22a6263ac6310d5809640a2c009793da23e36e567b1a954d94331671b7d995f"
+    },
+    {
+      "key": "customer_person_23",
+      "name": "冯建军",
+      "ids": [
+        "customer_person_23"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "m",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_23.png",
+      "visualAge": 33,
+      "appearance": "narrow face, high forehead, neat side-parted dark hair, sharp straight brows, lean build",
+      "outfit": "dark teal V-neck sweater over ivory shirt, stone trousers",
+      "prop": "holding a closed grey notebook with both hands",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "177354311342d637dae701f61e0dcceb62fc5b6c7e60913224d91840bed18522"
+    },
+    {
+      "key": "customer_person_24",
+      "name": "曹玉兰",
+      "ids": [
+        "customer_person_24"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "f",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_24.png",
+      "visualAge": 41,
+      "appearance": "square face, rounded nose, short straight black bob with blunt bangs, friendly small eyes",
+      "outfit": "dusty blue denim jacket, cream apron tied at waist, dark trousers",
+      "prop": "one hand on a blank tan delivery pouch",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "7ca0106c4409b76a36b4bbd182be7d74679abf1adaa6981361f9eb01d80a5018"
+    },
+    {
+      "key": "customer_person_25",
+      "name": "彭勇",
+      "ids": [
+        "customer_person_25"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "m",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_25.png",
+      "visualAge": 61,
+      "appearance": "older round face, deep eye wrinkles, balding crown with grey side hair, relaxed smile",
+      "outfit": "burgundy knitted vest over pale beige long-sleeve shirt, navy trousers",
+      "prop": "holding a wooden-handled folded umbrella",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "65cd3301114833c7e0760d46ab2ffae955bf4cd73b65d27b08f8425878a27ddd"
+    },
+    {
+      "key": "customer_person_26",
+      "name": "曾晓红",
+      "ids": [
+        "customer_person_26"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_26.png",
+      "visualAge": 36,
+      "appearance": "heart-shaped face, small beauty mark below left eye, long dark hair in low ponytail",
+      "outfit": "terracotta fine-knit cardigan, ivory blouse, olive skirt",
+      "prop": "holding a closed sage-green notebook",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "ab8f92a0cfe84300308263d37c459a9a19b20157a7b6ea1c27d4fa55b1e06966"
+    },
+    {
+      "key": "customer_person_27",
+      "name": "蒋德福",
+      "ids": [
+        "customer_person_27"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "企业主客户",
+      "customerType": "boss",
+      "sex": "m",
+      "note": "企业主客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_27.png",
+      "visualAge": 44,
+      "appearance": "broad rectangular face, salt-and-pepper buzz cut, thick brows, medium tan skin, sturdy build",
+      "outfit": "charcoal casual jacket over muted gold polo shirt, dark trousers",
+      "prop": "hands resting lightly around a closed leather folder",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "60f9dc723169b22a801dece882eab9fc6f370d7098078947d9c95b4fb795aa98"
+    },
+    {
+      "key": "customer_person_28",
+      "name": "田秀珍",
+      "ids": [
+        "customer_person_28"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "f",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_28.png",
+      "visualAge": 64,
+      "appearance": "older oval face, deep smile lines, silver hair in tidy bun with single loose curl",
+      "outfit": "dark teal quilted vest, beige cable-knit sweater, grey trousers",
+      "prop": "holding a plain soft cloth handbag",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "0e79ab5940f3f36f93d7c2a94d15e655eca79453bf41d643f24c0d1516e1704e"
+    },
+    {
+      "key": "customer_person_29",
+      "name": "钟建国",
+      "ids": [
+        "customer_person_29"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "m",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_29.png",
+      "visualAge": 65,
+      "appearance": "older long face, arched grey brows, brushed-back white hair, thin grey moustache",
+      "outfit": "warm brown cardigan, ivory collared shirt, slate trousers",
+      "prop": "holding a closed fabric spectacle case",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "df786ae05d9978d65236c3ee09d468b1a99f234170e5d9c5e15411f60a8427fd"
+    },
+    {
+      "key": "customer_person_30",
+      "name": "廖小琴",
+      "ids": [
+        "customer_person_30"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "f",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_30.png",
+      "visualAge": 66,
+      "appearance": "older square face, salt-and-pepper cropped curls, rounded cheeks, thin gold oval glasses",
+      "outfit": "muted brick-red collarless jacket over cream blouse, charcoal trousers",
+      "prop": "holding an unmarked red zip wallet",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "db42a883a25f87a4f107bff0d526ee1be60f07806d2376ae6b8817da3f898e1d"
+    },
+    {
+      "key": "customer_person_31",
+      "name": "范明",
+      "ids": [
+        "customer_person_31"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "m",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_31.png",
+      "visualAge": 41,
+      "appearance": "small angular face, narrow bright eyes, thick black curls, slim short build",
+      "outfit": "pale sage short-sleeved shirt, charcoal vest, navy trousers",
+      "prop": "holding a closed slim dark laptop",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "0754736bed52be02aa2c8f77c615c7638da305802a3719d965363e1a99f4fb48"
+    },
+    {
+      "key": "customer_person_32",
+      "name": "汪丽萍",
+      "ids": [
+        "customer_person_32"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "f",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_32.png",
+      "visualAge": 42,
+      "appearance": "oval face, strong straight brows, shoulder-length dark hair with side fringe, composed gaze",
+      "outfit": "muted petrol-blue blouse and cream cardigan, charcoal skirt",
+      "prop": "holding a small dark shoulder bag strap",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "117e26c2b426fa1b67e6b10584015dd8a51162cc8f72c69789440580072b7a73"
+    },
+    {
+      "key": "customer_person_33",
+      "name": "邹强",
+      "ids": [
+        "customer_person_33"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "上班族客户",
+      "customerType": "worker",
+      "sex": "m",
+      "note": "上班族客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_33.png",
+      "visualAge": 43,
+      "appearance": "broad square face, short black spiky crop, faint stubble, athletic shoulders",
+      "outfit": "navy polo shirt with grey casual jacket, stone chinos",
+      "prop": "holding a folded plain cycling jacket",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "68982c2201524efad15bd0ef9a47499a0fe328916283f6a970edebbc2a36da46"
+    },
+    {
+      "key": "customer_person_34",
+      "name": "熊春华",
+      "ids": [
+        "customer_person_34"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "f",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_34.png",
+      "visualAge": 51,
+      "appearance": "round face, short auburn-black curled bob, broad eyebrows, friendly open smile, solid build",
+      "outfit": "warm olive apron over cream roll-sleeve shirt, dark trousers",
+      "prop": "holding a plain closed brown order ledger",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "195671d842ddbdb2a9d7371cdc9134741780f3d16fc63a7a82207e0ced8ca205"
+    },
+    {
+      "key": "customer_person_35",
+      "name": "万国庆",
+      "ids": [
+        "customer_person_35"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "个体经营客户",
+      "customerType": "self",
+      "sex": "m",
+      "note": "个体经营客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_35.png",
+      "visualAge": 52,
+      "appearance": "long face, prominent cheekbones, black side-part hair with white temple streak, wireframe glasses",
+      "outfit": "slate-grey collarless jacket, tan knit shirt, dark trousers",
+      "prop": "holding a plain cloth messenger bag",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "afafcde6036e16a009f07d27cf7ec2f3e95f5b535cf63884c45b1b6b82ce7d2c"
+    },
+    {
+      "key": "customer_person_36",
+      "name": "雷敏",
+      "ids": [
+        "customer_person_36"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "企业主客户",
+      "customerType": "boss",
+      "sex": "f",
+      "note": "企业主客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_36.png",
+      "visualAge": 53,
+      "appearance": "heart-shaped face, sharply arched brows, black hair in high ponytail, confident calm eyes",
+      "outfit": "muted aubergine trouser suit, ivory blouse, gold stud earrings",
+      "prop": "holding a compact cream handbag",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "439f12cd2f81df3ea74642dc89ae490d9e046578fd9c2dae97f55603666e9eff"
+    },
+    {
+      "key": "customer_person_37",
+      "name": "龙泽",
+      "ids": [
+        "customer_person_37"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "m",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_37.png",
+      "visualAge": 61,
+      "appearance": "older lean face, short grey swept-up hair, high cheekbones, slightly prominent ears",
+      "outfit": "warm ochre windbreaker, pale blue polo, navy trousers",
+      "prop": "holding a plain closed folding fan at waist",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "c6067d10e39cd01ea825587cbb5c96e472501baac4793f4982c91ff5cd91a52d"
+    },
+    {
+      "key": "customer_person_38",
+      "name": "袁淑华",
+      "ids": [
+        "customer_person_38"
+      ],
+      "sources": [
+        "CUST_NAMES"
+      ],
+      "role": "退休客户",
+      "customerType": "retire",
+      "sex": "f",
+      "note": "退休客户，专属人物形象。",
+      "status": "ready",
+      "asset": "assets/portraits/source/customer_person_38.png",
+      "visualAge": 65,
+      "appearance": "older softly squared face, silver short waved hair, deep-set lively eyes, light smile lines",
+      "outfit": "slate blue knitted cardigan, cream blouse, grey trousers",
+      "prop": "holding a closed unmarked embroidered cloth purse",
+      "width": 1086,
+      "height": 1448,
+      "transparent": true,
+      "sha256": "a09e1c900cdbe74e224d99db80a03ddef833836dfc5495e3730a82f1ddd805f0"
+    }
+  ],
+  "randomCustomerNames": [
+    "王德明",
+    "刘桂兰",
+    "杨淑芬",
+    "赵建华",
+    "黄丽",
+    "周国平",
+    "吴晓燕",
+    "郑大勇",
+    "孙玉梅",
+    "马俊",
+    "胡秋菊",
+    "朱永红",
+    "何家伟",
+    "郭春燕",
+    "林涛",
+    "谢红",
+    "邱志强",
+    "梁晓敏",
+    "宋文斌",
+    "唐秀英",
+    "许志刚",
+    "韩梅",
+    "冯建军",
+    "曹玉兰",
+    "彭勇",
+    "曾晓红",
+    "蒋德福",
+    "田秀珍",
+    "钟建国",
+    "廖小琴",
+    "范明",
+    "汪丽萍",
+    "邹强",
+    "熊春华",
+    "万国庆",
+    "雷敏",
+    "龙泽",
+    "袁淑华"
+  ],
+  "assetCount": 110,
+  "readyCount": 110,
+  "retiredArchetypes": [
+    {
       "name": "退休客户女",
       "key": "customer_retire_f",
       "ids": [
@@ -1822,94 +2824,6 @@
       "height": 1448,
       "transparent": true,
       "sha256": "6f3e5a98b3c64e0c864814cf789674a0fe92327d084463d887053515b9fa08de"
-    },
-    {
-      "name": "玩家形象男",
-      "key": "player_m",
-      "ids": [
-        "player_m"
-      ],
-      "sources": [
-        "player-avatar"
-      ],
-      "role": "玩家",
-      "sex": "m",
-      "visualAge": 32,
-      "appearance": "neat short textured black hair, intelligent warm brown eyes, clear adult jawline, calm aspiring professional expression",
-      "outfit": "tailored deep green business suit, ivory open-collar shirt, charcoal trousers",
-      "prop": "closed plain notebook",
-      "note": "",
-      "status": "ready",
-      "asset": "assets/portraits/source/player_m.png",
-      "width": 1086,
-      "height": 1448,
-      "transparent": true,
-      "sha256": "4dbe4ba08ed1b9e8bc376d203758dbd40bca40232c21445ae389f3605092e7a7"
-    },
-    {
-      "name": "玩家形象女",
-      "key": "player_f",
-      "ids": [
-        "player_f"
-      ],
-      "sources": [
-        "player-avatar"
-      ],
-      "role": "玩家",
-      "sex": "f",
-      "visualAge": 32,
-      "appearance": "dark hair in neat low ponytail, warm intelligent adult face, focused hopeful eyes, composed gentle smile",
-      "outfit": "tailored deep green business suit, ivory open-collar shirt, charcoal trousers",
-      "prop": "closed plain notebook",
-      "note": "",
-      "status": "ready",
-      "asset": "assets/portraits/source/player_f.png",
-      "width": 1086,
-      "height": 1448,
-      "transparent": true,
-      "sha256": "ed9cc7d358cbac29f63ebfe8bb962caf5d3c232d3abfca71f51c167c9109c0ec"
     }
-  ],
-  "randomCustomerNames": [
-    "王德明",
-    "刘桂兰",
-    "杨淑芬",
-    "赵建华",
-    "黄丽",
-    "周国平",
-    "吴晓燕",
-    "郑大勇",
-    "孙玉梅",
-    "马俊",
-    "胡秋菊",
-    "朱永红",
-    "何家伟",
-    "郭春燕",
-    "林涛",
-    "谢红",
-    "邱志强",
-    "梁晓敏",
-    "宋文斌",
-    "唐秀英",
-    "许志刚",
-    "韩梅",
-    "冯建军",
-    "曹玉兰",
-    "彭勇",
-    "曾晓红",
-    "蒋德福",
-    "田秀珍",
-    "钟建国",
-    "廖小琴",
-    "范明",
-    "汪丽萍",
-    "邹强",
-    "熊春华",
-    "万国庆",
-    "雷敏",
-    "龙泽",
-    "袁淑华"
-  ],
-  "assetCount": 80,
-  "readyCount": 80
+  ]
 }

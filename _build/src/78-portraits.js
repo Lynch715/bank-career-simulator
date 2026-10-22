@@ -2,11 +2,6 @@
 const PORTRAITS = {
   byName: Object.fromEntries(Object.entries(PORTRAIT_DATA).map(([key, p])=>[p.name, key])),
   byId: Object.fromEntries(Object.entries(PORTRAIT_DATA).flatMap(([key, p])=>p.ids.map(id=>[id,key]))),
-  hash(text){
-    let value=2166136261;
-    for(const ch of String(text)) value=Math.imul(value ^ ch.charCodeAt(0),16777619);
-    return value>>>0;
-  },
   key(subject){
     if(!subject) return null;
     if(typeof subject==='string') return PORTRAIT_DATA[subject] ? subject : (this.byId[subject] || this.byName[subject] || null);
@@ -14,15 +9,7 @@ const PORTRAITS = {
     if(this.byName[subject.name]) return this.byName[subject.name];
     if(this.byId[subject.id]) return this.byId[subject.id];
     if(subject.portrait && PORTRAIT_DATA[subject.portrait]) return subject.portrait;
-    if(CUST_TYPES[subject.type]){
-      const femaleNames=new Set(['刘桂兰','杨淑芬','黄丽','吴晓燕','孙玉梅','胡秋菊','朱永红','郭春燕','谢红','梁晓敏','唐秀英','韩梅','曹玉兰','曾晓红','田秀珍','廖小琴','汪丽萍','熊春华','雷敏','袁淑华']);
-      const sex=subject.sex || (femaleNames.has(subject.name)?'f':'m');
-      return 'customer_'+subject.type+'_'+(sex==='f'?'f':'m');
-    }
-    if(subject.kind==='staff' || subject.role==='teller' || /^rk\d+$/.test(subject.id||'')){
-      const variants=['jiangke','rookie_0','rookie_1','rookie_2','rookie_3'];
-      return variants[this.hash((subject.id||'')+'|'+(subject.name||''))%variants.length];
-    }
+    // 客户姓名池、补充员工均有专属图。未识别身份时不再借用别人的脸。
     return null;
   },
   markup(subject, size='small', caption=false){

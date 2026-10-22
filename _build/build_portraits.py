@@ -7,12 +7,14 @@ the large standing portrait preserves the entire generated composition.
 import argparse
 import hashlib
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
 parser.add_argument('--allow-pending', action='store_true')
+parser.add_argument('--rebuild-images', action='store_true', help='Re-encode unchanged source art too')
 args = parser.parse_args()
 inventory_path = ROOT / 'assets/portraits/inventory.json'
 inventory = json.loads(inventory_path.read_text())
@@ -20,17 +22,27 @@ log_path = ROOT / 'assets/portraits/generated-log.jsonl'
 generated = {x['key']: x['source'] for x in map(json.loads, log_path.read_text().splitlines())} if log_path.exists() else {}
 out = ROOT / 'assets/portraits/web'
 out.mkdir(parents=True, exist_ok=True)
-manifest, precache, pending = {}, [], []
-for character in inventory['characters']:
+previous_path = out / 'manifest.json'
+previous = json.loads(previous_path.read_text()) if previous_path.exists() else {}
+
+def render(character):
     key = character['key']
     source = character.get('asset') or generated.get(key)
     src = ROOT / (source or ('assets/portraits/source/' + key + '.png'))
     small_path, large_path = out / (key + '-s.webp'), out / (key + '-l.webp')
     if not src.is_file():
-        pending.append(key)
         # Paths and size hints let UI work proceed while production runs.
-        manifest[key] = dict(name=character['name'], ids=character['ids'], small=str(small_path.relative_to(ROOT)), large=str(large_path.relative_to(ROOT)), width=540, height=720, thumbWidth=180, thumbHeight=240)
-        continue
+        return key, dict(name=character['name'], ids=character['ids'], small=str(small_path.relative_to(ROOT)), large=str(large_path.relative_to(ROOT)), width=540, height=720, thumbWidth=180, thumbHeight=240), False
+    digest = hashlib.sha256(src.read_bytes()).hexdigest()
+    cached = previous.get(key)
+    if not args.rebuild_images and cached and character.get('sha256') == digest:
+        try:
+            for path in (small_path, large_path):
+                with Image.open(path) as encoded:
+                    encoded.verify()
+            return key, dict(cached, name=character['name'], ids=character['ids']), True
+        except (OSError, ValueError):
+            pass  # A missing or interrupted derivative must be rebuilt.
     with Image.open(src) as image:
         if image.mode != 'RGBA' or image.getchannel('A').getextrema()[0] != 0:
             raise ValueError(f'{key}: source has no transparent background')
@@ -38,11 +50,25 @@ for character in inventory['characters']:
         large.thumbnail((600, 720), Image.Resampling.LANCZOS)
         thumb = image.crop((0, 0, image.width, round(image.height * .47)))
         thumb.thumbnail((240, 240), Image.Resampling.LANCZOS)
-        large.save(large_path, 'WEBP', quality=86, method=6)
-        thumb.save(small_path, 'WEBP', quality=85, method=6)
-        manifest[key] = dict(name=character['name'], ids=character['ids'], small=str(small_path.relative_to(ROOT)), large=str(large_path.relative_to(ROOT)), width=large.width, height=large.height, thumbWidth=thumb.width, thumbHeight=thumb.height)
-        character.update(asset=str(src.relative_to(ROOT)), status='ready', width=image.width, height=image.height, transparent=True, sha256=hashlib.sha256(src.read_bytes()).hexdigest())
-        precache.extend(['./'+str(small_path.relative_to(ROOT)), './'+str(large_path.relative_to(ROOT))])
+        for derivative, path, quality in ((large, large_path, 86), (thumb, small_path, 85)):
+            temporary = path.with_suffix('.tmp.webp')
+            try:
+                derivative.save(temporary, 'WEBP', quality=quality, method=6)
+                temporary.replace(path)
+            finally:
+                temporary.unlink(missing_ok=True)
+        metadata = dict(name=character['name'], ids=character['ids'], small=str(small_path.relative_to(ROOT)), large=str(large_path.relative_to(ROOT)), width=large.width, height=large.height, thumbWidth=thumb.width, thumbHeight=thumb.height)
+        character.update(asset=str(src.relative_to(ROOT)), status='ready', width=image.width, height=image.height, transparent=True, sha256=digest)
+        return key, metadata, True
+
+manifest, precache, pending = {}, [], []
+with ThreadPoolExecutor(max_workers=4) as workers:
+    for key, metadata, ready in workers.map(render, inventory['characters']):
+        manifest[key] = metadata
+        if ready:
+            precache.extend(['./'+metadata['small'], './'+metadata['large']])
+        else:
+            pending.append(key)
 if pending and not args.allow_pending:
     raise ValueError('Portrait production incomplete: ' + ', '.join(pending))
 inventory['stage'] = 'production' if pending else 'integrated'
@@ -51,4 +77,9 @@ inventory_path.write_text(json.dumps(inventory, ensure_ascii=False, indent=2)+'\
 (ROOT / '_build/src/77-portrait-data.js').write_text('/* Generated by _build/build_portraits.py. */\nconst PORTRAIT_DATA = '+json.dumps(manifest, ensure_ascii=False, separators=(',', ':'))+';\n')
 (ROOT / 'assets/portraits/precache.js').write_text('const PORTRAIT_PRECACHE = '+json.dumps(precache, separators=(',', ':'))+';\n')
 (ROOT / 'assets/portraits/web/manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n')
+# Retired templates are reproducible derivatives; keep their original PNGs and
+# metadata locally, but remove them from the runtime art package.
+for retired in inventory.get('retiredArchetypes', []):
+    for size in ('s', 'l'):
+        (out / (retired['key']+'-'+size+'.webp')).unlink(missing_ok=True)
 print(f'Portraits: {len(manifest)-len(pending)}/{len(manifest)}, {len(precache)} WebP files, {sum(p.stat().st_size for p in out.glob("*.webp"))//1024} KiB')
