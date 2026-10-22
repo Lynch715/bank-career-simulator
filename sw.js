@@ -1,8 +1,13 @@
 // 银行升职记:离线缓存。代码走网络优先,图片走缓存优先。
-const VER = "thsz-v17-unique-customers-20261022";
+const VER = "thsz-v18-distinct-leaders-20261022";
 importScripts('./assets/portraits/precache.js');
 const SHELL = ["./", "./index.html", "./site.webmanifest", "./favicon.ico", "./icon/icon-192.png", "./icon/icon-512.png", "./icon/icon-64.png", "./icon/icon-180.png"];
-self.addEventListener("install", e => { e.waitUntil(caches.open(VER).then(c => c.addAll(SHELL.concat(PORTRAIT_PRECACHE)))); });
+self.addEventListener("install", e => {
+  // Replaced portraits keep their public filenames. Bypass the HTTP cache so
+  // installing a new release actually downloads the new image bytes.
+  const fresh = SHELL.concat(PORTRAIT_PRECACHE).map(path => new Request(new URL(path, self.location.href), {cache:"reload"}));
+  e.waitUntil(caches.open(VER).then(c => c.addAll(fresh)));
+});
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VER).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener("message", e => { if(e.data === "skipWaiting") self.skipWaiting(); });
 self.addEventListener("fetch", e => {

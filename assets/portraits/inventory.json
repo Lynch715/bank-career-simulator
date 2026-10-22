@@ -41,16 +41,29 @@
       "sex": "f",
       "note": "在弹子石站了十一年柜台。叫你小李，一直没改口。",
       "status": "ready",
-      "asset": "assets/portraits/source/hejing.png",
+      "asset": "assets/portraits/source/hejing-v3.png",
       "visualAge": 38,
-      "appearance": "neat jaw-length dark bob, slightly rounded face, thoughtful small eyes",
-      "outfit": "long-sleeved ivory bank blouse and green waistcoat, small gold earrings",
-      "prop": "closed cash ledger",
+      "appearance": "wide softly round face, full lower cheeks, short rounded chin, small low-bridge nose, small hooded downturned eyes, straight thin brows, faint under-eye lines; chin-length practical black bob tucked behind both ears",
+      "outfit": "ivory bank blouse, forest-green cardigan, simple neck scarf",
+      "prop": "holding a closed cash ledger against her waist",
       "key": "hejing",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a41ff26b7d45778fe0d54f9cb581d11258d93b998b5ecd315c822c88541c4051"
+      "sha256": "8c65f302c3668ff85aa8886f87565726f93231e5d6714383fbdfe495891f6ed5",
+      "previousAssets": [
+        "assets/portraits/source/hejing.png"
+      ],
+      "faceDesign": "wide softly round face, full lower cheeks, short rounded chin, small low-bridge nose, small hooded downturned eyes, straight thin brows, faint under-eye lines",
+      "hairDesign": "chin-length practical black bob tucked behind both ears",
+      "bodyDesign": "short sturdy build, relaxed shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/hejing.png",
+          "sha256": "a41ff26b7d45778fe0d54f9cb581d11258d93b998b5ecd315c822c88541c4051"
+        }
+      ]
     },
     {
       "name": "唐亮",
@@ -64,16 +77,29 @@
       "sex": "m",
       "note": "大堂经理，嘴甜，老年客户都认他。",
       "status": "ready",
-      "asset": "assets/portraits/source/tangliang.png",
+      "asset": "assets/portraits/source/tangliang-v3.png",
       "visualAge": 29,
-      "appearance": "short fluffy black hair, narrow friendly face, cheerful open smile",
-      "outfit": "deep green slim suit, ivory shirt, gold-green striped tie",
-      "prop": "one palm gently open in welcome",
+      "appearance": "long rounded face with a broad forehead, prominent ears, slightly upturned nose, crescent smiling eyes, wide cheerful mouth showing a small tooth gap; very short flat black crop with a receding corner",
+      "outfit": "green bank waistcoat, ivory shirt, loose muted gold tie",
+      "prop": "one palm open in welcome",
       "key": "tangliang",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a677c31e044b1caea510751011574f37d6ba42c4eb14d480e48e8d471d1ceb19"
+      "sha256": "b6d217b15612062630a2e6771d83badbc4275609fa3c8950b71ec6f04190d940",
+      "previousAssets": [
+        "assets/portraits/source/tangliang.png"
+      ],
+      "faceDesign": "long rounded face with a broad forehead, prominent ears, slightly upturned nose, crescent smiling eyes, wide cheerful mouth showing a small tooth gap",
+      "hairDesign": "very short flat black crop with a receding corner",
+      "bodyDesign": "lanky narrow shoulders and long neck",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/tangliang.png",
+          "sha256": "a677c31e044b1caea510751011574f37d6ba42c4eb14d480e48e8d471d1ceb19"
+        }
+      ]
     },
     {
       "name": "苏晓雯",
@@ -87,16 +113,29 @@
       "sex": "f",
       "note": "理财经理，业绩榜上常年前三，手机从不离手。",
       "status": "ready",
-      "asset": "assets/portraits/source/suxw.png",
+      "asset": "assets/portraits/source/suxw-v3.png",
       "visualAge": 28,
-      "appearance": "long sleek black hair worn over one shoulder, sharp almond eyes, confident smile",
-      "outfit": "fitted deep green bank blazer, ivory blouse, gold brooch",
-      "prop": "plain smartphone",
+      "appearance": "heart-shaped face with broad cheekbones and short blunt chin, small almond eyes with lifted outer corners, short straight nose, full upper lip, a small mole beside the right corner of her mouth; straight glossy black hair in a sleek high ponytail with blunt short fringe",
+      "outfit": "tailored charcoal-green pantsuit, pale sage shell blouse, square gold studs",
+      "prop": "holding a blank phone beside a closed portfolio",
       "key": "suxw",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "dcacdec021fa983780b71dfd7d3b8d84b2e960913be499793273ede019731fe9"
+      "sha256": "9902dccf4652392aacdc6810c1a67804a37f78c49352f063a357660e76be645b",
+      "previousAssets": [
+        "assets/portraits/source/suxw.png"
+      ],
+      "faceDesign": "heart-shaped face with broad cheekbones and short blunt chin, small almond eyes with lifted outer corners, short straight nose, full upper lip, a small mole beside the right corner of her mouth",
+      "hairDesign": "straight glossy black hair in a sleek high ponytail with blunt short fringe",
+      "bodyDesign": "slim straight posture",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/suxw.png",
+          "sha256": "dcacdec021fa983780b71dfd7d3b8d84b2e960913be499793273ede019731fe9"
+        }
+      ]
     },
     {
       "name": "罗建",
@@ -110,16 +149,29 @@
       "sex": "m",
       "note": "客户经理，跑外拓，车里常年放着一箱宣传折页。",
       "status": "ready",
-      "asset": "assets/portraits/source/luojian.png",
+      "asset": "assets/portraits/source/luojian-v3.png",
       "visualAge": 33,
-      "appearance": "short textured hair, sun-tanned face, broad relaxed smile",
-      "outfit": "green business jacket, ivory open-collar shirt, charcoal trousers",
-      "prop": "plain folded brochures",
+      "appearance": "broad rectangular face with a blunt square jaw, wide low nose, narrow deep-set eyes, thick straight eyebrows, sun-tanned skin, light chin stubble; close-cropped coarse black hair with naturally uneven hairline",
+      "outfit": "rolled-sleeve ivory shirt, open dark-green jacket over arm, dark trousers",
+      "prop": "holding plain car keys and a folded blank brochure",
       "key": "luojian",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "04004a2fda7c4cc51c8473b0dcc1bba4a845f499b0b26a30df0d260841cb4852"
+      "sha256": "f9eceeea02cea28e20417b986aba5b94999786fb05e02eafd041e8ad77d48334",
+      "previousAssets": [
+        "assets/portraits/source/luojian.png"
+      ],
+      "faceDesign": "broad rectangular face with a blunt square jaw, wide low nose, narrow deep-set eyes, thick straight eyebrows, sun-tanned skin, light chin stubble",
+      "hairDesign": "close-cropped coarse black hair with naturally uneven hairline",
+      "bodyDesign": "broad stocky shoulders and thick forearms",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/luojian.png",
+          "sha256": "04004a2fda7c4cc51c8473b0dcc1bba4a845f499b0b26a30df0d260841cb4852"
+        }
+      ]
     },
     {
       "name": "张秀芬",
@@ -225,16 +277,29 @@
       "sex": "m",
       "note": "分行一把手，话说得轻。",
       "status": "ready",
-      "asset": "assets/portraits/source/lu.png",
+      "asset": "assets/portraits/source/lu-v3.png",
       "visualAge": 55,
-      "appearance": "slim elongated face, neatly combed salt-and-pepper hair, gentle eyes, composed slight smile",
-      "outfit": "well-tailored very dark green suit, ivory shirt, subdued gold tie",
-      "prop": "one hand resting on a closed notebook",
+      "appearance": "long oblong head with a broad high forehead, receding hairline, narrow jaw without a pointed chin, small watchful eyes, long slightly hooked nose, thin compressed lips, deep nasolabial lines; sparse neatly combed-back dark-grey hair with exposed temples",
+      "outfit": "deep charcoal three-piece suit, ivory shirt, moss-green tie",
+      "prop": "both hands resting lightly over a closed thin folder",
       "key": "lu",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a71a32d840f777cdf09b49cdec653003dfeb94aee89fc73179578204fbdff3d7"
+      "sha256": "59910b0234b9cb2e1a46c41c0658ff053896c1b23a342ec129c24b8b3fbab493",
+      "previousAssets": [
+        "assets/portraits/source/lu.png"
+      ],
+      "faceDesign": "long oblong head with a broad high forehead, receding hairline, narrow jaw without a pointed chin, small watchful eyes, long slightly hooked nose, thin compressed lips, deep nasolabial lines",
+      "hairDesign": "sparse neatly combed-back dark-grey hair with exposed temples",
+      "bodyDesign": "tall slender build, composed upright stance",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/lu.png",
+          "sha256": "a71a32d840f777cdf09b49cdec653003dfeb94aee89fc73179578204fbdff3d7"
+        }
+      ]
     },
     {
       "name": "顾清越",
@@ -273,16 +338,29 @@
       "sex": "m",
       "note": "原来南坪的负责人，你们在一张排名表上比了两年。",
       "status": "ready",
-      "asset": "assets/portraits/source/dengyu.png",
+      "asset": "assets/portraits/source/dengyu-v3.png",
       "visualAge": 34,
-      "appearance": "close-cropped black hair, angular face, thick sharp eyebrows, energetic expression",
-      "outfit": "fitted green suit, ivory shirt, narrow charcoal tie",
-      "prop": "rolled blank quarterly chart",
+      "appearance": "trapezoid face with a broad angular jaw and narrow forehead, flat broad nose, close-set small eyes, thick eyebrows angled inward, compact tight-lipped grin; short upright black bristle cut",
+      "outfit": "dark-green suit with a rust-brown tie, white shirt",
+      "prop": "one hand pressing a closed notebook to his side",
       "key": "dengyu",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "12f4c878dba4cbb33afbaa0438cce10e9df993c5d658567406682d8c6f4b9286"
+      "sha256": "bc3bc2eb089eab449f1394a92d364da1617e7861b8e069c56b81a941667cecf3",
+      "previousAssets": [
+        "assets/portraits/source/dengyu.png"
+      ],
+      "faceDesign": "trapezoid face with a broad angular jaw and narrow forehead, flat broad nose, close-set small eyes, thick eyebrows angled inward, compact tight-lipped grin",
+      "hairDesign": "short upright black bristle cut",
+      "bodyDesign": "compact muscular build, thick neck",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/dengyu.png",
+          "sha256": "12f4c878dba4cbb33afbaa0438cce10e9df993c5d658567406682d8c6f4b9286"
+        }
+      ]
     },
     {
       "name": "许丽萍",
@@ -298,16 +376,29 @@
       "sex": "f",
       "note": "茶园的负责人。周报从不晚交，也从不多写一个字。",
       "status": "ready",
-      "asset": "assets/portraits/source/xulp.png",
+      "asset": "assets/portraits/source/xulp-v3.png",
       "visualAge": 40,
-      "appearance": "neatly coiled low hair bun, oval mature face, understated rectangular glasses, restrained smile",
-      "outfit": "dark green skirt suit, ivory blouse, small gold earrings",
-      "prop": "closed slim report binder",
+      "appearance": "broad oval face, softly squared jaw, low cheekbones, long rounded nose, small evenly spaced eyes behind thick rectangular brown glasses, thin straight lips; straight shoulder-length black hair tied into a tight low knot, center part",
+      "outfit": "bottle-green long jacket over cream high-collar blouse",
+      "prop": "holding a closed weekly report binder with both hands",
       "key": "xulp",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "5feccfef987c5d8d3ce3970b3476f87412862e3077f52ba9bb27377f98998e50"
+      "sha256": "2ea09f0a1b357adef8c59f743070615bdb15af34fff16cf4a9932df6068580e7",
+      "previousAssets": [
+        "assets/portraits/source/xulp.png"
+      ],
+      "faceDesign": "broad oval face, softly squared jaw, low cheekbones, long rounded nose, small evenly spaced eyes behind thick rectangular brown glasses, thin straight lips",
+      "hairDesign": "straight shoulder-length black hair tied into a tight low knot, center part",
+      "bodyDesign": "medium solid build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/xulp.png",
+          "sha256": "5feccfef987c5d8d3ce3970b3476f87412862e3077f52ba9bb27377f98998e50"
+        }
+      ]
     },
     {
       "name": "黎正",
@@ -323,16 +414,29 @@
       "sex": "m",
       "note": "四公里的负责人，南岸哪个社区主任的电话他都有。",
       "status": "ready",
-      "asset": "assets/portraits/source/lizheng.png",
+      "asset": "assets/portraits/source/lizheng-v3.png",
       "visualAge": 43,
-      "appearance": "rounded friendly face, gently wavy short hair, sociable smile",
-      "outfit": "olive-green blazer over ivory open-collar shirt",
-      "prop": "plain smartphone held loosely at waist",
+      "appearance": "round face with heavy cheeks, broad flat nose, small drooping eyes, curved thick brows, a wide asymmetrical welcoming smile, strong laugh lines; short dark curls with a slightly high forehead",
+      "outfit": "olive blazer, cream open-collar shirt, dark brown trousers",
+      "prop": "one hand gesturing warmly at chest height",
       "key": "lizheng",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "cbdf04f6451c21795c1d3293cfe9e255ed4ac498bb54e0f140a7d0bf50156ecb"
+      "sha256": "163118fe8076a328b94afe9b8bf4428ae4213ce529b24c101cd3538140eea833",
+      "previousAssets": [
+        "assets/portraits/source/lizheng.png"
+      ],
+      "faceDesign": "round face with heavy cheeks, broad flat nose, small drooping eyes, curved thick brows, a wide asymmetrical welcoming smile, strong laugh lines",
+      "hairDesign": "short dark curls with a slightly high forehead",
+      "bodyDesign": "short heavyset build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/lizheng.png",
+          "sha256": "cbdf04f6451c21795c1d3293cfe9e255ed4ac498bb54e0f140a7d0bf50156ecb"
+        }
+      ]
     },
     {
       "name": "周启明",
@@ -347,16 +451,29 @@
       "sex": "m",
       "note": "分行分管公司和零售的副行长。开会看表，不看人。",
       "status": "ready",
-      "asset": "assets/portraits/source/zhouqm.png",
+      "asset": "assets/portraits/source/zhouqm-v3.png",
       "visualAge": 50,
-      "appearance": "lean angular face, short side-parted hair with gray at temples, thin rectangular spectacles, impassive eyes",
-      "outfit": "charcoal-green suit, ivory shirt, silver-green tie, wristwatch",
-      "prop": "plain pen and closed report",
+      "appearance": "long thin rectangular face, prominent cheekbones and temples, narrow downturned eyes, sharply bent long nose, very thin lips, furrow between brows; precise dark side part with grey temples and exposed high forehead",
+      "outfit": "ink-blue pinstripe suit, ivory shirt, narrow dark-green tie",
+      "prop": "one hand checking a plain wristwatch",
       "key": "zhouqm",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a9a0633e96fe95cc17a07d06f56443d83965c643635694b1bb19ebec1ef7bdfa"
+      "sha256": "a890f7806f0f5d40a3ca57a60058fac37e3a29a880edb95baeed4ff62a4ca853",
+      "previousAssets": [
+        "assets/portraits/source/zhouqm.png"
+      ],
+      "faceDesign": "long thin rectangular face, prominent cheekbones and temples, narrow downturned eyes, sharply bent long nose, very thin lips, furrow between brows",
+      "hairDesign": "precise dark side part with grey temples and exposed high forehead",
+      "bodyDesign": "very lean build with slightly stooped shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/zhouqm.png",
+          "sha256": "a9a0633e96fe95cc17a07d06f56443d83965c643635694b1bb19ebec1ef7bdfa"
+        }
+      ]
     },
     {
       "name": "马奔",
@@ -372,16 +489,29 @@
       "sex": "m",
       "note": "渝北的一把手。车里常年放着两箱酒。",
       "status": "ready",
-      "asset": "assets/portraits/source/maben.png",
+      "asset": "assets/portraits/source/maben-v3.png",
       "visualAge": 42,
-      "appearance": "broad athletic torso, square jaw, brushed-back black hair, forceful confident grin",
-      "outfit": "dark olive suit with loosened green tie, ivory shirt",
-      "prop": "one hand casually in pocket, other holding a car key",
+      "appearance": "wide diamond-shaped face with protruding cheekbones, square short chin, broad straight nose with a slightly crooked bridge, deep-set upward-slanting eyes, thick low brows, broad confident grin; dense black hair shaved close at sides and brushed upward",
+      "outfit": "deep-green suit, ivory open-neck shirt without tie",
+      "prop": "one hand loosely on his hip, the other holding a closed black portfolio",
       "key": "maben",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ef50e26c8da8097618aff181ff9e61560a6e672a272cd9e70f982f7e0bbc46c8"
+      "sha256": "0925d53372ffc0fa3ae22fac89335ca20d0fe7e5991544bbfd3e3f97596f8cb6",
+      "previousAssets": [
+        "assets/portraits/source/maben.png"
+      ],
+      "faceDesign": "wide diamond-shaped face with protruding cheekbones, square short chin, broad straight nose with a slightly crooked bridge, deep-set upward-slanting eyes, thick low brows, broad confident grin",
+      "hairDesign": "dense black hair shaved close at sides and brushed upward",
+      "bodyDesign": "large athletic torso and thick neck",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/maben.png",
+          "sha256": "ef50e26c8da8097618aff181ff9e61560a6e672a272cd9e70f982f7e0bbc46c8"
+        }
+      ]
     },
     {
       "name": "魏临川",
@@ -418,16 +548,29 @@
       "sex": "m",
       "note": "在营业部干了十二年，桌上的茶杯是万州三中的校庆纪念品。",
       "status": "ready",
-      "asset": "assets/portraits/source/xiongw.png",
+      "asset": "assets/portraits/source/xiongw-v3.png",
       "visualAge": 48,
-      "appearance": "broad oval face, neat short hair with a little gray, calm approachable expression",
-      "outfit": "dark green suit, ivory shirt, charcoal tie",
-      "prop": "plain ceramic tea mug",
+      "appearance": "large softly squared face, full jowls, small rounded nose, sleepy heavy-lidded eyes, thin arched brows, short broad chin, deep smile folds; neat black-and-grey flat top with sparse temples",
+      "outfit": "olive knitted waistcoat over cream shirt, dark trousers",
+      "prop": "holding a plain ceramic tea cup at waist",
       "key": "xiongw",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "98f6eb2f91a82fac6debe14781b7f6a9cab9be0ad182631704b0ecc99cf735e7"
+      "sha256": "af3d160ad5d5c647e55cb82a9af728434598fb0f7e5647b4c488913b07463a96",
+      "previousAssets": [
+        "assets/portraits/source/xiongw.png"
+      ],
+      "faceDesign": "large softly squared face, full jowls, small rounded nose, sleepy heavy-lidded eyes, thin arched brows, short broad chin, deep smile folds",
+      "hairDesign": "neat black-and-grey flat top with sparse temples",
+      "bodyDesign": "short barrel-chested build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/xiongw.png",
+          "sha256": "98f6eb2f91a82fac6debe14781b7f6a9cab9be0ad182631704b0ecc99cf735e7"
+        }
+      ]
     },
     {
       "name": "程晓燕",
@@ -441,16 +584,29 @@
       "sex": "f",
       "note": "说话快，报数比报表还快。",
       "status": "ready",
-      "asset": "assets/portraits/source/chengxy.png",
+      "asset": "assets/portraits/source/chengxy-v3.png",
       "visualAge": 39,
-      "appearance": "short layered dark pixie bob, sharp focused eyes, lively confident smile",
-      "outfit": "green tailored trouser suit, ivory blouse",
-      "prop": "plain report folder held firmly",
+      "appearance": "narrow triangular face with a high broad forehead and pointed but short chin, high cheekbones, long narrow upturned nose, small sharp eyes, sharply arched eyebrows, firm thin mouth; very short angular black pixie haircut with exposed ears",
+      "outfit": "fitted muted teal trouser suit, ivory V-neck blouse",
+      "prop": "holding a blank presentation clicker and closed slim report",
       "key": "chengxy",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "cbe37f3168c55537eba80768fde493420064be5a9376d0c7f05c2819b3c5248c"
+      "sha256": "20e69fb09e88c8c48f8da6ba30cb773678a58c262a9656e0c34e879bb934d65b",
+      "previousAssets": [
+        "assets/portraits/source/chengxy.png"
+      ],
+      "faceDesign": "narrow triangular face with a high broad forehead and pointed but short chin, high cheekbones, long narrow upturned nose, small sharp eyes, sharply arched eyebrows, firm thin mouth",
+      "hairDesign": "very short angular black pixie haircut with exposed ears",
+      "bodyDesign": "slim wiry build, brisk forward-leaning posture",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/chengxy.png",
+          "sha256": "cbe37f3168c55537eba80768fde493420064be5a9376d0c7f05c2819b3c5248c"
+        }
+      ]
     },
     {
       "name": "付国华",
@@ -464,16 +620,29 @@
       "sex": "m",
       "note": "江南新区的开发商，他叫得出一半人的小名。",
       "status": "ready",
-      "asset": "assets/portraits/source/fugh.png",
+      "asset": "assets/portraits/source/fugh-v3.png",
       "visualAge": 47,
-      "appearance": "round face, curly short hair, warm smiling eyes, easygoing posture",
-      "outfit": "olive blazer, ivory open-collar shirt",
-      "prop": "plain phone and closed small notebook",
+      "appearance": "wide pear-shaped face, small forehead, broad rounded jaw, fleshy bulbous nose, widely spaced gentle eyes, broad lips, one deeper left smile fold; wavy dark hair brushed sideways over a low forehead",
+      "outfit": "warm brown suit with dark olive collared knit shirt",
+      "prop": "both hands spread in an easy conversational gesture",
       "key": "fugh",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "f87cfdf70f6eae5d32bb9f53178e6f720bf2f74f93d2ed9acf329a751438872d"
+      "sha256": "9bb56c45894a3c8a09bbfa820b649d99ed836f92065c4b4c25f6ed73dbc5dd00",
+      "previousAssets": [
+        "assets/portraits/source/fugh.png"
+      ],
+      "faceDesign": "wide pear-shaped face, small forehead, broad rounded jaw, fleshy bulbous nose, widely spaced gentle eyes, broad lips, one deeper left smile fold",
+      "hairDesign": "wavy dark hair brushed sideways over a low forehead",
+      "bodyDesign": "rounded broad build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/fugh.png",
+          "sha256": "f87cfdf70f6eae5d32bb9f53178e6f720bf2f74f93d2ed9acf329a751438872d"
+        }
+      ]
     },
     {
       "name": "牟俊",
@@ -487,16 +656,29 @@
       "sex": "m",
       "note": "工科出身，看财报先看应收账款。",
       "status": "ready",
-      "asset": "assets/portraits/source/moujun.png",
+      "asset": "assets/portraits/source/moujun-v3.png",
       "visualAge": 41,
-      "appearance": "slim build, narrow face, crew cut, rectangular dark glasses, analytical expression",
-      "outfit": "gray-green suit, ivory shirt, narrow green tie",
-      "prop": "closed account binder with colored tabs",
+      "appearance": "long lean face with sharply squared chin, high narrow nose bridge, small close-set eyes behind thin oval metal glasses, straight low brows and small serious mouth; short straight black hair with a blunt practical side fringe",
+      "outfit": "slate-grey suit, ivory shirt, subdued pine tie",
+      "prop": "holding a closed ruled ledger vertically against his body",
       "key": "moujun",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "c5573cb2e575f08e7024d82e8e2f75628fbf4d443ecda79b35491e50c0acec01"
+      "sha256": "b0da1e82ba3a839a34630d3ca91d89b9ec385bf6cc57f8cc6c64d3a91b70e43d",
+      "previousAssets": [
+        "assets/portraits/source/moujun.png"
+      ],
+      "faceDesign": "long lean face with sharply squared chin, high narrow nose bridge, small close-set eyes behind thin oval metal glasses, straight low brows and small serious mouth",
+      "hairDesign": "short straight black hair with a blunt practical side fringe",
+      "bodyDesign": "tall narrow torso",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/moujun.png",
+          "sha256": "c5573cb2e575f08e7024d82e8e2f75628fbf4d443ecda79b35491e50c0acec01"
+        }
+      ]
     },
     {
       "name": "冉光明",
@@ -510,16 +692,29 @@
       "sex": "m",
       "note": "五桥本地人，快退了。",
       "status": "ready",
-      "asset": "assets/portraits/source/ranggm.png",
+      "asset": "assets/portraits/source/ranggm-v3.png",
       "visualAge": 59,
-      "appearance": "deep laugh lines, thinning gray hair, kindly drooping eyes, slightly stocky body",
-      "outfit": "traditional olive casual business jacket, cream shirt",
-      "prop": "old thermos cup",
+      "appearance": "long weathered face, hollow cheeks, broad flat chin, short wide nose, heavy drooping eyelids, sparse uneven eyebrows, clear forehead furrows and eye wrinkles; thin white-grey hair brushed flat across the crown",
+      "outfit": "brown wool jacket over ivory collared knit shirt, charcoal trousers",
+      "prop": "holding a plain woven bag containing two unmarked pomelos",
       "key": "ranggm",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ee2ebc97d038113b5545285d187c907f54f404d5804df400071bb91f96f6efb9"
+      "sha256": "0628011d66cae2c0999dba91eccab232da721f1082c91ee90543d6fa0c29ccd0",
+      "previousAssets": [
+        "assets/portraits/source/ranggm.png"
+      ],
+      "faceDesign": "long weathered face, hollow cheeks, broad flat chin, short wide nose, heavy drooping eyelids, sparse uneven eyebrows, clear forehead furrows and eye wrinkles",
+      "hairDesign": "thin white-grey hair brushed flat across the crown",
+      "bodyDesign": "slim older body, softly sloping shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/ranggm.png",
+          "sha256": "ee2ebc97d038113b5545285d187c907f54f404d5804df400071bb91f96f6efb9"
+        }
+      ]
     },
     {
       "name": "向红",
@@ -533,16 +728,29 @@
       "sex": "f",
       "note": "龙都支行的账，她一个人理了三年。",
       "status": "ready",
-      "asset": "assets/portraits/source/xianghong.png",
+      "asset": "assets/portraits/source/xianghong-v3.png",
       "visualAge": 44,
-      "appearance": "straight shoulder-length dark hair tucked behind ears, strong cheekbones, careful calm gaze",
-      "outfit": "dark green blazer, cream blouse, dark straight skirt",
-      "prop": "closed ledger and plain pen",
+      "appearance": "broad square face with a firm horizontal jaw, flat high cheekbones, medium broad nose, narrow calm eyes, thick level eyebrows and wide thin lips; straight black bob cut bluntly at jaw level with one grey streak near the ear",
+      "outfit": "dark-green collarless jacket, ivory blouse, simple silver brooch",
+      "prop": "holding a closed account book with fingertips aligned",
       "key": "xianghong",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "fdd6e5061c52ccfdd81389f1acd39f0b6e20b08bd1f4fa18f06a0f2e5a717b24"
+      "sha256": "8b482ad80e09b3b6efa1ca067466450c1ecb7790e096c4717e678163521a48ef",
+      "previousAssets": [
+        "assets/portraits/source/xianghong.png"
+      ],
+      "faceDesign": "broad square face with a firm horizontal jaw, flat high cheekbones, medium broad nose, narrow calm eyes, thick level eyebrows and wide thin lips",
+      "hairDesign": "straight black bob cut bluntly at jaw level with one grey streak near the ear",
+      "bodyDesign": "solid upright build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/xianghong.png",
+          "sha256": "fdd6e5061c52ccfdd81389f1acd39f0b6e20b08bd1f4fa18f06a0f2e5a717b24"
+        }
+      ]
     },
     {
       "name": "邓家福",
@@ -556,16 +764,29 @@
       "sex": "m",
       "note": "逢场天自己去街上摆摊宣传。",
       "status": "ready",
-      "asset": "assets/portraits/source/dengjf.png",
+      "asset": "assets/portraits/source/dengjf-v3.png",
       "visualAge": 52,
-      "appearance": "sun-browned face, short dark-gray hair, gentle plainspoken smile",
-      "outfit": "olive work-style jacket over white shirt, dark trousers",
-      "prop": "folded blank promotional leaflets",
+      "appearance": "small round face with pronounced cheek dimples, broad blunt nose, uneven high brows, smiling narrow eyes, large protruding ears, deep outdoor tan; short salt-and-pepper curly hair, broad receding forehead",
+      "outfit": "olive field jacket over pale checked shirt, dark trousers",
+      "prop": "holding a folded blank publicity leaflet",
       "key": "dengjf",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "cdfc2786f0e829720d412444c124df62a1ef7bd10a49c592e5736b9c5eac37a4"
+      "sha256": "fe2969eb1c9bb598df98b260dce3bef6789442ee6d419fb723ad66df86fa4ea5",
+      "previousAssets": [
+        "assets/portraits/source/dengjf.png"
+      ],
+      "faceDesign": "small round face with pronounced cheek dimples, broad blunt nose, uneven high brows, smiling narrow eyes, large protruding ears, deep outdoor tan",
+      "hairDesign": "short salt-and-pepper curly hair, broad receding forehead",
+      "bodyDesign": "short sinewy build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/dengjf.png",
+          "sha256": "cdfc2786f0e829720d412444c124df62a1ef7bd10a49c592e5736b9c5eac37a4"
+        }
+      ]
     },
     {
       "name": "谭敏",
@@ -579,16 +800,29 @@
       "sex": "f",
       "note": "分行的会，座签都是她摆的。",
       "status": "ready",
-      "asset": "assets/portraits/source/tanmin.png",
+      "asset": "assets/portraits/source/tanmin-v3.png",
       "visualAge": 37,
-      "appearance": "smooth low bun with side fringe, narrow elegant face, warm professional expression",
-      "outfit": "green skirt suit, ivory collarless blouse",
-      "prop": "closed planner and plain pen",
+      "appearance": "long egg-shaped face, narrow forehead and rounded chin, wide-set small eyes, low short nose, thick gently arched brows, full lower lip; dark hair in a neat high bun with a single side curl, no bangs",
+      "outfit": "dusty blue blouse under deep green sleeveless vest, dark skirt",
+      "prop": "holding a stack of completely blank folded name cards",
       "key": "tanmin",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "e951be028fcb60d44a6918df71571185852c477bcf7472d70fb7197e28d9284a"
+      "sha256": "42c68298ceb8f146c94c927bf3ea4a6681e1d06fd6010f854fa3a5e6ee076e10",
+      "previousAssets": [
+        "assets/portraits/source/tanmin.png"
+      ],
+      "faceDesign": "long egg-shaped face, narrow forehead and rounded chin, wide-set small eyes, low short nose, thick gently arched brows, full lower lip",
+      "hairDesign": "dark hair in a neat high bun with a single side curl, no bangs",
+      "bodyDesign": "tall medium build with long neck",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/tanmin.png",
+          "sha256": "e951be028fcb60d44a6918df71571185852c477bcf7472d70fb7197e28d9284a"
+        }
+      ]
     },
     {
       "name": "汪明",
@@ -602,16 +836,29 @@
       "sex": "m",
       "note": "风险部的门常年关着，门上贴着一张便签：敲门。",
       "status": "ready",
-      "asset": "assets/portraits/source/wangming.png",
+      "asset": "assets/portraits/source/wangming-v3.png",
       "visualAge": 46,
-      "appearance": "high forehead, short neatly parted black hair, narrow rimless glasses, reserved serious gaze",
-      "outfit": "charcoal suit, muted green tie, ivory shirt",
-      "prop": "plain dark risk file",
+      "appearance": "broad angular face with square jaw, deep eye sockets, very heavy upper eyelids, strong hooked nose, dense bushy brows, compressed small mouth and light forehead lines; receding dark hairline with short grey sideburns",
+      "outfit": "charcoal-green suit, cream shirt, plain black tie",
+      "prop": "one hand holding a closed thick risk dossier low at waist",
       "key": "wangming",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "60ff505dd60bb7895e88f26c8321cc25c09cadda1946cec52dba10ed7f8d8333"
+      "sha256": "f9b9a4229c2d6aecf25efe658bfa54c325c26327e8e7a9c974a4540aa7fde0d5",
+      "previousAssets": [
+        "assets/portraits/source/wangming.png"
+      ],
+      "faceDesign": "broad angular face with square jaw, deep eye sockets, very heavy upper eyelids, strong hooked nose, dense bushy brows, compressed small mouth and light forehead lines",
+      "hairDesign": "receding dark hairline with short grey sideburns",
+      "bodyDesign": "heavy broad shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/wangming.png",
+          "sha256": "60ff505dd60bb7895e88f26c8321cc25c09cadda1946cec52dba10ed7f8d8333"
+        }
+      ]
     },
     {
       "name": "段斌",
@@ -625,16 +872,29 @@
       "sex": "m",
       "note": "跑工业园跑出来的，车里常年放着安全帽。",
       "status": "ready",
-      "asset": "assets/portraits/source/duanbin.png",
+      "asset": "assets/portraits/source/duanbin-v3.png",
       "visualAge": 36,
-      "appearance": "athletic build, sun-tanned angular face, very short black hair, energetic confident eyes",
-      "outfit": "green suit with ivory open-collar shirt",
-      "prop": "plain yellow safety helmet held at hip",
+      "appearance": "narrow rectangular face with pronounced jaw corners, high cheekbones, flattened bridge nose, small alert round eyes, thick brows, sun-tanned cheeks and slight stubble; very short buzz cut with a small cowlick at front",
+      "outfit": "dark green utility jacket over ivory button shirt, dark trousers",
+      "prop": "holding an unmarked white safety helmet at his side",
       "key": "duanbin",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "85497e97e6f7eeb69f5e9f207b89b2b729ba4f314be5d805f7f1d5ac0f510bd8"
+      "sha256": "ea155ecb90e3481a434f6b49242871f16af5bbe643d8cec9001d0f2300512fc2",
+      "previousAssets": [
+        "assets/portraits/source/duanbin.png"
+      ],
+      "faceDesign": "narrow rectangular face with pronounced jaw corners, high cheekbones, flattened bridge nose, small alert round eyes, thick brows, sun-tanned cheeks and slight stubble",
+      "hairDesign": "very short buzz cut with a small cowlick at front",
+      "bodyDesign": "lean athletic build, strong forearms",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/duanbin.png",
+          "sha256": "85497e97e6f7eeb69f5e9f207b89b2b729ba4f314be5d805f7f1d5ac0f510bd8"
+        }
+      ]
     },
     {
       "name": "刘佳",
@@ -648,16 +908,29 @@
       "sex": "f",
       "note": "做过五年理财经理，客户名单记在脑子里。",
       "status": "ready",
-      "asset": "assets/portraits/source/liujia.png",
+      "asset": "assets/portraits/source/liujia-v3.png",
       "visualAge": 34,
-      "appearance": "soft wave shoulder-length chestnut-black hair, rounded mature face, reassuring smile",
-      "outfit": "olive-green blazer, cream blouse, dark slacks",
-      "prop": "plain small tablet",
+      "appearance": "round face with a short wide chin, full cheeks, large rounded eyes separated widely, low-bridge button nose, delicate short brows, small heart-shaped lips; short softly permed dark hair ending above jaw",
+      "outfit": "cream cardigan with a deep emerald bank dress and small pearl studs",
+      "prop": "holding a closed plain card folio with both hands",
       "key": "liujia",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a79b2bebe18c937216b44d0b93ce7242d6379a20bdc8aa635ffb86a7de5d06f5"
+      "sha256": "3596879d23d8ec2fe700013ac71719c834c21aea27bb1c166cf7fcdf5c5f3e78",
+      "previousAssets": [
+        "assets/portraits/source/liujia.png"
+      ],
+      "faceDesign": "round face with a short wide chin, full cheeks, large rounded eyes separated widely, low-bridge button nose, delicate short brows, small heart-shaped lips",
+      "hairDesign": "short softly permed dark hair ending above jaw",
+      "bodyDesign": "petite full-figured build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/liujia.png",
+          "sha256": "a79b2bebe18c937216b44d0b93ce7242d6379a20bdc8aa635ffb86a7de5d06f5"
+        }
+      ]
     },
     {
       "name": "黄炜",
@@ -671,16 +944,29 @@
       "sex": "m",
       "note": "区里好几个局的办公室主任是他同学。",
       "status": "ready",
-      "asset": "assets/portraits/source/huangwei.png",
+      "asset": "assets/portraits/source/huangwei-v3.png",
       "visualAge": 40,
-      "appearance": "broad friendly face, short side-combed hair, slightly heavy eyebrows, relaxed sociable smile",
-      "outfit": "gray-green business suit, cream shirt, green tie",
-      "prop": "closed contact notebook",
+      "appearance": "broad oval face with a long rounded chin, wide forehead, long fleshy nose, close-set narrow eyes, strongly curved brows, wide smiling mouth; dark hair swept in a rounded side wave with visible temple recession",
+      "outfit": "moss green suit with muted cream-and-ochre tie",
+      "prop": "holding a plain phone loosely in one hand",
       "key": "huangwei",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "26c874a819e589f40e04947f9e96d0a3be7dba1626172c27d743da757fcc69e2"
+      "sha256": "e573e1d9df586939059c3db685134ebb8e76c7b8e6c1e99cbf5137f693a6d924",
+      "previousAssets": [
+        "assets/portraits/source/huangwei.png"
+      ],
+      "faceDesign": "broad oval face with a long rounded chin, wide forehead, long fleshy nose, close-set narrow eyes, strongly curved brows, wide smiling mouth",
+      "hairDesign": "dark hair swept in a rounded side wave with visible temple recession",
+      "bodyDesign": "medium tall, soft stocky build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/huangwei.png",
+          "sha256": "26c874a819e589f40e04947f9e96d0a3be7dba1626172c27d743da757fcc69e2"
+        }
+      ]
     },
     {
       "name": "杜衡",
@@ -694,16 +980,29 @@
       "sex": "m",
       "note": "原来的公司部总经理，考察你那年给你投过票。",
       "status": "ready",
-      "asset": "assets/portraits/source/duheng.png",
+      "asset": "assets/portraits/source/duheng-v3.png",
       "visualAge": 45,
-      "appearance": "defined square jaw, dark swept-up short hair, thick straight eyebrows, assertive eyes",
-      "outfit": "deep green double-breasted suit, ivory shirt, dark gold tie",
-      "prop": "closed strategic report folder",
+      "appearance": "very angular elongated hexagonal face, broad jutting chin, deep-set narrow eyes, strong straight protruding nose, sharply sloped brows, thin taut mouth, one shallow cheek crease; short black slicked-back hair with a pronounced widow peak",
+      "outfit": "severe black-green double-breasted suit, ivory shirt, dark bronze tie",
+      "prop": "arms loosely folded, both hands anatomically visible",
       "key": "duheng",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "e1b086998356121fc1e115673575660bd2d0993a30cbaeede7dc20ee0ed9c7bc"
+      "sha256": "fe95a39483ce2c945024c3f018d0c7aefde5027b082f37875bc3c0f88b4ba6d7",
+      "previousAssets": [
+        "assets/portraits/source/duheng.png"
+      ],
+      "faceDesign": "very angular elongated hexagonal face, broad jutting chin, deep-set narrow eyes, strong straight protruding nose, sharply sloped brows, thin taut mouth, one shallow cheek crease",
+      "hairDesign": "short black slicked-back hair with a pronounced widow peak",
+      "bodyDesign": "tall lean broad-shouldered stance",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/duheng.png",
+          "sha256": "e1b086998356121fc1e115673575660bd2d0993a30cbaeede7dc20ee0ed9c7bc"
+        }
+      ]
     },
     {
       "name": "沈岚",
@@ -717,16 +1016,29 @@
       "sex": "f",
       "note": "做零售出身，开会从不看稿子。",
       "status": "ready",
-      "asset": "assets/portraits/source/shenlan.png",
+      "asset": "assets/portraits/source/shenlan-v3.png",
       "visualAge": 46,
-      "appearance": "elegant shoulder-length softly curled black hair, sophisticated narrow face, restrained knowing smile",
-      "outfit": "dark green tailored suit, ivory blouse, small gold pin",
-      "prop": "closed presentation notebook",
+      "appearance": "wide heart-shaped face with high rounded cheekbones and soft square chin, large straight nose, small level eyes with fine outer wrinkles, gently raised thick brows, full relaxed lips; short salt-and-pepper wavy crop with a visible white streak at the front",
+      "outfit": "muted teal silk blouse, dark-green long blazer, small angular gold earrings",
+      "prop": "one hand resting on a closed thin report",
       "key": "shenlan",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a8a485aaf685817d09f6a2359a46c14684f8b1768f089d309a8bf23aec347aa9"
+      "sha256": "19d79457f8cd88a9b04055965015b65b19b30bf28725550ad4d2b1622e02b0ba",
+      "previousAssets": [
+        "assets/portraits/source/shenlan.png"
+      ],
+      "faceDesign": "wide heart-shaped face with high rounded cheekbones and soft square chin, large straight nose, small level eyes with fine outer wrinkles, gently raised thick brows, full relaxed lips",
+      "hairDesign": "short salt-and-pepper wavy crop with a visible white streak at the front",
+      "bodyDesign": "tall substantial build, assured open posture",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/shenlan.png",
+          "sha256": "a8a485aaf685817d09f6a2359a46c14684f8b1768f089d309a8bf23aec347aa9"
+        }
+      ]
     },
     {
       "name": "蒋国栋",
@@ -740,16 +1052,29 @@
       "sex": "m",
       "note": "风险条线干了二十年，签字前要把合同从头翻到尾。",
       "status": "ready",
-      "asset": "assets/portraits/source/jianggd.png",
+      "asset": "assets/portraits/source/jianggd-v3.png",
       "visualAge": 54,
-      "appearance": "slim long face, short graying hair, wire-frame glasses, cautious thoughtful gaze",
-      "outfit": "charcoal business suit, muted olive tie, cream shirt",
-      "prop": "thick plain contract binder",
+      "appearance": "long trapezoid face with broad jaw, low cheekbones, long downturned nose, tiny thoughtful eyes behind small round wire glasses, sparse thin eyebrows and deep vertical forehead furrows; balding crown with close-cropped grey hair at sides",
+      "outfit": "charcoal wool jacket, ivory shirt, forest-green knitted tie",
+      "prop": "holding a closed thick contract folder carefully with both hands",
       "key": "jianggd",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "1658e98692b3e002d060f80249f7da41419e58396bdcb234d68acbe06b0a5e09"
+      "sha256": "d1a6f84dab7f049a14c4d8f98b28f5371d85718947fe29e975f227b475e91f5e",
+      "previousAssets": [
+        "assets/portraits/source/jianggd.png"
+      ],
+      "faceDesign": "long trapezoid face with broad jaw, low cheekbones, long downturned nose, tiny thoughtful eyes behind small round wire glasses, sparse thin eyebrows and deep vertical forehead furrows",
+      "hairDesign": "balding crown with close-cropped grey hair at sides",
+      "bodyDesign": "slender stooped build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/jianggd.png",
+          "sha256": "1658e98692b3e002d060f80249f7da41419e58396bdcb234d68acbe06b0a5e09"
+        }
+      ]
     },
     {
       "name": "宋文远",
@@ -763,16 +1088,29 @@
       "sex": "m",
       "note": "总行一把手。视频会上从不开摄像头。",
       "status": "ready",
-      "asset": "assets/portraits/source/songwy.png",
+      "asset": "assets/portraits/source/songwy-v3.png",
       "visualAge": 60,
-      "appearance": "broad mature lined face, neatly combed silver-gray hair, stately composed expression",
-      "outfit": "dark charcoal-green suit, white shirt, muted gold tie",
-      "prop": "closed slim envelope",
+      "appearance": "wide round head with a broad flat forehead, heavy cheeks and jaw, short blunt nose, small distant deep-set eyes, pale sparse brows, thin lips and distinct neck folds; bald crown with a neat short white-grey fringe around sides",
+      "outfit": "very dark navy suit with ivory shirt and restrained muted gold tie",
+      "prop": "both hands calmly clasped in front of his abdomen",
       "key": "songwy",
       "width": 1086,
-      "height": 1448,
+      "height": 1449,
       "transparent": true,
-      "sha256": "b7b54e1e3d5419b7ed7e84ea620fcfdd8d08e94e8efbbea61a4d262cd54e2a84"
+      "sha256": "1e0bfbde2d2b14a0c0f6bf4eec3900266443d6bf89fe67f3852e7bbcccdbdc98",
+      "previousAssets": [
+        "assets/portraits/source/songwy.png"
+      ],
+      "faceDesign": "wide round head with a broad flat forehead, heavy cheeks and jaw, short blunt nose, small distant deep-set eyes, pale sparse brows, thin lips and distinct neck folds",
+      "hairDesign": "bald crown with a neat short white-grey fringe around sides",
+      "bodyDesign": "large heavyset older build, dignified still posture",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/songwy.png",
+          "sha256": "b7b54e1e3d5419b7ed7e84ea620fcfdd8d08e94e8efbbea61a4d262cd54e2a84"
+        }
+      ]
     },
     {
       "name": "江可",
@@ -786,16 +1124,29 @@
       "sex": "f",
       "note": "刚从柜员培训班出来，工号还没背熟。",
       "status": "ready",
-      "asset": "assets/portraits/source/jiangke.png",
+      "asset": "assets/portraits/source/jiangke-v3.png",
       "visualAge": 23,
-      "appearance": "short straight black bob with light bangs, earnest round eyes, slightly nervous smile",
-      "outfit": "ivory bank blouse, green waistcoat, gold-green scarf",
-      "prop": "plain blank training notebook",
+      "appearance": "small square face with a short flat chin, wide-set round eyes, broad low-bridge nose, thick straight brows and a slightly uneven shy smile, a few freckles over cheeks; short straight black bowl-bob with blunt bangs and exposed ears",
+      "outfit": "ivory bank blouse, dark-green fitted waistcoat, narrow green neck scarf",
+      "prop": "holding a plain staff card lanyard nervously at waist",
       "key": "jiangke",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "690faf34560a829b53b99a5db7a0e26e8ca621f2d233032af84aaa9b7cff23d3"
+      "sha256": "ccaac19ef9a8988b210ed8fdbae6df825b998c504b47474de014921bd06b243f",
+      "previousAssets": [
+        "assets/portraits/source/jiangke.png"
+      ],
+      "faceDesign": "small square face with a short flat chin, wide-set round eyes, broad low-bridge nose, thick straight brows and a slightly uneven shy smile, a few freckles over cheeks",
+      "hairDesign": "short straight black bowl-bob with blunt bangs and exposed ears",
+      "bodyDesign": "petite sturdy build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/jiangke.png",
+          "sha256": "690faf34560a829b53b99a5db7a0e26e8ca621f2d233032af84aaa9b7cff23d3"
+        }
+      ]
     },
     {
       "name": "韩冬",
@@ -809,16 +1160,29 @@
       "sex": "m",
       "note": "对公团队的老客户经理，四十五岁，做过三任行长的对公。",
       "status": "ready",
-      "asset": "assets/portraits/source/handong.png",
+      "asset": "assets/portraits/source/handong-v3.png",
       "visualAge": 45,
-      "appearance": "short salt-and-pepper hair, long lean face, small rectangular glasses, patient eyes",
-      "outfit": "olive-gray suit, cream open-collar shirt",
-      "prop": "well-used plain leather document bag",
+      "appearance": "long tired oval face with hollow cheeks, high forehead, long bulb-tipped nose, asymmetric hooded eyes, thick uneven brows, short moustache and visible eye bags; thinning salt-and-pepper hair with a small messy side part",
+      "outfit": "dark olive cardigan over cream shirt, loosened brown tie, dark trousers",
+      "prop": "holding a very worn plain leather customer folder",
       "key": "handong",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "0f4ac237ace4d9304faa2954addfcf5e4ea09297d58eb5ee19101d76ea11d848"
+      "sha256": "4a535f05f15a3d72ae534a2f146ef2a0aa2e2e36822feb794e1d1da376577388",
+      "previousAssets": [
+        "assets/portraits/source/handong.png"
+      ],
+      "faceDesign": "long tired oval face with hollow cheeks, high forehead, long bulb-tipped nose, asymmetric hooded eyes, thick uneven brows, short moustache and visible eye bags",
+      "hairDesign": "thinning salt-and-pepper hair with a small messy side part",
+      "bodyDesign": "medium stooped build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/handong.png",
+          "sha256": "0f4ac237ace4d9304faa2954addfcf5e4ea09297d58eb5ee19101d76ea11d848"
+        }
+      ]
     },
     {
       "name": "付强",
@@ -832,16 +1196,29 @@
       "sex": "m",
       "note": "行事风格：灰色",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_haitangxi.png",
+      "asset": "assets/portraits/source/rival_haitangxi-v3.png",
       "visualAge": 39,
-      "appearance": "slick short dark hair, narrow angled eyes, trimmed small moustache, knowing half smile",
-      "outfit": "charcoal blazer over olive shirt, green patterned tie without logos",
-      "prop": "closed plain folder",
+      "appearance": "broad sharply squared face, short forehead, thick lower jaw, broad crooked nose, small sly sideways-looking eyes, low heavy brows, narrow crooked grin; dark slick side-parted hair with closely clipped sides",
+      "outfit": "charcoal-green suit, cream shirt, muted maroon tie",
+      "prop": "holding a closed black phone low beside his belt",
       "key": "rival_haitangxi",
-      "width": 1086,
-      "height": 1448,
+      "width": 1087,
+      "height": 1447,
       "transparent": true,
-      "sha256": "c15e08c1afb0714e294d12a990277ff1e9991817bfde026465ac5100da22971f"
+      "sha256": "34358b470831e7afd25eaea918bbbec360083c8976a4d725d02350988ebd97e6",
+      "previousAssets": [
+        "assets/portraits/source/rival_haitangxi.png"
+      ],
+      "faceDesign": "broad sharply squared face, short forehead, thick lower jaw, broad crooked nose, small sly sideways-looking eyes, low heavy brows, narrow crooked grin",
+      "hairDesign": "dark slick side-parted hair with closely clipped sides",
+      "bodyDesign": "compact broad torso",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_haitangxi.png",
+          "sha256": "c15e08c1afb0714e294d12a990277ff1e9991817bfde026465ac5100da22971f"
+        }
+      ]
     },
     {
       "name": "杨帆",
@@ -855,16 +1232,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_tongyuan.png",
+      "asset": "assets/portraits/source/rival_tongyuan-v3.png",
       "visualAge": 35,
-      "appearance": "neat short parted black hair, gentle oval face, calm clear eyes",
-      "outfit": "olive-green suit, ivory shirt, gold-green tie",
-      "prop": "closed notebook",
+      "appearance": "long pear-shaped face, narrow forehead and broad round jaw, short rounded nose, large slightly downturned eyes, thin long brows, mild wide mouth; soft straight dark hair with a low off-center fringe",
+      "outfit": "grey-green single-breasted suit, ivory shirt, sage striped tie",
+      "prop": "holding a closed folder flat between both palms",
       "key": "rival_tongyuan",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a8a59fccfb4c3b16cb27a1e7fce0b1c96e1f9642cd9c0d7e3a9f0f9b7505bb7c"
+      "sha256": "35c561d14385214473232c3dc03097fbb5d69e3ac490fbb9961613bd53375065",
+      "previousAssets": [
+        "assets/portraits/source/rival_tongyuan.png"
+      ],
+      "faceDesign": "long pear-shaped face, narrow forehead and broad round jaw, short rounded nose, large slightly downturned eyes, thin long brows, mild wide mouth",
+      "hairDesign": "soft straight dark hair with a low off-center fringe",
+      "bodyDesign": "tall slim build with rounded shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_tongyuan.png",
+          "sha256": "a8a59fccfb4c3b16cb27a1e7fce0b1c96e1f9642cd9c0d7e3a9f0f9b7505bb7c"
+        }
+      ]
     },
     {
       "name": "秦月",
@@ -878,16 +1268,29 @@
       "sex": "f",
       "note": "行事风格：冲劲",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_dafo.png",
+      "asset": "assets/portraits/source/rival_dafo-v3.png",
       "visualAge": 31,
-      "appearance": "high dark ponytail, angular lively face, strong confident eyes",
-      "outfit": "dark green cropped business blazer, ivory blouse, charcoal trousers",
-      "prop": "plain tablet",
+      "appearance": "broad short face with a flat chin and strong cheekbones, small narrow nose, slightly upturned small round eyes, thick angled brows, lively broad smile; short black undercut with a swept-back top exposing forehead",
+      "outfit": "deep green bank jacket over ivory collarless blouse, narrow dark trousers",
+      "prop": "one hand open as if making a point in a meeting",
       "key": "rival_dafo",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "015803b71d972d1e97be0f8fc3d75e7202e488dbde249af422e470d628f8c8b6"
+      "sha256": "93fe16f89b8431d941e36f94508dfa6c0f22d80f9ffc6bcb2f02e8fa052dbe1e",
+      "previousAssets": [
+        "assets/portraits/source/rival_dafo.png"
+      ],
+      "faceDesign": "broad short face with a flat chin and strong cheekbones, small narrow nose, slightly upturned small round eyes, thick angled brows, lively broad smile",
+      "hairDesign": "short black undercut with a swept-back top exposing forehead",
+      "bodyDesign": "compact athletic build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_dafo.png",
+          "sha256": "015803b71d972d1e97be0f8fc3d75e7202e488dbde249af422e470d628f8c8b6"
+        }
+      ]
     },
     {
       "name": "曾德福",
@@ -901,16 +1304,29 @@
       "sex": "m",
       "note": "行事风格：躺平",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_nanshan.png",
+      "asset": "assets/portraits/source/rival_nanshan-v3.png",
       "visualAge": 56,
-      "appearance": "round stocky face, balding crown, gray temples, relaxed sleepy smile",
-      "outfit": "olive casual blazer over cream polo",
-      "prop": "plain ceramic cup",
+      "appearance": "very broad round face with double chin, soft puffy cheeks, small low-bridge nose, sleepy slit eyes, short thin eyebrows and a small contented smile; balding forehead with sparse dark-grey wisps combed sideways",
+      "outfit": "olive cardigan, beige collared polo, charcoal trousers",
+      "prop": "holding a plain cream lidded tea mug in both hands",
       "key": "rival_nanshan",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "6199ac80680d3615d2cead574bcdb515dd3668d48a35b06f4fc31215fc8791a8"
+      "sha256": "e74045322b49a1ed9ebb62e420517a4048456f7ee8869ef34e23176f12c6a4cf",
+      "previousAssets": [
+        "assets/portraits/source/rival_nanshan.png"
+      ],
+      "faceDesign": "very broad round face with double chin, soft puffy cheeks, small low-bridge nose, sleepy slit eyes, short thin eyebrows and a small contented smile",
+      "hairDesign": "balding forehead with sparse dark-grey wisps combed sideways",
+      "bodyDesign": "short very stout build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_nanshan.png",
+          "sha256": "6199ac80680d3615d2cead574bcdb515dd3668d48a35b06f4fc31215fc8791a8"
+        }
+      ]
     },
     {
       "name": "陈崇山",
@@ -926,16 +1342,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_yuzhong.png",
+      "asset": "assets/portraits/source/rival_yuzhong-v3.png",
       "visualAge": 49,
-      "appearance": "strong rectangular face, very short salt-and-pepper hair, sober steady gaze",
-      "outfit": "charcoal-green suit, ivory shirt, dark gold tie",
-      "prop": "closed report binder",
+      "appearance": "long narrow face with a broad prominent chin, high nose with a curved bridge, small downturned eyes, flat straight brows, thin upper lip, visible cheek grooves; short dark-grey hair in a severely precise side part",
+      "outfit": "ink navy pinstripe suit, ivory shirt, dark olive tie",
+      "prop": "one hand holding a closed narrow leather portfolio",
       "key": "rival_yuzhong",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "6ce3def77078d5591134602030c4e3db41dea33a4d160edbc78924db25cbccfd"
+      "sha256": "75887c4e0c7a2799e6f1f701ebb5c02e7ff5e8bae556b96310262434346c3687",
+      "previousAssets": [
+        "assets/portraits/source/rival_yuzhong.png"
+      ],
+      "faceDesign": "long narrow face with a broad prominent chin, high nose with a curved bridge, small downturned eyes, flat straight brows, thin upper lip, visible cheek grooves",
+      "hairDesign": "short dark-grey hair in a severely precise side part",
+      "bodyDesign": "tall thin upright build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_yuzhong.png",
+          "sha256": "6ce3def77078d5591134602030c4e3db41dea33a4d160edbc78924db25cbccfd"
+        }
+      ]
     },
     {
       "name": "唐建国",
@@ -951,16 +1380,29 @@
       "sex": "m",
       "note": "行事风格：关系",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_jiulongpo.png",
+      "asset": "assets/portraits/source/rival_jiulongpo-v3.png",
       "visualAge": 53,
-      "appearance": "broad face, wavy graying side-parted hair, friendly crow's feet",
-      "outfit": "warm gray-green blazer, cream shirt, olive tie",
-      "prop": "closed contact planner",
+      "appearance": "broad triangular face with wide temples and short round chin, bulbous broad nose, small crinkled eyes, dense arched brows, full lips and prominent laugh lines; short grey curls with dark sides and exposed high forehead",
+      "outfit": "brown-green business jacket, cream open-collar shirt",
+      "prop": "one palm extended in greeting",
       "key": "rival_jiulongpo",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "f1977a7f3c735aebbcd9761971e1c3239a3e1e56ee27a890ac32a2e5037a8d2c"
+      "sha256": "6f8d388608dd3379873abde5acadecac64f55e46e4ce5aa68dd64d6364c82f77",
+      "previousAssets": [
+        "assets/portraits/source/rival_jiulongpo.png"
+      ],
+      "faceDesign": "broad triangular face with wide temples and short round chin, bulbous broad nose, small crinkled eyes, dense arched brows, full lips and prominent laugh lines",
+      "hairDesign": "short grey curls with dark sides and exposed high forehead",
+      "bodyDesign": "large thick-necked build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_jiulongpo.png",
+          "sha256": "f1977a7f3c735aebbcd9761971e1c3239a3e1e56ee27a890ac32a2e5037a8d2c"
+        }
+      ]
     },
     {
       "name": "文卓然",
@@ -974,16 +1416,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_shapingba.png",
+      "asset": "assets/portraits/source/rival_shapingba-v3.png",
       "visualAge": 43,
-      "appearance": "long slim face, tousled side-part black hair, thin round glasses, cultured gentle smile",
-      "outfit": "olive-gray suit, ivory shirt, small gold tie clip",
-      "prop": "plain hardcover notebook",
+      "appearance": "thin long oval face with delicate rounded chin, high flat forehead, very long narrow nose, large hooded eyes behind thick round tortoiseshell spectacles, thin pale brows, faint closed smile; slightly long straight dark hair combed behind both ears",
+      "outfit": "charcoal knitted vest under green jacket, ivory shirt, plain dark tie",
+      "prop": "holding a closed unmarked book against his chest",
       "key": "rival_shapingba",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "3ea233d633f7060d72c9c0743cf38337c42b36b89138e7bf89bedc0aa79494f2"
+      "sha256": "1cec9e3f77b3e29216f80b3c6df1e5eb49e64292d958e4e946386eb026b93f4a",
+      "previousAssets": [
+        "assets/portraits/source/rival_shapingba.png"
+      ],
+      "faceDesign": "thin long oval face with delicate rounded chin, high flat forehead, very long narrow nose, large hooded eyes behind thick round tortoiseshell spectacles, thin pale brows, faint closed smile",
+      "hairDesign": "slightly long straight dark hair combed behind both ears",
+      "bodyDesign": "tall very slender build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_shapingba.png",
+          "sha256": "3ea233d633f7060d72c9c0743cf38337c42b36b89138e7bf89bedc0aa79494f2"
+        }
+      ]
     },
     {
       "name": "韦明德",
@@ -997,16 +1452,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_beibei.png",
+      "asset": "assets/portraits/source/rival_beibei-v3.png",
       "visualAge": 51,
-      "appearance": "neat gray-black flat top, lined oval face, serious kind eyes",
-      "outfit": "dark green suit, ivory shirt, charcoal tie",
-      "prop": "plain document sleeve",
+      "appearance": "wide pentagonal face with broad cheekbones and heavy straight jaw, short broad nose, small level eyes, prominent horizontal eyebrows, full lower lip and crow feet; salt-and-pepper crew cut with a central upright cowlick",
+      "outfit": "dark-green suit, pale cream shirt, muted ochre tie",
+      "prop": "hands resting squarely on a closed document folder",
       "key": "rival_beibei",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "18c60bd948037c01c92390bf675c0cc322ec76024ed5d8610fb073520fc9c548"
+      "sha256": "80fb48e65bfc05abcd15d25d43d1022789337a7f67df4bcbf94b66ad268cb922",
+      "previousAssets": [
+        "assets/portraits/source/rival_beibei.png"
+      ],
+      "faceDesign": "wide pentagonal face with broad cheekbones and heavy straight jaw, short broad nose, small level eyes, prominent horizontal eyebrows, full lower lip and crow feet",
+      "hairDesign": "salt-and-pepper crew cut with a central upright cowlick",
+      "bodyDesign": "sturdy square body",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_beibei.png",
+          "sha256": "18c60bd948037c01c92390bf675c0cc322ec76024ed5d8610fb073520fc9c548"
+        }
+      ]
     },
     {
       "name": "石小川",
@@ -1020,16 +1488,29 @@
       "sex": "m",
       "note": "行事风格：躺平",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_dadukou.png",
+      "asset": "assets/portraits/source/rival_dadukou-v3.png",
       "visualAge": 44,
-      "appearance": "round face, short messy black hair, slight five-o'clock shadow, casual smile",
-      "outfit": "olive unbuttoned blazer over cream polo",
-      "prop": "one hand in pocket, small plain mug in the other",
+      "appearance": "small heart-shaped face with high forehead, hollow cheeks and short sharp chin, upturned narrow nose, wide-set heavy-lidded eyes, sparse raised eyebrows and slightly pursed lips; wiry dark hair worn long on top and loose at back",
+      "outfit": "grey-green cardigan over ivory polo, dark brown trousers",
+      "prop": "hands loosely around a plain phone, elbows relaxed",
       "key": "rival_dadukou",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "d2f81b45f37f21ec0c6f46e734575fdb67a2d95e3650aef32cca7497b033af09"
+      "sha256": "9d502c757896fc3a2093183a66811a8e3671f2ac8806655098e789a1106a3553",
+      "previousAssets": [
+        "assets/portraits/source/rival_dadukou.png"
+      ],
+      "faceDesign": "small heart-shaped face with high forehead, hollow cheeks and short sharp chin, upturned narrow nose, wide-set heavy-lidded eyes, sparse raised eyebrows and slightly pursed lips",
+      "hairDesign": "wiry dark hair worn long on top and loose at back",
+      "bodyDesign": "short narrow body with slouched shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_dadukou.png",
+          "sha256": "d2f81b45f37f21ec0c6f46e734575fdb67a2d95e3650aef32cca7497b033af09"
+        }
+      ]
     },
     {
       "name": "鲁达",
@@ -1043,16 +1524,29 @@
       "sex": "m",
       "note": "行事风格：躺平",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_banan.png",
+      "asset": "assets/portraits/source/rival_banan-v3.png",
       "visualAge": 57,
-      "appearance": "large broad torso, balding salt-and-pepper hair, broad nose, easygoing expression",
-      "outfit": "dark olive casual business jacket over beige shirt",
-      "prop": "closed folder held under arm",
+      "appearance": "broad long face with thick blunt jaw, flat large nose, small close-set drooping eyes, dense straight grey eyebrows, broad mouth and deep cheek lines; almost shaved greying head with very high receding hairline",
+      "outfit": "dark olive loose blazer, tan knit shirt, charcoal trousers",
+      "prop": "one hand resting on a folded plain newspaper folder",
       "key": "rival_banan",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "d3b906dbe0e529d63ed95e17f9e6f0ee9b39eadbcab31cf580757a4d87138b7b"
+      "sha256": "07906fb7c8e97484980634b645deae173c9d252946ab80d3089557d89929c991",
+      "previousAssets": [
+        "assets/portraits/source/rival_banan.png"
+      ],
+      "faceDesign": "broad long face with thick blunt jaw, flat large nose, small close-set drooping eyes, dense straight grey eyebrows, broad mouth and deep cheek lines",
+      "hairDesign": "almost shaved greying head with very high receding hairline",
+      "bodyDesign": "very tall heavy build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_banan.png",
+          "sha256": "d3b906dbe0e529d63ed95e17f9e6f0ee9b39eadbcab31cf580757a4d87138b7b"
+        }
+      ]
     },
     {
       "name": "郑天明",
@@ -1068,16 +1562,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_fuling.png",
+      "asset": "assets/portraits/source/rival_fuling-v3.png",
       "visualAge": 50,
-      "appearance": "square face, neatly combed dark-gray hair, thin spectacles, steady expression",
-      "outfit": "deep green suit, ivory shirt, muted gold tie",
-      "prop": "closed plain portfolio",
+      "appearance": "oblong face with narrow jaw and rounded chin, strong hooked nose, large angular brows, deep-set squinting eyes, thin long lips and pronounced lower-eye bags; short tightly curled dark-grey hair, receding at temples",
+      "outfit": "warm grey suit, ivory shirt, dark green patterned tie without lettering",
+      "prop": "holding a closed thin navy report binder",
       "key": "rival_fuling",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "df08ca5ce28a8ee6695d078a71baad3960f9b06e2562851e0c5d9be307c1bbcf"
+      "sha256": "ea398262f2dcf371a396961fc2a085da37a7c69e49a39e63f3e15738d6b219ce",
+      "previousAssets": [
+        "assets/portraits/source/rival_fuling.png"
+      ],
+      "faceDesign": "oblong face with narrow jaw and rounded chin, strong hooked nose, large angular brows, deep-set squinting eyes, thin long lips and pronounced lower-eye bags",
+      "hairDesign": "short tightly curled dark-grey hair, receding at temples",
+      "bodyDesign": "medium lean build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_fuling.png",
+          "sha256": "df08ca5ce28a8ee6695d078a71baad3960f9b06e2562851e0c5d9be307c1bbcf"
+        }
+      ]
     },
     {
       "name": "卢晓峰",
@@ -1093,16 +1600,29 @@
       "sex": "m",
       "note": "行事风格：狼性",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_yongchuan.png",
+      "asset": "assets/portraits/source/rival_yongchuan-v3.png",
       "visualAge": 41,
-      "appearance": "athletic slender build, sharp jaw, swept-up black hair, intense bright eyes",
-      "outfit": "tailored charcoal suit, ivory shirt, narrow green tie",
-      "prop": "plain rolled blank chart",
+      "appearance": "wide square head with a very broad flat jaw, shallow forehead, small short nose, tiny sharp close-set eyes, low thick straight brows and very firm wide mouth; short black military buzz cut",
+      "outfit": "black-green suit, cream shirt, burgundy narrow tie",
+      "prop": "one fist lightly resting against a closed folder",
       "key": "rival_yongchuan",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "9522673b2f1429bc66f8edf21937cd896648692fb0a58b5721b6c575fd98fd82"
+      "sha256": "5f298d54620da188df1f25ea43a34075d823c5c92b7b996c5fc448ab7b2fe41a",
+      "previousAssets": [
+        "assets/portraits/source/rival_yongchuan.png"
+      ],
+      "faceDesign": "wide square head with a very broad flat jaw, shallow forehead, small short nose, tiny sharp close-set eyes, low thick straight brows and very firm wide mouth",
+      "hairDesign": "short black military buzz cut",
+      "bodyDesign": "broad muscular body and thick neck",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_yongchuan.png",
+          "sha256": "9522673b2f1429bc66f8edf21937cd896648692fb0a58b5721b6c575fd98fd82"
+        }
+      ]
     },
     {
       "name": "许建",
@@ -1118,16 +1638,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_hechuan.png",
+      "asset": "assets/portraits/source/rival_hechuan-v3.png",
       "visualAge": 48,
-      "appearance": "long oval face, straight short black hair with gray temples, careful calm gaze",
-      "outfit": "olive-green suit, cream shirt, charcoal tie",
-      "prop": "closed small notebook",
+      "appearance": "round oval face with high domed forehead, full lower cheeks, long rounded nose, small wide-set gentle eyes behind thin half-rim reading glasses, short curved eyebrows; thinning dark hair parted far to one side with grey around ears",
+      "outfit": "moss wool blazer over cream button-down shirt, navy trousers",
+      "prop": "holding a closed plain ledger with both hands",
       "key": "rival_hechuan",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "3943015a5110e837527f1c874f0c1882bdb29809e05cada7ffb1eada7d196677"
+      "sha256": "227d3a98cdf623b888687e7ba251beb47244b4ba5bb1097cbb646e19ac69fb08",
+      "previousAssets": [
+        "assets/portraits/source/rival_hechuan.png"
+      ],
+      "faceDesign": "round oval face with high domed forehead, full lower cheeks, long rounded nose, small wide-set gentle eyes behind thin half-rim reading glasses, short curved eyebrows",
+      "hairDesign": "thinning dark hair parted far to one side with grey around ears",
+      "bodyDesign": "short medium-heavy build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_hechuan.png",
+          "sha256": "3943015a5110e837527f1c874f0c1882bdb29809e05cada7ffb1eada7d196677"
+        }
+      ]
     },
     {
       "name": "曹勇",
@@ -1143,16 +1676,29 @@
       "sex": "m",
       "note": "行事风格：关系",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_jiangjin.png",
+      "asset": "assets/portraits/source/rival_jiangjin-v3.png",
       "visualAge": 46,
-      "appearance": "stocky rounded face, short dark curled hair, genial smile",
-      "outfit": "dark green suit, cream open-collar shirt",
-      "prop": "plain mobile phone held at waist",
+      "appearance": "diamond face with very wide cheekbones and narrow rounded chin, large broad nose, narrow smiling eyes, high thick curved eyebrows, wide full-lipped mouth, one cheek dimple; short thick black-and-grey curls",
+      "outfit": "olive double-breasted blazer, ivory open-collar shirt, dark trousers",
+      "prop": "one hand giving a relaxed conversational gesture",
       "key": "rival_jiangjin",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a2c728013b7aad1891bc78e48d10e70b29998e1be07247150ffb7ff952135a48"
+      "sha256": "c66e78b6b754d095c054934b0145509b3be4166bef89882ebf0633d7e4f1526c",
+      "previousAssets": [
+        "assets/portraits/source/rival_jiangjin.png"
+      ],
+      "faceDesign": "diamond face with very wide cheekbones and narrow rounded chin, large broad nose, narrow smiling eyes, high thick curved eyebrows, wide full-lipped mouth, one cheek dimple",
+      "hairDesign": "short thick black-and-grey curls",
+      "bodyDesign": "medium broad-shouldered stocky build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_jiangjin.png",
+          "sha256": "a2c728013b7aad1891bc78e48d10e70b29998e1be07247150ffb7ff952135a48"
+        }
+      ]
     },
     {
       "name": "田瑛",
@@ -1168,16 +1714,29 @@
       "sex": "f",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_qianjiang.png",
+      "asset": "assets/portraits/source/rival_qianjiang-v3.png",
       "visualAge": 47,
-      "appearance": "mature composed face, neatly braided low bun, delicate gold-rim glasses, serious eyes",
-      "outfit": "olive business suit, ivory high-collar blouse",
-      "prop": "closed green report binder",
+      "appearance": "long rectangular face with a blunt square chin, high forehead, long low-bridge nose, small hooded eyes behind narrow rimless glasses, strong level brows and thin calm lips; grey-streaked black hair in a tightly coiled low bun, no fringe",
+      "outfit": "charcoal-green long jacket over pale blue blouse, silver stud earrings",
+      "prop": "holding a closed risk report at hip level",
       "key": "rival_qianjiang",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "5602fd0cb525bce89f8ce1cc3a6b3039f41ce8fe8fba3e0f4e8f87b9b92953cb"
+      "sha256": "507aa4b0240e8eea5f54037445e07380b4fe0ede0b64579b355d54aa9a35913e",
+      "previousAssets": [
+        "assets/portraits/source/rival_qianjiang.png"
+      ],
+      "faceDesign": "long rectangular face with a blunt square chin, high forehead, long low-bridge nose, small hooded eyes behind narrow rimless glasses, strong level brows and thin calm lips",
+      "hairDesign": "grey-streaked black hair in a tightly coiled low bun, no fringe",
+      "bodyDesign": "tall spare upright build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_qianjiang.png",
+          "sha256": "5602fd0cb525bce89f8ce1cc3a6b3039f41ce8fe8fba3e0f4e8f87b9b92953cb"
+        }
+      ]
     },
     {
       "name": "聂平",
@@ -1191,16 +1750,29 @@
       "sex": "m",
       "note": "行事风格：冲劲",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_changshou.png",
+      "asset": "assets/portraits/source/rival_changshou-v3.png",
       "visualAge": 38,
-      "appearance": "narrow face, closely trimmed black hair, upward sharp eyebrows, energetic smile",
-      "outfit": "fitted deep green suit, ivory shirt, muted gold tie",
-      "prop": "plain pen and portfolio",
+      "appearance": "broad round face with short chin, large prominent ears, short wide nose, big narrow-set smiling eyes, thick uneven brows and an open energetic smile; short springy black curls with one distinctive curl falling over forehead",
+      "outfit": "green blazer over ivory shirt, untied muted gold tie hanging loose",
+      "prop": "holding a rolled completely blank paper in one hand",
       "key": "rival_changshou",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "1f34ef07e2142c210310d28593ecdaa60d759b1aa812cc466fa6d31c3eeb888a"
+      "sha256": "0f9c542ffacd66160aa7a5003df50f5f3b43285c654eba090163a80cf5d65440",
+      "previousAssets": [
+        "assets/portraits/source/rival_changshou.png"
+      ],
+      "faceDesign": "broad round face with short chin, large prominent ears, short wide nose, big narrow-set smiling eyes, thick uneven brows and an open energetic smile",
+      "hairDesign": "short springy black curls with one distinctive curl falling over forehead",
+      "bodyDesign": "short broad athletic build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_changshou.png",
+          "sha256": "1f34ef07e2142c210310d28593ecdaa60d759b1aa812cc466fa6d31c3eeb888a"
+        }
+      ]
     },
     {
       "name": "符军",
@@ -1214,16 +1786,29 @@
       "sex": "m",
       "note": "行事风格：躺平",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_qijiang.png",
+      "asset": "assets/portraits/source/rival_qijiang-v3.png",
       "visualAge": 55,
-      "appearance": "broad lined face, receding salt-and-pepper hair, slightly tired eyes, relaxed posture",
-      "outfit": "gray-olive jacket over cream shirt",
-      "prop": "small matte tea flask",
+      "appearance": "long bony face with narrow temples and jutting square chin, high hooked nose, very drooping narrow eyes, sparse grey eyebrows and deep under-eye creases; sparse long grey hair combed over from left temple",
+      "outfit": "loose charcoal jacket, ecru knit polo, brown trousers",
+      "prop": "holding a plain insulated tea flask near abdomen",
       "key": "rival_qijiang",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "b8b12008842d8ba0bb31eda158bf919cdd39b288c225de3bbcc3e556168794ff"
+      "sha256": "a30731dd1f4d67f0cb61989da4bd90be1f9fa999d3f461131a0fe62300ad68f4",
+      "previousAssets": [
+        "assets/portraits/source/rival_qijiang.png"
+      ],
+      "faceDesign": "long bony face with narrow temples and jutting square chin, high hooked nose, very drooping narrow eyes, sparse grey eyebrows and deep under-eye creases",
+      "hairDesign": "sparse long grey hair combed over from left temple",
+      "bodyDesign": "thin stooped older build with long neck",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_qijiang.png",
+          "sha256": "b8b12008842d8ba0bb31eda158bf919cdd39b288c225de3bbcc3e556168794ff"
+        }
+      ]
     },
     {
       "name": "何嘉陵",
@@ -1237,16 +1822,29 @@
       "sex": "m",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_sc.png",
+      "asset": "assets/portraits/source/rival_sc-v3.png",
       "visualAge": 52,
-      "appearance": "tall slender build, long refined face, combed salt-and-pepper hair, calm gentle eyes",
-      "outfit": "dark green suit, ivory shirt, silver-gray tie",
-      "prop": "closed leather report folder",
+      "appearance": "broad oval face with a high wide forehead and strong short chin, fleshy medium nose, small deep-set eyes, long level brows, full lips and a deep smile crease on right cheek; dense greying hair swept straight back from a rounded high hairline",
+      "outfit": "dark teal suit, ivory shirt, navy tie with subtle dots",
+      "prop": "holding a closed flat green portfolio in one hand",
       "key": "rival_sc",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "6df603746754cbe59aa1d64fd55238ec6989855ed2b206d5ca7c58a6efa97ab3"
+      "sha256": "63be5ccaeb9b22e6fc64648c101f0a47bfdd0d9bb61cdaec38f0de113831c4b9",
+      "previousAssets": [
+        "assets/portraits/source/rival_sc.png"
+      ],
+      "faceDesign": "broad oval face with a high wide forehead and strong short chin, fleshy medium nose, small deep-set eyes, long level brows, full lips and a deep smile crease on right cheek",
+      "hairDesign": "dense greying hair swept straight back from a rounded high hairline",
+      "bodyDesign": "tall large-framed body",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_sc.png",
+          "sha256": "6df603746754cbe59aa1d64fd55238ec6989855ed2b206d5ca7c58a6efa97ab3"
+        }
+      ]
     },
     {
       "name": "严峻",
@@ -1260,16 +1858,29 @@
       "sex": "m",
       "note": "行事风格：狼性",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_hb.png",
+      "asset": "assets/portraits/source/rival_hb-v3.png",
       "visualAge": 46,
-      "appearance": "muscular broad shoulders, square jaw, short swept-back black hair, firm assertive expression",
-      "outfit": "charcoal suit, ivory shirt, deep olive tie",
-      "prop": "plain strategic report binder",
+      "appearance": "very long angular face, narrow cheeks and heavy protruding jaw, sharply hooked nose, small severe upturned eyes, thick steeply sloping brows, thin straight lips and vertical brow furrow; black hair cropped to a severe flat top, grey at temples",
+      "outfit": "black pinstripe suit, ivory shirt, forest-green tie",
+      "prop": "one hand holding a closed thin notebook beside his leg",
       "key": "rival_hb",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "3f273a16c44bbdf4086d1b20e16c5a3d60fdd432aa32c9771e7345fbdd6db6d3"
+      "sha256": "c294572afa37bbc1e1fed88e6794daab73efed9cfa5ecd1e9f6b20b3e43171ea",
+      "previousAssets": [
+        "assets/portraits/source/rival_hb.png"
+      ],
+      "faceDesign": "very long angular face, narrow cheeks and heavy protruding jaw, sharply hooked nose, small severe upturned eyes, thick steeply sloping brows, thin straight lips and vertical brow furrow",
+      "hairDesign": "black hair cropped to a severe flat top, grey at temples",
+      "bodyDesign": "tall wiry broad-shouldered build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_hb.png",
+          "sha256": "3f273a16c44bbdf4086d1b20e16c5a3d60fdd432aa32c9771e7345fbdd6db6d3"
+        }
+      ]
     },
     {
       "name": "谷雨",
@@ -1283,16 +1894,29 @@
       "sex": "f",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_hn.png",
+      "asset": "assets/portraits/source/rival_hn-v3.png",
       "visualAge": 44,
-      "appearance": "chin-length softly curled black bob, warm mature oval face, measured confident smile",
-      "outfit": "dark olive business suit, cream blouse, small gold earrings",
-      "prop": "plain closed notebook",
+      "appearance": "wide pear-shaped face with full lower cheeks and broad soft chin, short button nose, small round widely spaced eyes, thick curved brows, full lower lip and soft eye creases; short dark spiral curls framing ears, several silver strands",
+      "outfit": "deep olive silk blouse under cream-green collarless jacket, dark skirt",
+      "prop": "holding a closed cream document pouch",
       "key": "rival_hn",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ad6c460b6cfd930c8f490be05990ceff9c5ebe1134b24da5122f4d14669702c8"
+      "sha256": "1685f655b906409d0f1c9ef8b9895cf08efa8294283f48653704c7111276ceed",
+      "previousAssets": [
+        "assets/portraits/source/rival_hn.png"
+      ],
+      "faceDesign": "wide pear-shaped face with full lower cheeks and broad soft chin, short button nose, small round widely spaced eyes, thick curved brows, full lower lip and soft eye creases",
+      "hairDesign": "short dark spiral curls framing ears, several silver strands",
+      "bodyDesign": "short full-bodied build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_hn.png",
+          "sha256": "ad6c460b6cfd930c8f490be05990ceff9c5ebe1134b24da5122f4d14669702c8"
+        }
+      ]
     },
     {
       "name": "秦汉",
@@ -1306,16 +1930,29 @@
       "sex": "m",
       "note": "行事风格：关系",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_sx.png",
+      "asset": "assets/portraits/source/rival_sx-v3.png",
       "visualAge": 54,
-      "appearance": "broad face, black-gray moustache neatly trimmed, thick short hair, diplomatic expression",
-      "outfit": "olive-green blazer, ivory shirt, understated dark tie",
-      "prop": "closed address notebook",
+      "appearance": "broad rectangular weathered face with prominent cheekbones and square blunt chin, wide flat nose, deep-set narrow eyes, dense horizontal brows, neatly trimmed grey moustache; short thick grey hair with receding temples and an uneven side part",
+      "outfit": "dark brown-green wool suit, ivory shirt, muted bronze tie",
+      "prop": "both hands calmly holding a closed black leather file",
       "key": "rival_sx",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "416f53f6e4dd969c38d24457f1ff91894f674b49840c951fe3aa2340746bc59d"
+      "sha256": "4520b2f3522d1aa10e1814d591348a917e8030698d36d626b266a0b1cee5538f",
+      "previousAssets": [
+        "assets/portraits/source/rival_sx.png"
+      ],
+      "faceDesign": "broad rectangular weathered face with prominent cheekbones and square blunt chin, wide flat nose, deep-set narrow eyes, dense horizontal brows, neatly trimmed grey moustache",
+      "hairDesign": "short thick grey hair with receding temples and an uneven side part",
+      "bodyDesign": "broad solid body",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_sx.png",
+          "sha256": "416f53f6e4dd969c38d24457f1ff91894f674b49840c951fe3aa2340746bc59d"
+        }
+      ]
     },
     {
       "name": "龙安",
@@ -1329,16 +1966,29 @@
       "sex": "m",
       "note": "行事风格：冲劲",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_gz.png",
+      "asset": "assets/portraits/source/rival_gz-v3.png",
       "visualAge": 40,
-      "appearance": "slim vigorous build, tan angular face, close-cut black hair, bright motivated smile",
-      "outfit": "green suit jacket, ivory open-collar shirt",
-      "prop": "plain tablet",
+      "appearance": "short wide hexagonal face with pronounced jaw corners, low forehead, small flat nose, large alert eyes, bold arched brows and wide grinning mouth, warm medium-dark tan; very short coarse black crop with a shaved side part",
+      "outfit": "dark-green unstructured jacket, ivory shirt with collar open, dark trousers",
+      "prop": "one palm upright as if explaining a plan",
       "key": "rival_gz",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "2c3f2c3c59d050a8c62aa8b7369fb3635cdf3d3240ed9bc5cef2ebf1961f74de"
+      "sha256": "621bfaecd76a8d3e9ae9054362e46c5d2e8648fe1b6300fa5d14e4ee308be7eb",
+      "previousAssets": [
+        "assets/portraits/source/rival_gz.png"
+      ],
+      "faceDesign": "short wide hexagonal face with pronounced jaw corners, low forehead, small flat nose, large alert eyes, bold arched brows and wide grinning mouth, warm medium-dark tan",
+      "hairDesign": "very short coarse black crop with a shaved side part",
+      "bodyDesign": "short powerful athletic build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_gz.png",
+          "sha256": "2c3f2c3c59d050a8c62aa8b7369fb3635cdf3d3240ed9bc5cef2ebf1961f74de"
+        }
+      ]
     },
     {
       "name": "段云",
@@ -1352,16 +2002,29 @@
       "sex": "f",
       "note": "行事风格：稳健",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_yn.png",
+      "asset": "assets/portraits/source/rival_yn-v3.png",
       "visualAge": 42,
-      "appearance": "long black hair in low side bun, calm slender mature face, thoughtful eyes",
-      "outfit": "dark green tailored blazer, ivory blouse, charcoal trousers",
-      "prop": "closed plain folder",
+      "appearance": "long thin face with high cheekbones and a small rounded chin, narrow protruding nose, small gentle downturned eyes, long fine eyebrows, faint freckles and thin upper lip; thick straight dark hair in one low side braid with streaks of grey",
+      "outfit": "muted blue-green blouse under deep green long jacket, tiny silver earrings",
+      "prop": "holding a plain closed ivory folio",
       "key": "rival_yn",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "7a4d1762b9566ca80969b1f06aa86c551c53e9a75d077c501d0efa8b47d1ad82"
+      "sha256": "02bf7cacc1f9be67dee010fa560722c6404d19e934d64d20630d5c4d9566d47b",
+      "previousAssets": [
+        "assets/portraits/source/rival_yn.png"
+      ],
+      "faceDesign": "long thin face with high cheekbones and a small rounded chin, narrow protruding nose, small gentle downturned eyes, long fine eyebrows, faint freckles and thin upper lip",
+      "hairDesign": "thick straight dark hair in one low side braid with streaks of grey",
+      "bodyDesign": "tall slender body",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_yn.png",
+          "sha256": "7a4d1762b9566ca80969b1f06aa86c551c53e9a75d077c501d0efa8b47d1ad82"
+        }
+      ]
     },
     {
       "name": "韦桂生",
@@ -1375,16 +2038,29 @@
       "sex": "m",
       "note": "行事风格：躺平",
       "status": "ready",
-      "asset": "assets/portraits/source/rival_gx.png",
+      "asset": "assets/portraits/source/rival_gx-v3.png",
       "visualAge": 58,
-      "appearance": "stocky torso, short thinning gray-black hair, broad lined face, relaxed kindly smile",
-      "outfit": "dark olive business jacket over cream polo",
-      "prop": "plain thermal mug",
+      "appearance": "large broad square face with sagging lower cheeks, broad bulb-tipped nose, tiny nearly closed eyes, bushy grey brows and a thin patient smile, deep neck folds; short silver hair with a flat crown and heavy grey sideburns",
+      "outfit": "olive loose suit, cream collared shirt without tie",
+      "prop": "hands resting around a plain dark ceramic tea mug",
       "key": "rival_gx",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "7b6eed351ef04e4362fec44e6b06e2b16e9852aac555620c308206635f359533"
+      "sha256": "979b7823a78a5c8ff51015a7940fba4e144fe16465864c568f230d405a80beef",
+      "previousAssets": [
+        "assets/portraits/source/rival_gx.png"
+      ],
+      "faceDesign": "large broad square face with sagging lower cheeks, broad bulb-tipped nose, tiny nearly closed eyes, bushy grey brows and a thin patient smile, deep neck folds",
+      "hairDesign": "short silver hair with a flat crown and heavy grey sideburns",
+      "bodyDesign": "large heavyset older build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rival_gx.png",
+          "sha256": "7b6eed351ef04e4362fec44e6b06e2b16e9852aac555620c308206635f359533"
+        }
+      ]
     },
     {
       "name": "沈国梁",
@@ -1398,16 +2074,29 @@
       "sex": "m",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/shenlan2.png",
+      "asset": "assets/portraits/source/shenlan2-v3.png",
       "visualAge": 51,
-      "appearance": "rectangular mature face, neatly side-parted graying hair, rectangular dark glasses, reserved gaze",
-      "outfit": "charcoal-green suit, ivory shirt, muted green tie",
-      "prop": "closed report portfolio",
+      "appearance": "long narrow pentagonal face, broad angular chin, high thin nose with a slightly bent tip, small tired eyes behind thick square black glasses, straight heavy brows and thin mouth; short greying hair neatly combed forward over a receding hairline",
+      "outfit": "charcoal pinstripe suit, ivory shirt, narrow moss tie",
+      "prop": "holding a closed account book low with both hands",
       "key": "shenlan2",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "446584a5438b22a4a99dd43524083fed60658d351b69c4c8438dbf985e38dd21"
+      "sha256": "add91db97dbc2b216c88c3fd474b35b9a7504be82bf3202f00d069f12067e763",
+      "previousAssets": [
+        "assets/portraits/source/shenlan2.png"
+      ],
+      "faceDesign": "long narrow pentagonal face, broad angular chin, high thin nose with a slightly bent tip, small tired eyes behind thick square black glasses, straight heavy brows and thin mouth",
+      "hairDesign": "short greying hair neatly combed forward over a receding hairline",
+      "bodyDesign": "lean medium-tall build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/shenlan2.png",
+          "sha256": "446584a5438b22a4a99dd43524083fed60658d351b69c4c8438dbf985e38dd21"
+        }
+      ]
     },
     {
       "name": "卢敏",
@@ -1421,16 +2110,29 @@
       "sex": "f",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/yubeihead.png",
+      "asset": "assets/portraits/source/yubeihead-v3.png",
       "visualAge": 43,
-      "appearance": "straight shoulder-length black hair with side fringe, sharp oval face, steady confident eyes",
-      "outfit": "olive-green trouser suit, ivory blouse",
-      "prop": "plain slim tablet",
+      "appearance": "wide oval face with a strong rounded jaw, short broad nose, deep-set small eyes, thick straight eyebrows, wide mouth and a subtle left cheek dimple; very short dark feathered haircut with exposed forehead and ears",
+      "outfit": "forest-green trouser suit, pale ochre blouse, simple square gold earrings",
+      "prop": "one hand holding a slim blank report binder",
       "key": "yubeihead",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "c47d9da1dc665672b06a99b542d8766979635eb1ae6f4b20aef2aeef566c7340"
+      "sha256": "e51ccbab0bc0df45d616bd0623b9de8cffb6df77708d267b70c09b5c5fa21aee",
+      "previousAssets": [
+        "assets/portraits/source/yubeihead.png"
+      ],
+      "faceDesign": "wide oval face with a strong rounded jaw, short broad nose, deep-set small eyes, thick straight eyebrows, wide mouth and a subtle left cheek dimple",
+      "hairDesign": "very short dark feathered haircut with exposed forehead and ears",
+      "bodyDesign": "short sturdy upright build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/yubeihead.png",
+          "sha256": "c47d9da1dc665672b06a99b542d8766979635eb1ae6f4b20aef2aeef566c7340"
+        }
+      ]
     },
     {
       "name": "蒋红",
@@ -1444,16 +2146,34 @@
       "sex": "f",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/jianghong.png",
+      "asset": "assets/portraits/source/jianghong-v3.png",
       "visualAge": 44,
-      "appearance": "short straight dark hair, broad mature face, thin glasses, practical patient expression",
-      "outfit": "deep green business blazer, cream blouse",
-      "prop": "closed operations ledger",
+      "appearance": "a distinctly broad rectangular adult face with a strong straight horizontal jaw and flat chin, full low cheeks, a large wide flat-bridge nose, tiny deep-set narrow eyes, thick level eyebrows, broad thin lips, pronounced smile folds and light freckles; short straight dark hair in a blunt practical crop with a straight short fringe and a grey streak above one ear",
+      "outfit": "ivory banker blouse, green knitted waistcoat, simple dark skirt",
+      "prop": "holding a closed operations checklist folder",
       "key": "jianghong",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "7cd980585d9cc648a333995ed572a9e8e4a28326399fbd59d41838acb8b3787b"
+      "sha256": "229f57a4b83b36d69a2c8e226ccf341939379b819f9467dd1ced374f662a3da2",
+      "previousAssets": [
+        "assets/portraits/source/jianghong.png",
+        "assets/portraits/source/review-v3/jianghong-first.png"
+      ],
+      "faceDesign": "a distinctly broad rectangular adult face with a strong straight horizontal jaw and flat chin, full low cheeks, a large wide flat-bridge nose, tiny deep-set narrow eyes, thick level eyebrows, broad thin lips, pronounced smile folds and light freckles",
+      "hairDesign": "short straight dark hair in a blunt practical crop with a straight short fringe and a grey streak above one ear",
+      "bodyDesign": "medium full-bodied build, thick neck and square shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/jianghong.png",
+          "sha256": "7cd980585d9cc648a333995ed572a9e8e4a28326399fbd59d41838acb8b3787b"
+        },
+        {
+          "asset": "assets/portraits/source/review-v3/jianghong-first.png",
+          "sha256": "16c46b5face517702684b0221ceb57cf2bc79680c722d409e69f3d9bf616faba"
+        }
+      ]
     },
     {
       "name": "程立",
@@ -1467,16 +2187,29 @@
       "sex": "m",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/chengli.png",
+      "asset": "assets/portraits/source/chengli-v3.png",
       "visualAge": 38,
-      "appearance": "neat short dark hair, oval face, bright sociable eyes, professional smile",
-      "outfit": "olive suit, ivory shirt, green-gold striped tie",
-      "prop": "plain small tablet",
+      "appearance": "small long triangular face with narrow chin and wide forehead, prominent rounded ears, short upturned nose, small quick round eyes behind oval rimless glasses, high fine eyebrows; soft slightly long dark hair parted in center and tucked behind ears",
+      "outfit": "muted teal single-breasted suit, ivory shirt, plain mustard tie",
+      "prop": "holding a small closed product sample book",
       "key": "chengli",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "78bacef289a0d771bb40d1e3a6d258be2a888958d52a4b36a2f0fad0f9815c33"
+      "sha256": "614854ba5304d5c43fdf8ca1de2ee75b5b965d31b41c045484b530839ffbe7aa",
+      "previousAssets": [
+        "assets/portraits/source/chengli.png"
+      ],
+      "faceDesign": "small long triangular face with narrow chin and wide forehead, prominent rounded ears, short upturned nose, small quick round eyes behind oval rimless glasses, high fine eyebrows",
+      "hairDesign": "soft slightly long dark hair parted in center and tucked behind ears",
+      "bodyDesign": "slim short build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/chengli.png",
+          "sha256": "78bacef289a0d771bb40d1e3a6d258be2a888958d52a4b36a2f0fad0f9815c33"
+        }
+      ]
     },
     {
       "name": "孔组长",
@@ -1490,16 +2223,29 @@
       "sex": "m",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/kong.png",
+      "asset": "assets/portraits/source/kong-v3.png",
       "visualAge": 54,
-      "appearance": "thin severe face, short salt-and-pepper hair, steel-rim glasses, attentive serious eyes",
-      "outfit": "charcoal-green business suit, ivory shirt, dark tie",
-      "prop": "plain thermos and closed audit folder",
+      "appearance": "wide square head with a broad protruding chin, deep brow ridge, long straight nose, tiny narrow eyes behind thick rectangular half-rim glasses, bushy downsloping grey brows and tightly shut lips; shaved head with a short grey horseshoe fringe",
+      "outfit": "very dark green suit, ivory shirt, dark grey tie",
+      "prop": "holding a closed thick audit binder in both hands",
       "key": "kong",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "0a86f1f9c7e798e05c2e0618d2dc7b27e6f54ddb424cdd59e59ce915271115ee"
+      "sha256": "0aa50a9f26ae0165f560966764df6e88fd5b60b2879bea0a0c17014039cac528",
+      "previousAssets": [
+        "assets/portraits/source/kong.png"
+      ],
+      "faceDesign": "wide square head with a broad protruding chin, deep brow ridge, long straight nose, tiny narrow eyes behind thick rectangular half-rim glasses, bushy downsloping grey brows and tightly shut lips",
+      "hairDesign": "shaved head with a short grey horseshoe fringe",
+      "bodyDesign": "broad heavy shoulders and straight rigid posture",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/kong.png",
+          "sha256": "0a86f1f9c7e798e05c2e0618d2dc7b27e6f54ddb424cdd59e59ce915271115ee"
+        }
+      ]
     },
     {
       "name": "范以恒",
@@ -1527,7 +2273,8 @@
     {
       "name": "江北那位",
       "ids": [
-        "jbnw"
+        "jbnw",
+        "rival_jiangbei"
       ],
       "sources": [
         "narrative-or-generated-staff"
@@ -1536,16 +2283,29 @@
       "sex": "m",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/jbnw.png",
+      "asset": "assets/portraits/source/jbnw-v3.png",
       "visualAge": 47,
-      "appearance": "long strong face, short neatly combed black hair, serious narrow eyes",
-      "outfit": "dark green suit, cream shirt, charcoal tie",
-      "prop": "closed plain report binder",
+      "appearance": "thin oblong face with a narrow forehead and broad flat chin, a long convex nose, uneven hooded eyes, one thick eyebrow slightly higher, small compressed mouth and a tiny mole under left eye; sleek black hair parted far to one side with greying sideburns",
+      "outfit": "dark olive double-breasted suit, ivory shirt, restrained cream-gold tie",
+      "prop": "holding a completely blank phone faced inward at waist",
       "key": "jbnw",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "988e7c8d12889e51ae2b894777a2e1f4822dea004d4161cb8bf7bd7ed57a0090"
+      "sha256": "cddaf875acb5149b59feca9c748e9871f0946f18e108d911a95cecb682b95a36",
+      "previousAssets": [
+        "assets/portraits/source/jbnw.png"
+      ],
+      "faceDesign": "thin oblong face with a narrow forehead and broad flat chin, a long convex nose, uneven hooded eyes, one thick eyebrow slightly higher, small compressed mouth and a tiny mole under left eye",
+      "hairDesign": "sleek black hair parted far to one side with greying sideburns",
+      "bodyDesign": "very tall lean build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/jbnw.png",
+          "sha256": "988e7c8d12889e51ae2b894777a2e1f4822dea004d4161cb8bf7bd7ed57a0090"
+        }
+      ]
     },
     {
       "name": "吴悠",
@@ -1559,16 +2319,34 @@
       "sex": "f",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/rookie_0.png",
+      "asset": "assets/portraits/source/rookie_0-v3.png",
       "visualAge": 24,
-      "appearance": "short wavy chestnut-black bob, soft oval face, friendly relaxed smile",
-      "outfit": "ivory bank blouse, green waistcoat, small gold-green scarf",
-      "prop": "plain training notebook",
+      "appearance": "an elongated pear-shaped adult face with narrow temples and a very broad squared lower jaw, long flat chin, small horizontal hooded eyes spaced widely apart, broad low nose with a blunt rounded tip, heavy short straight eyebrows, thin asymmetric lips and noticeable freckles over both cheeks; extremely short black pixie cut with exposed large ears and a high bare forehead, absolutely no bangs",
+      "outfit": "ivory bank blouse and deep-green waistcoat, gold-green narrow scarf",
+      "prop": "holding an unmarked notebook close to her chest",
       "key": "rookie_0",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "5b06b520fea8ab60f69a13da86f5d035c801834c2a501d62965f3193765d1a79"
+      "sha256": "5e3ec8b27f170cc8bef013296000300b87e449595b276c3f7e816d85c92f1c61",
+      "previousAssets": [
+        "assets/portraits/source/rookie_0.png",
+        "assets/portraits/source/review-v3/rookie_0-first.png"
+      ],
+      "faceDesign": "an elongated pear-shaped adult face with narrow temples and a very broad squared lower jaw, long flat chin, small horizontal hooded eyes spaced widely apart, broad low nose with a blunt rounded tip, heavy short straight eyebrows, thin asymmetric lips and noticeable freckles over both cheeks",
+      "hairDesign": "extremely short black pixie cut with exposed large ears and a high bare forehead, absolutely no bangs",
+      "bodyDesign": "short sturdy adult build with strong shoulders",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rookie_0.png",
+          "sha256": "5b06b520fea8ab60f69a13da86f5d035c801834c2a501d62965f3193765d1a79"
+        },
+        {
+          "asset": "assets/portraits/source/review-v3/rookie_0-first.png",
+          "sha256": "2e40ed28facfaa758e7ab9c8bc465ca05655f2ccf7e9f986f6c0b6f696684341"
+        }
+      ]
     },
     {
       "name": "马晓",
@@ -1582,16 +2360,29 @@
       "sex": "f",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/rookie_1.png",
+      "asset": "assets/portraits/source/rookie_1-v3.png",
       "visualAge": 23,
-      "appearance": "straight black hair in low ponytail, dark rectangular glasses, earnest narrow face",
-      "outfit": "green bank blazer, cream blouse, dark skirt",
-      "prop": "closed plain binder",
+      "appearance": "long narrow adult face with high cheekbones and a rounded chin, small close-set upward-sloping eyes behind large round red-brown glasses, long narrow nose, fine straight brows and thin lips; two very short low pigtails behind ears with a neat middle part",
+      "outfit": "cream shirt under emerald fine-knit cardigan, charcoal trousers",
+      "prop": "holding a plain office pen and closed cash ledger",
       "key": "rookie_1",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "6fc158bcfc8546708019dd21e1f9f036ec702fe1da6f9e430837ada048146a20"
+      "sha256": "944780936961a4b48d6d8711ed1260f2b5d93f19564fd1ddfc4f7b693eb28ffd",
+      "previousAssets": [
+        "assets/portraits/source/rookie_1.png"
+      ],
+      "faceDesign": "long narrow adult face with high cheekbones and a rounded chin, small close-set upward-sloping eyes behind large round red-brown glasses, long narrow nose, fine straight brows and thin lips",
+      "hairDesign": "two very short low pigtails behind ears with a neat middle part",
+      "bodyDesign": "tall skinny adult build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rookie_1.png",
+          "sha256": "6fc158bcfc8546708019dd21e1f9f036ec702fe1da6f9e430837ada048146a20"
+        }
+      ]
     },
     {
       "name": "孙一",
@@ -1605,16 +2396,29 @@
       "sex": "f",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/rookie_2.png",
+      "asset": "assets/portraits/source/rookie_2-v3.png",
       "visualAge": 22,
-      "appearance": "straight dark hair in tidy high bun, round bright eyes, shy small smile",
-      "outfit": "ivory bank blouse, green waistcoat, green-gold scarf",
-      "prop": "blank slips held neatly",
+      "appearance": "square youthful adult face with a broad jaw, large prominent ears, small deep-set round eyes, wide flat nose, thick arched eyebrows and a broad lopsided grin; short tight natural dark curls in a rounded crop",
+      "outfit": "sage bank blouse, dark green waistcoat, small neatly tied scarf",
+      "prop": "one hand open with the other holding an unmarked staff folder",
       "key": "rookie_2",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "08c437ee067198333eee1fb2ee3088109a7a5633df370007bbc0404df24872ea"
+      "sha256": "51550de1de86c6d7e244a73e5f4db745b44f7d9ff46672e4bcb267e7db20a1cf",
+      "previousAssets": [
+        "assets/portraits/source/rookie_2.png"
+      ],
+      "faceDesign": "square youthful adult face with a broad jaw, large prominent ears, small deep-set round eyes, wide flat nose, thick arched eyebrows and a broad lopsided grin",
+      "hairDesign": "short tight natural dark curls in a rounded crop",
+      "bodyDesign": "medium athletic adult build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rookie_2.png",
+          "sha256": "08c437ee067198333eee1fb2ee3088109a7a5633df370007bbc0404df24872ea"
+        }
+      ]
     },
     {
       "name": "钱朵",
@@ -1628,16 +2432,29 @@
       "sex": "f",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/rookie_3.png",
+      "asset": "assets/portraits/source/rookie_3-v3.png",
       "visualAge": 24,
-      "appearance": "shoulder-length wavy black hair, broad gentle face, warm curious smile",
-      "outfit": "green tailored bank blazer, cream blouse",
-      "prop": "closed small training planner",
+      "appearance": "wide heart-shaped adult face with high round cheekbones and a blunt chin, wide-set almond eyes, broad short nose, soft curved brows, full lips and a single visible left dimple; black hair in a low heavy braid over one shoulder, no bangs",
+      "outfit": "ivory blouse, dark-green jacket, muted gold-green scarf",
+      "prop": "holding a plain slim blank tablet against her hip",
       "key": "rookie_3",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "20bad43ae96b1634c8989519e61c85aaa1d7efc87ad5708f0b7ab1597f585db9"
+      "sha256": "3b4174124f5eaf9e5d2b63eeced8f97a5c6c8ba77edf3ffdd158a4aa91e55b5c",
+      "previousAssets": [
+        "assets/portraits/source/rookie_3.png"
+      ],
+      "faceDesign": "wide heart-shaped adult face with high round cheekbones and a blunt chin, wide-set almond eyes, broad short nose, soft curved brows, full lips and a single visible left dimple",
+      "hairDesign": "black hair in a low heavy braid over one shoulder, no bangs",
+      "bodyDesign": "medium height full-figured adult build",
+      "artRevision": 3,
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/rookie_3.png",
+          "sha256": "20bad43ae96b1634c8989519e61c85aaa1d7efc87ad5708f0b7ab1597f585db9"
+        }
+      ]
     },
     {
       "name": "玩家形象男",
@@ -2825,5 +3642,88 @@
       "transparent": true,
       "sha256": "6f3e5a98b3c64e0c864814cf789674a0fe92327d084463d887053515b9fa08de"
     }
-  ]
+  ],
+  "leadershipAudit": {
+    "audited": 65,
+    "retained": [
+      "xiaoman",
+      "huang",
+      "gu"
+    ],
+    "redesigned": [
+      "hejing",
+      "tangliang",
+      "suxw",
+      "luojian",
+      "lu",
+      "dengyu",
+      "xulp",
+      "lizheng",
+      "zhouqm",
+      "maben",
+      "xiongw",
+      "chengxy",
+      "fugh",
+      "moujun",
+      "ranggm",
+      "xianghong",
+      "dengjf",
+      "tanmin",
+      "wangming",
+      "duanbin",
+      "liujia",
+      "huangwei",
+      "duheng",
+      "shenlan",
+      "jianggd",
+      "songwy",
+      "jiangke",
+      "handong",
+      "rival_haitangxi",
+      "rival_tongyuan",
+      "rival_dafo",
+      "rival_nanshan",
+      "rival_yuzhong",
+      "rival_jiulongpo",
+      "rival_shapingba",
+      "rival_beibei",
+      "rival_dadukou",
+      "rival_banan",
+      "rival_fuling",
+      "rival_yongchuan",
+      "rival_hechuan",
+      "rival_jiangjin",
+      "rival_qianjiang",
+      "rival_changshou",
+      "rival_qijiang",
+      "rival_sc",
+      "rival_hb",
+      "rival_hn",
+      "rival_sx",
+      "rival_gz",
+      "rival_yn",
+      "rival_gx",
+      "shenlan2",
+      "yubeihead",
+      "jianghong",
+      "chengli",
+      "kong",
+      "jbnw",
+      "rookie_0",
+      "rookie_1",
+      "rookie_2",
+      "rookie_3"
+    ],
+    "revision": 3,
+    "reason": "Separate files had near-identical facial designs; redesign individual facial geometry without portrait references.",
+    "retainedSourceHashes": {
+      "xiaoman": "8f1a1faa681e17ad8e3483fc6af2e2cafa65c4d85e61e9a76a1295fa337f9718",
+      "huang": "fd7a40c77987d98321a88dd3bfab203db85f42253db615be95a485c39794ae29",
+      "gu": "fe773e727b8a4238ac379e2ac59c820746f48ce659722d36a2850c918f9723ff"
+    },
+    "refined": [
+      "rookie_0",
+      "jianghong"
+    ]
+  }
 }

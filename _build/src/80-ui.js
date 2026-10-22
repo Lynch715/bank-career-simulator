@@ -130,7 +130,7 @@ const UI = {
     const rows = t.map((r,i) => {
       let arr = "";
       if(r.me && S.kpi.prevRank){ const d = S.kpi.prevRank - S.kpi.rank; arr = d>0?`<span class="arr-up">↑${d}</span>`:(d<0?`<span class="arr-dn">↓${-d}</span>`:""); }
-      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${PORTRAITS.inline(r.me?(S.player.portrait||'player_m'):r.boss,r.boss)}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):Number(r.score).toFixed(1))} ${first?"":arr}</td></tr>`;
+      return `<tr class="${r.me?"me":""}"><td class="n">${i+1}</td><td>${r.name}<br><small class="muted">${PORTRAITS.inline(r.me?(S.player.portrait||'player_m'):{id:'rival_'+r.id,name:r.boss},r.boss)}</small></td><td class="s num">${r.score==null?"—":(S.lv===5?fmtWy(r.score):Number(r.score).toFixed(1))} ${first?"":arr}</td></tr>`;
     }).join("");
     $("colL").innerHTML = `
       <div class="box"><h3>考核卡 <em>入行第${S.careerYear}年</em></h3>${items}

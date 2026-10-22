@@ -430,7 +430,7 @@
     ],
     "small": "assets/portraits/web/rival_haitangxi-s.webp",
     "large": "assets/portraits/web/rival_haitangxi-l.webp",
-    "width": 540,
+    "width": 541,
     "height": 720,
     "thumbWidth": 240,
     "thumbHeight": 150
@@ -793,7 +793,8 @@
   "jbnw": {
     "name": "江北那位",
     "ids": [
-      "jbnw"
+      "jbnw",
+      "rival_jiangbei"
     ],
     "small": "assets/portraits/web/jbnw-s.webp",
     "large": "assets/portraits/web/jbnw-l.webp",
