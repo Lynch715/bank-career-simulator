@@ -185,16 +185,29 @@
       "sex": "f",
       "note": "纺织厂退休会计，每回来都要把利息算一遍。",
       "status": "ready",
-      "asset": "assets/portraits/source/zhangxf.png",
+      "asset": "assets/portraits/source/zhangxf-v4.png",
       "visualAge": 66,
-      "appearance": "short curled gray-black hair, round lined face, small reading spectacles, patient precise expression",
-      "outfit": "muted jade cardigan over cream blouse, gray slacks",
-      "prop": "plain old savings passbook",
+      "appearance": "broad round face, low cheekbones and soft double chin, short broad snub nose, small smiling crescent eyes, sparse high curved eyebrows, deep laugh lines; short tightly permed salt-and-pepper curls, plain small round brass spectacles",
+      "outfit": "sage cardigan over ivory floral-collar blouse, dark skirt",
+      "prop": "holding a small closed blank savings ledger and a pencil",
       "key": "zhangxf",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "172f2bd419f76d2347dd7cf60f44d95622cacc3a4ab654a76a08e710a86eafb0"
+      "sha256": "fc347daf3be83c5ddc9fb9c0be41ab3b6b57c05f3a887ae48216643d7f8f55cd",
+      "previousAssets": [
+        "assets/portraits/source/zhangxf.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/zhangxf.png",
+          "sha256": "172f2bd419f76d2347dd7cf60f44d95622cacc3a4ab654a76a08e710a86eafb0"
+        }
+      ],
+      "faceDesign": "broad round face, low cheekbones and soft double chin, short broad snub nose, small smiling crescent eyes, sparse high curved eyebrows, deep laugh lines",
+      "hairDesign": "short tightly permed salt-and-pepper curls, plain small round brass spectacles",
+      "bodyDesign": "short and plump, relaxed shoulders",
+      "artRevision": 4
     },
     {
       "name": "冉国强",
@@ -208,16 +221,29 @@
       "sex": "m",
       "note": "在弹子石老街开火锅店，店名叫「冉记老灶」。",
       "status": "ready",
-      "asset": "assets/portraits/source/ranguoq.png",
+      "asset": "assets/portraits/source/ranguoq-v4.png",
       "visualAge": 46,
-      "appearance": "stocky broad face, cropped dark hair, lively eyes, hearty grin",
-      "outfit": "olive casual jacket over cream polo, dark trousers",
-      "prop": "restaurant order pad, no writing",
+      "appearance": "wide hexagonal face, thick blunt jaw, flat wide nose with flared nostrils, small close-set deep eyes, very heavy horizontal brows, large gap-toothed grin, tan skin; near-shaved black crew cut, short sparse moustache",
+      "outfit": "brick red polo shirt under charcoal open work vest, dark trousers",
+      "prop": "one open palm explaining, other hand holding a blank order pad",
       "key": "ranguoq",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "de624557a8c306e789e98d56a729546d28a64ee08df4b8688b1caee4d5b3c548"
+      "sha256": "fa5519663513eed3d5e237ace864e1b46cbe8d564e2f5a92caab0909cc634aef",
+      "previousAssets": [
+        "assets/portraits/source/ranguoq.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/ranguoq.png",
+          "sha256": "de624557a8c306e789e98d56a729546d28a64ee08df4b8688b1caee4d5b3c548"
+        }
+      ],
+      "faceDesign": "wide hexagonal face, thick blunt jaw, flat wide nose with flared nostrils, small close-set deep eyes, very heavy horizontal brows, large gap-toothed grin, tan skin",
+      "hairDesign": "near-shaved black crew cut, short sparse moustache",
+      "bodyDesign": "stocky muscular body, thick forearms",
+      "artRevision": 4
     },
     {
       "name": "陈德贵",
@@ -231,16 +257,29 @@
       "sex": "m",
       "note": "老码头工人，存折用塑料袋包着。",
       "status": "ready",
-      "asset": "assets/portraits/source/chendg.png",
+      "asset": "assets/portraits/source/chendg-v4.png",
       "visualAge": 71,
-      "appearance": "weathered sun-tanned narrow face with deep wrinkles, thin gray hair, slightly bent posture",
-      "outfit": "dark olive work jacket, faded ivory shirt, gray trousers",
-      "prop": "old savings passbook in clear plastic sleeve",
+      "appearance": "long weathered oblong face with hollow cheeks and jutting rounded chin, long crooked nose, deeply hooded downturned eyes, bushy drooping grey brows, deep crow feet and thin lips; bald crown with wispy white side hair, no glasses or beard",
+      "outfit": "faded dark blue cotton jacket over pale beige shirt, worn charcoal trousers",
+      "prop": "carefully holding a closed savings booklet in a clear unmarked sleeve",
       "key": "chendg",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "eb284f98bf7f1b540fa7ae386567df61ce13927425d844970ff72c818dc703c7"
+      "sha256": "affdb1743e3c8493fc078bcd32fb64716b2f3b87a5f9c83b27557be3745e8b16",
+      "previousAssets": [
+        "assets/portraits/source/chendg.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/chendg.png",
+          "sha256": "eb284f98bf7f1b540fa7ae386567df61ce13927425d844970ff72c818dc703c7"
+        }
+      ],
+      "faceDesign": "long weathered oblong face with hollow cheeks and jutting rounded chin, long crooked nose, deeply hooded downturned eyes, bushy drooping grey brows, deep crow feet and thin lips",
+      "hairDesign": "bald crown with wispy white side hair, no glasses or beard",
+      "bodyDesign": "stooped wiry older build, sun-darkened skin",
+      "artRevision": 4
     },
     {
       "name": "黄世海",
@@ -525,16 +564,29 @@
       "sex": "m",
       "note": "跑了十年货车起的家，朋友遍布各个码头。",
       "status": "ready",
-      "asset": "assets/portraits/source/weilc.png",
+      "asset": "assets/portraits/source/weilc-v4.png",
       "visualAge": 49,
-      "appearance": "rugged tan complexion, broad shoulders, cropped salt-and-pepper hair, stubble, confident earthy smile",
-      "outfit": "olive casual blazer, cream polo, dark trousers",
-      "prop": "plain truck key ring",
+      "appearance": "large pear-shaped face with narrow temples and very broad lower jaw, flat horizontal chin, wide hooked nose, small widely spaced eyes, short angled brows, thin wry mouth, dimple on right cheek; slicked-back medium length dark hair with grey temples, thick trimmed horseshoe moustache",
+      "outfit": "brown-green relaxed business jacket, cream open-collar shirt, plain leather belt",
+      "prop": "one hand holding a key ring low, other resting on a closed portfolio",
       "key": "weilc",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "30f0dd559de8dffcce43a1c38c12f28d0948869b7378405bbc8050cab64c00d7"
+      "sha256": "ae336d0625e8d841713a1eab820a425e3c773a82861428db859fe81bdf828d52",
+      "previousAssets": [
+        "assets/portraits/source/weilc.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/weilc.png",
+          "sha256": "30f0dd559de8dffcce43a1c38c12f28d0948869b7378405bbc8050cab64c00d7"
+        }
+      ],
+      "faceDesign": "large pear-shaped face with narrow temples and very broad lower jaw, flat horizontal chin, wide hooked nose, small widely spaced eyes, short angled brows, thin wry mouth, dimple on right cheek",
+      "hairDesign": "slicked-back medium length dark hair with grey temples, thick trimmed horseshoe moustache",
+      "bodyDesign": "very tall heavyset build, broad shoulders and belly",
+      "artRevision": 4
     },
     {
       "name": "熊伟",
@@ -2259,16 +2311,29 @@
       "sex": "m",
       "note": "",
       "status": "ready",
-      "asset": "assets/portraits/source/fanyh.png",
+      "asset": "assets/portraits/source/fanyh-v4.png",
       "visualAge": 32,
-      "appearance": "slim build, slightly unruly black hair, rectangular black spectacles, thoughtful earnest expression",
-      "outfit": "olive casual blazer over plain ivory crewneck shirt",
-      "prop": "closed unbranded slim laptop",
+      "appearance": "elongated narrow adult face, high sharp cheekbones and a long squared chin, large protruding ears, long straight nose, small hooded eyes behind slim rectangular silver glasses, thin flat brows, restrained uneven smile; straight black hair in an asymmetric undercut with the top swept right",
+      "outfit": "plain charcoal turtleneck under teal casual blazer, grey trousers",
+      "prop": "holding an entirely blank slim laptop against his hip",
       "key": "fanyh",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "50f1927122b01f680f6e3530a3d7b9ef4d16ef9c67731b0ec47272eb7cd96cc9"
+      "sha256": "e05b9255a77c390bf3b56eef72c56257c1378c66fb82e700bf66b7bac884075f",
+      "previousAssets": [
+        "assets/portraits/source/fanyh.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/fanyh.png",
+          "sha256": "50f1927122b01f680f6e3530a3d7b9ef4d16ef9c67731b0ec47272eb7cd96cc9"
+        }
+      ],
+      "faceDesign": "elongated narrow adult face, high sharp cheekbones and a long squared chin, large protruding ears, long straight nose, small hooded eyes behind slim rectangular silver glasses, thin flat brows, restrained uneven smile",
+      "hairDesign": "straight black hair in an asymmetric undercut with the top swept right",
+      "bodyDesign": "very tall skinny body, long neck, slightly forward shoulders",
+      "artRevision": 4
     },
     {
       "name": "江北那位",
@@ -2516,15 +2581,28 @@
       "sex": "m",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_01.png",
+      "asset": "assets/portraits/source/customer_person_01-v4.png",
       "visualAge": 28,
-      "appearance": "long narrow face, prominent straight nose, close-cropped black hair, thin rectangular glasses",
-      "outfit": "slate blue rolled-sleeve shirt, charcoal trousers",
-      "prop": "holding a closed cream laptop sleeve",
+      "appearance": "short broad trapezoid face, large rounded lower jaw, flat wide nose, small wide-set round eyes behind thick square navy glasses, thick level brows, full lips and light freckles; very short straight black buzz cut with a squared hairline",
+      "outfit": "muted blue office shirt, sleeves rolled neatly, tan chinos",
+      "prop": "holding a plain canvas commuter tote by its strap",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "fc6aa794b2859fa0a920ad0cb27ddb9388cbba7424ddb15f14d2d129062cb04a"
+      "sha256": "81e2ba3db3e4bc4cc2c2dfbad2ae482ff0fc797c06ebdea565fac7bf559f5416",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_01.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_01.png",
+          "sha256": "fc6aa794b2859fa0a920ad0cb27ddb9388cbba7424ddb15f14d2d129062cb04a"
+        }
+      ],
+      "faceDesign": "short broad trapezoid face, large rounded lower jaw, flat wide nose, small wide-set round eyes behind thick square navy glasses, thick level brows, full lips and light freckles",
+      "hairDesign": "very short straight black buzz cut with a squared hairline",
+      "bodyDesign": "short sturdy adult build",
+      "artRevision": 4
     },
     {
       "key": "customer_person_02",
@@ -2540,15 +2618,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_02.png",
+      "asset": "assets/portraits/source/customer_person_02-v4.png",
       "visualAge": 29,
-      "appearance": "round face, soft cheeks, short rounded black bob with straight fringe, warm smile",
-      "outfit": "dusty rose knitted cardigan, cream blouse, navy skirt",
-      "prop": "hands loosely clasped at waist",
+      "appearance": "a broad rectangular adult face with flat jaw and strong blunt chin, prominent low cheeks, very short upturned nose, close-set narrow almond eyes, dark straight brows, broad asymmetric smiling lips; straight chestnut bob cut exactly at jaw level with a short blunt fringe",
+      "outfit": "dusty pink casual jacket over plain cream crewneck, dark trousers",
+      "prop": "holding an unmarked thermos with both hands",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "b5b6d8d2970b564e161c6c1af89163e405c8a8e13bef672ab82bd47230630cd1"
+      "sha256": "1ea41f95b2c6bca84fa2b6fc169040d7a80d73c781c32659ec9364454dc8c142",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_02.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_02.png",
+          "sha256": "b5b6d8d2970b564e161c6c1af89163e405c8a8e13bef672ab82bd47230630cd1"
+        }
+      ],
+      "faceDesign": "a broad rectangular adult face with flat jaw and strong blunt chin, prominent low cheeks, very short upturned nose, close-set narrow almond eyes, dark straight brows, broad asymmetric smiling lips",
+      "hairDesign": "straight chestnut bob cut exactly at jaw level with a short blunt fringe",
+      "bodyDesign": "medium height athletic adult build, square shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_03",
@@ -2564,15 +2655,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_03.png",
+      "asset": "assets/portraits/source/customer_person_03-v4.png",
       "visualAge": 30,
-      "appearance": "angular heart-shaped face, fine arched eyebrows, shoulder-length wavy dark hair, focused gaze",
-      "outfit": "ochre buttoned blouse and dark olive trousers",
-      "prop": "holding a small blank zipped purse",
+      "appearance": "long diamond-shaped adult face, very high cheekbones, small rounded chin, long convex nose, tiny hooded widely spaced eyes, arched fine brows, thin upper lip and a beauty spot beside nose; thick black corkscrew curls cut at shoulders with one side clipped behind ear",
+      "outfit": "ochre linen blouse with rolled cuffs, black ankle trousers, small angular earrings",
+      "prop": "holding a closed plain canvas document sleeve",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "2a22209d57183f03143fad98c31ebd5bf49d1dbbe3b85a18709dfe41c9cf4fab"
+      "sha256": "4bdcb94d683b79dccef41dbb17273ee86a9474954070ff24d8bb3e476f88fda0",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_03.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_03.png",
+          "sha256": "2a22209d57183f03143fad98c31ebd5bf49d1dbbe3b85a18709dfe41c9cf4fab"
+        }
+      ],
+      "faceDesign": "long diamond-shaped adult face, very high cheekbones, small rounded chin, long convex nose, tiny hooded widely spaced eyes, arched fine brows, thin upper lip and a beauty spot beside nose",
+      "hairDesign": "thick black corkscrew curls cut at shoulders with one side clipped behind ear",
+      "bodyDesign": "tall slender adult body, long neck",
+      "artRevision": 4
     },
     {
       "key": "customer_person_04",
@@ -2588,15 +2692,28 @@
       "sex": "m",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_04.png",
+      "asset": "assets/portraits/source/customer_person_04-v4.png",
       "visualAge": 39,
-      "appearance": "square jaw, broad nose, medium tan skin, wavy side-combed black hair, small moustache",
-      "outfit": "rust-brown casual jacket, ecru T-shirt, dark jeans",
-      "prop": "one hand resting on a canvas satchel strap",
+      "appearance": "large wide square face with heavy jutting jaw, low forehead, small deep-set angular eyes, broad saddle nose, dense eyebrows almost meeting, broad thin lips, reddish tan cheeks; short coarse black flat-top hair, clean shaven",
+      "outfit": "faded russet work shirt under dark olive utility jacket, work trousers",
+      "prop": "holding a closed plain stock notebook in one large hand",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "6714e276ff52fc36b320900cc8cbb00de2163013df9f0ed001a4941a0e7a5a1c"
+      "sha256": "b790b6f772ee0756cd7210028eb1a8b21fa20fc4bfebad53a1bafcb9d629478e",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_04.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_04.png",
+          "sha256": "6714e276ff52fc36b320900cc8cbb00de2163013df9f0ed001a4941a0e7a5a1c"
+        }
+      ],
+      "faceDesign": "large wide square face with heavy jutting jaw, low forehead, small deep-set angular eyes, broad saddle nose, dense eyebrows almost meeting, broad thin lips, reddish tan cheeks",
+      "hairDesign": "short coarse black flat-top hair, clean shaven",
+      "bodyDesign": "short powerful adult build, thick neck",
+      "artRevision": 4
     },
     {
       "key": "customer_person_05",
@@ -2612,15 +2729,28 @@
       "sex": "f",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_05.png",
+      "asset": "assets/portraits/source/customer_person_05-v4.png",
       "visualAge": 40,
-      "appearance": "oval face, high cheekbones, long black braid over shoulder, bright attentive eyes",
-      "outfit": "teal patterned collarless blouse, beige trousers",
-      "prop": "holding a closed neutral sample book",
+      "appearance": "wide oval face with full cheeks and deep right dimple, short broad nose, small upturned crescent eyes, thick softly curved eyebrows, full lower lip and visible smile lines; black hair in a high loosely coiled bun with several grey strands",
+      "outfit": "deep teal patterned blouse, beige unstructured cardigan, dark long skirt",
+      "prop": "resting both hands around a plain canvas handbag",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ef63fa5d3dff9691da122196f5e0135a2f9347bafdf5fe396f519fc03258d386"
+      "sha256": "edd6f3630e5a351c4ff728c284a31bbbe641bb2ed28a66c82e628074c70053a1",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_05.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_05.png",
+          "sha256": "ef63fa5d3dff9691da122196f5e0135a2f9347bafdf5fe396f519fc03258d386"
+        }
+      ],
+      "faceDesign": "wide oval face with full cheeks and deep right dimple, short broad nose, small upturned crescent eyes, thick softly curved eyebrows, full lower lip and visible smile lines",
+      "hairDesign": "black hair in a high loosely coiled bun with several grey strands",
+      "bodyDesign": "short full-figured middle-aged body",
+      "artRevision": 4
     },
     {
       "key": "customer_person_06",
@@ -2636,15 +2766,28 @@
       "sex": "m",
       "note": "企业主客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_06.png",
+      "asset": "assets/portraits/source/customer_person_06-v4.png",
       "visualAge": 41,
-      "appearance": "wide face, strong brow, thick short salt-and-pepper hair swept back, stocky build",
-      "outfit": "dark chocolate casual blazer, forest green shirt, beige trousers",
-      "prop": "holding a closed leather document case",
+      "appearance": "long rectangular adult face, sharply defined jaw corners, flat chin, long narrow hooked nose, narrow uneven-lidded eyes, thick downward-sloping eyebrows, thin horizontal mouth and slight eye bags; short side-parted black hair with one white streak near forehead",
+      "outfit": "dark chocolate single-breasted suit, pale grey shirt, no tie",
+      "prop": "holding an unmarked closed black business folio with one hand",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "df55c40fafecec5eb939cb7493db49db2d3e44b11159d77dcda6095a28a2d97a"
+      "sha256": "220cd89a0239208f64798feb4f05a42c3e17193d0c8ae1990f665f9b61d32035",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_06.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_06.png",
+          "sha256": "df55c40fafecec5eb939cb7493db49db2d3e44b11159d77dcda6095a28a2d97a"
+        }
+      ],
+      "faceDesign": "long rectangular adult face, sharply defined jaw corners, flat chin, long narrow hooked nose, narrow uneven-lidded eyes, thick downward-sloping eyebrows, thin horizontal mouth and slight eye bags",
+      "hairDesign": "short side-parted black hair with one white streak near forehead",
+      "bodyDesign": "tall lean straight-backed build",
+      "artRevision": 4
     },
     {
       "key": "customer_person_07",
@@ -2660,15 +2803,28 @@
       "sex": "f",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_07.png",
+      "asset": "assets/portraits/source/customer_person_07-v4.png",
       "visualAge": 67,
-      "appearance": "older long face, pronounced smile lines, silver hair in low chignon, oval wire glasses",
-      "outfit": "muted plum cardigan over cream floral blouse, grey trousers",
-      "prop": "holding a plain folded cloth shopping bag",
+      "appearance": "small triangular elderly face, wide brow and tapering chin, hollow cheeks, long rounded nose, large downturned eyes behind oversized oval plum glasses, fine uneven brows, deeply lined smile; silver hair drawn into a low tight bun with bare forehead",
+      "outfit": "plum button cardigan over cream collar blouse, charcoal skirt",
+      "prop": "holding a folded plain grocery tote and closed bankbook",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ad9836ac0375d7fe4f74e2c316cbf7ef71228bcf86abb19b32f76ac41eb6060e"
+      "sha256": "4a7d339efcef5f5b01bccfaf7fbd1ad8974b91978b02a46d3646d5891784ba74",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_07.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_07.png",
+          "sha256": "ad9836ac0375d7fe4f74e2c316cbf7ef71228bcf86abb19b32f76ac41eb6060e"
+        }
+      ],
+      "faceDesign": "small triangular elderly face, wide brow and tapering chin, hollow cheeks, long rounded nose, large downturned eyes behind oversized oval plum glasses, fine uneven brows, deeply lined smile",
+      "hairDesign": "silver hair drawn into a low tight bun with bare forehead",
+      "bodyDesign": "short very slim older body, gently rounded shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_08",
@@ -2684,15 +2840,28 @@
       "sex": "m",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_08.png",
+      "asset": "assets/portraits/source/customer_person_08-v4.png",
       "visualAge": 35,
-      "appearance": "slender face, straight low eyebrows, textured black crew cut, tall lean build",
-      "outfit": "pale blue short-sleeved office shirt, navy trousers, simple wristwatch",
-      "prop": "one hand holding a plain takeaway tumbler",
+      "appearance": "broad heart-shaped adult face, prominent rounded cheekbones and square chin, very large ears, wide flat nose, small horizontal eyes, thick arched brows and a left-sided grin; short tight black curls with a slightly receding center hairline",
+      "outfit": "pale blue checked office shirt, open at neck, grey trousers",
+      "prop": "one hand at hip while other holds a plain lunch bag",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "4bfb8f589f777047cd8ae50d66741d4350be08613283bb64cb85a6bf7bc20684"
+      "sha256": "fbac89ae67f28f6f879ef14a17db622fb568611843dfa87c37ad791b707746ee",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_08.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_08.png",
+          "sha256": "4bfb8f589f777047cd8ae50d66741d4350be08613283bb64cb85a6bf7bc20684"
+        }
+      ],
+      "faceDesign": "broad heart-shaped adult face, prominent rounded cheekbones and square chin, very large ears, wide flat nose, small horizontal eyes, thick arched brows and a left-sided grin",
+      "hairDesign": "short tight black curls with a slightly receding center hairline",
+      "bodyDesign": "medium athletic adult build, broad chest",
+      "artRevision": 4
     },
     {
       "key": "customer_person_09",
@@ -2708,15 +2877,28 @@
       "sex": "f",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_09.png",
+      "asset": "assets/portraits/source/customer_person_09-v4.png",
       "visualAge": 44,
-      "appearance": "broad face, small smiling eyes, short wavy auburn-black hair, strong forearms",
-      "outfit": "brick-red apron over cream striped long-sleeved top, dark trousers",
-      "prop": "holding a closed small order notebook",
+      "appearance": "short wide round face with pronounced lower cheeks, soft chin, small bulbous nose, close-set narrow eyes, long fine eyebrows, deep nasolabial creases and broad bright smile; chin-length reddish-brown straight hair with curved bangs and a silver temple streak",
+      "outfit": "cream cotton blouse under muted terracotta apron, dark trousers",
+      "prop": "holding a closed blank daily takings ledger at waist",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "fef2c31ef44ff9124f187c47104a87ae56130c6e3be03dbf2619c4378c0b8660"
+      "sha256": "122d800e9a7997c52101acb615118fb32eed975bd2c8b46c1f01c0e80e2a3012",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_09.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_09.png",
+          "sha256": "fef2c31ef44ff9124f187c47104a87ae56130c6e3be03dbf2619c4378c0b8660"
+        }
+      ],
+      "faceDesign": "short wide round face with pronounced lower cheeks, soft chin, small bulbous nose, close-set narrow eyes, long fine eyebrows, deep nasolabial creases and broad bright smile",
+      "hairDesign": "chin-length reddish-brown straight hair with curved bangs and a silver temple streak",
+      "bodyDesign": "short heavyset middle-aged body",
+      "artRevision": 4
     },
     {
       "key": "customer_person_10",
@@ -2732,15 +2914,28 @@
       "sex": "m",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_10.png",
+      "asset": "assets/portraits/source/customer_person_10-v4.png",
       "visualAge": 70,
-      "appearance": "older square face, bushy grey brows, short silver crew cut, visible laugh lines, sturdy build",
-      "outfit": "moss green zip cardigan over pale check shirt, taupe trousers",
-      "prop": "hands lightly folded over a plain cloth pouch",
+      "appearance": "broad rectangular elderly face, large square chin, deeply furrowed brow, wide hooked nose, small sunken eyes under thick bushy white brows, wide thin mouth and heavy neck folds; bald crown, cropped silver horseshoe hair and neat short white goatee",
+      "outfit": "olive field jacket over pale grey knit polo, dark trousers",
+      "prop": "holding a plain folded newspaper without text under one arm",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "5842a28ee4fc2192e29dc37a0d9eb5b2dcc20c684476732ee81b3b4ea1bc66f3"
+      "sha256": "a229a14e36a7653726a539de54b272ed6ff109f0e37e60354bfacbd1f26e5570",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_10.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_10.png",
+          "sha256": "5842a28ee4fc2192e29dc37a0d9eb5b2dcc20c684476732ee81b3b4ea1bc66f3"
+        }
+      ],
+      "faceDesign": "broad rectangular elderly face, large square chin, deeply furrowed brow, wide hooked nose, small sunken eyes under thick bushy white brows, wide thin mouth and heavy neck folds",
+      "hairDesign": "bald crown, cropped silver horseshoe hair and neat short white goatee",
+      "bodyDesign": "tall bulky elderly build, upright sturdy posture",
+      "artRevision": 4
     },
     {
       "key": "customer_person_11",
@@ -2756,15 +2951,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_11.png",
+      "asset": "assets/portraits/source/customer_person_11-v4.png",
       "visualAge": 38,
-      "appearance": "soft triangular face, fine freckles across cheeks, chin-length black hair tucked behind ears",
-      "outfit": "warm blue round-neck knit top, grey pleated skirt",
-      "prop": "holding a folded ivory rain jacket",
+      "appearance": "long pear-shaped adult face with narrow upper skull and wide squared jaw, low cheekbones, long blunt nose, small widely spaced eyes, short heavy eyebrows, thin lip line and faint freckles; short practical black feathered crop, forehead and ears entirely visible",
+      "outfit": "slate-blue zip cardigan over plain ivory blouse, navy trousers",
+      "prop": "holding a closed plain folder loosely at her side",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "abc9aa609fbea12e3009e236cf79e27540288b7369c06cffbb0bedc73a683eb4"
+      "sha256": "39b75ce154acb8aba9dc3f8f8f47ebf34b23880412f268d4e487e5146688a262",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_11.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_11.png",
+          "sha256": "abc9aa609fbea12e3009e236cf79e27540288b7369c06cffbb0bedc73a683eb4"
+        }
+      ],
+      "faceDesign": "long pear-shaped adult face with narrow upper skull and wide squared jaw, low cheekbones, long blunt nose, small widely spaced eyes, short heavy eyebrows, thin lip line and faint freckles",
+      "hairDesign": "short practical black feathered crop, forehead and ears entirely visible",
+      "bodyDesign": "medium height sturdy adult build",
+      "artRevision": 4
     },
     {
       "key": "customer_person_12",
@@ -2780,15 +2988,28 @@
       "sex": "f",
       "note": "企业主客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_12.png",
+      "asset": "assets/portraits/source/customer_person_12-v4.png",
       "visualAge": 47,
-      "appearance": "diamond face, defined cheekbones, voluminous black curled bob, confident wide smile",
-      "outfit": "muted burgundy pantsuit with ivory silk blouse, small pearl earrings",
-      "prop": "holding a structured tan handbag by handles",
+      "appearance": "large angular pentagonal face, broad high cheekbones, strong horizontal jaw and flat chin, broad straight nose, small intense close-set eyes, thick arched eyebrows, wide unsmiling lips and deep eye creases; sleek greying black hair combed into a low bun with side part",
+      "outfit": "burgundy tailored trouser suit, cream high-neck blouse, small square gold earrings",
+      "prop": "hands resting calmly on a closed plain ivory portfolio",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "84081d9742f02338e3d058005bfcea3ec3983c18785bb8570aa235e5941a0cd1"
+      "sha256": "daa6124f067c810c4462f6f0c3b4b82723fa61007a56984375afc60560b244c3",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_12.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_12.png",
+          "sha256": "84081d9742f02338e3d058005bfcea3ec3983c18785bb8570aa235e5941a0cd1"
+        }
+      ],
+      "faceDesign": "large angular pentagonal face, broad high cheekbones, strong horizontal jaw and flat chin, broad straight nose, small intense close-set eyes, thick arched eyebrows, wide unsmiling lips and deep eye creases",
+      "hairDesign": "sleek greying black hair combed into a low bun with side part",
+      "bodyDesign": "tall full-figured middle-aged body, strong shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_13",
@@ -2804,15 +3025,28 @@
       "sex": "m",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_13.png",
+      "asset": "assets/portraits/source/customer_person_13-v4.png",
       "visualAge": 61,
-      "appearance": "older lean face, short white hair receding at temples, round rimless glasses, gentle smile",
-      "outfit": "navy sleeveless knitted vest, ivory shirt, grey trousers",
-      "prop": "holding a closed blank newspaper folder",
+      "appearance": "long lean elderly face with a very narrow pointed chin, jutting cheekbones, large long aquiline nose, small hooded eyes behind rimless rectangle glasses, thin grey brows, narrow pursed mouth; thinning silver hair combed backward, long grey sideburns, clean shaven",
+      "outfit": "dark navy knitted waistcoat over cream narrow-striped shirt, grey trousers",
+      "prop": "holding a small plain paper envelope carefully with both hands",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "2917cad50b86a043be90bff587df669fe2665eaab26143820d15b2715a6fb2b4"
+      "sha256": "8bf62b9667b436290a0b529985daad4f11ab4dfd5e0cec2228e838d439fa9e02",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_13.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_13.png",
+          "sha256": "2917cad50b86a043be90bff587df669fe2665eaab26143820d15b2715a6fb2b4"
+        }
+      ],
+      "faceDesign": "long lean elderly face with a very narrow pointed chin, jutting cheekbones, large long aquiline nose, small hooded eyes behind rimless rectangle glasses, thin grey brows, narrow pursed mouth",
+      "hairDesign": "thinning silver hair combed backward, long grey sideburns, clean shaven",
+      "bodyDesign": "very tall slender older build, slightly stooped",
+      "artRevision": 4
     },
     {
       "key": "customer_person_14",
@@ -2828,15 +3062,28 @@
       "sex": "f",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_14.png",
+      "asset": "assets/portraits/source/customer_person_14-v4.png",
       "visualAge": 62,
-      "appearance": "older round face, short salt-and-pepper soft curls, plump cheeks, deep smile lines",
-      "outfit": "ochre knitted cardigan, teal blouse, charcoal trousers",
-      "prop": "hands resting on a folded cloth tote",
+      "appearance": "very broad square elderly face with full low cheeks and blunt chin, flat broad nose, tiny smiling eyes, short grey straight brows, broad lower lip and deep smile folds; short dark-grey straight hair in a blunt bowl crop, no glasses",
+      "outfit": "mustard knitted vest over moss-green blouse, dark skirt",
+      "prop": "holding an unmarked cloth shopping bag close to waist",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "b0ae3b24f9041abadd74dca6beb62441722e6bd046262c4e5831767c13a3c27d"
+      "sha256": "94e7312634a6092d2255e7906d7600e0f0f423992d714bd9d7edb5bd6e74e329",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_14.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_14.png",
+          "sha256": "b0ae3b24f9041abadd74dca6beb62441722e6bd046262c4e5831767c13a3c27d"
+        }
+      ],
+      "faceDesign": "very broad square elderly face with full low cheeks and blunt chin, flat broad nose, tiny smiling eyes, short grey straight brows, broad lower lip and deep smile folds",
+      "hairDesign": "short dark-grey straight hair in a blunt bowl crop, no glasses",
+      "bodyDesign": "short stout elderly body, thick neck",
+      "artRevision": 4
     },
     {
       "key": "customer_person_15",
@@ -2852,15 +3099,28 @@
       "sex": "m",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_15.png",
+      "asset": "assets/portraits/source/customer_person_15-v4.png",
       "visualAge": 63,
-      "appearance": "older angular face, medium tan skin, grey flat-top hair, pronounced cheekbones, clean shaven",
-      "outfit": "light taupe field jacket, dark navy polo shirt, brown trousers",
-      "prop": "holding a plain insulated steel flask",
+      "appearance": "long angular hexagonal older face, hollow lower cheeks and squared chin, wide bumpy nose, deeply hooded small eyes, dense diagonal grey eyebrows, wide mouth and a short salt-and-pepper stubble beard; thick silver hair in a high swept-back quiff",
+      "outfit": "sand brown utility jacket over charcoal polo, dark work trousers",
+      "prop": "holding a small plain steel flask near his hip",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ded849d47e66519355503f5eaf2bd63c3ed068f05983404580550619cc30de98"
+      "sha256": "84897c987e1f173a4c77897f1a0770b1f2d2aeebb61e7297b3f6ed5cbbf19d3f",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_15.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_15.png",
+          "sha256": "ded849d47e66519355503f5eaf2bd63c3ed068f05983404580550619cc30de98"
+        }
+      ],
+      "faceDesign": "long angular hexagonal older face, hollow lower cheeks and squared chin, wide bumpy nose, deeply hooded small eyes, dense diagonal grey eyebrows, wide mouth and a short salt-and-pepper stubble beard",
+      "hairDesign": "thick silver hair in a high swept-back quiff",
+      "bodyDesign": "tall broad-shouldered older build, long arms",
+      "artRevision": 4
     },
     {
       "key": "customer_person_16",
@@ -2876,15 +3136,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_16.png",
+      "asset": "assets/portraits/source/customer_person_16-v4.png",
       "visualAge": 43,
-      "appearance": "slim oval face, slightly wide-set eyes, short pixie black cut with side fringe",
-      "outfit": "sage green long-sleeved blouse, stone grey trousers",
-      "prop": "one palm open gently, other holding a closed slim notebook",
+      "appearance": "short round adult face, broad forehead, full cheek pads and very small blunt chin, small flat-bridge nose, tiny close-set smiling eyes, short curved eyebrows, full asymmetric lips and round glasses; straight dark hair in a high ponytail with full blunt bangs",
+      "outfit": "muted sage simple blouse with a burgundy cardigan, dark trousers",
+      "prop": "holding a closed unmarked commuter notebook against chest",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "9182dd831c0117812c8740ffeb0ab0e0a74a57b545d3ccd86a2812565741527c"
+      "sha256": "3e90a220022fa66277a2e4bcdc7ea7574d444276a04c7339c67762bf2b186e8d",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_16.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_16.png",
+          "sha256": "9182dd831c0117812c8740ffeb0ab0e0a74a57b545d3ccd86a2812565741527c"
+        }
+      ],
+      "faceDesign": "short round adult face, broad forehead, full cheek pads and very small blunt chin, small flat-bridge nose, tiny close-set smiling eyes, short curved eyebrows, full asymmetric lips and round glasses",
+      "hairDesign": "straight dark hair in a high ponytail with full blunt bangs",
+      "bodyDesign": "petite full-figured middle-aged body",
+      "artRevision": 4
     },
     {
       "key": "customer_person_17",
@@ -2900,15 +3173,28 @@
       "sex": "m",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_17.png",
+      "asset": "assets/portraits/source/customer_person_17-v4.png",
       "visualAge": 44,
-      "appearance": "round face, slightly upturned nose, thick tousled dark hair, round dark glasses, broad build",
-      "outfit": "muted ochre overshirt over white T-shirt, dark chinos",
-      "prop": "holding a closed blue laptop sleeve against hip",
+      "appearance": "wide oval adult face with a heavy double chin, flat broad nose, small round eyes set far apart, very thick slanting eyebrows, large protruding ears, broad thin lips and a left cheek mole; short soft black curls, large round brown spectacles",
+      "outfit": "ochre overshirt over plain cream T-shirt, charcoal trousers",
+      "prop": "holding a plain lunch container in a cloth wrap",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "def2f80d83a216293b00639971d18e5985582ecbf39d9f4daef5fe511c5f3df8"
+      "sha256": "b1a3d41e948adc4ce435b1a03b7e3c0e30a75bf45c0cd04bbb3ee517b7169bf5",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_17.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_17.png",
+          "sha256": "def2f80d83a216293b00639971d18e5985582ecbf39d9f4daef5fe511c5f3df8"
+        }
+      ],
+      "faceDesign": "wide oval adult face with a heavy double chin, flat broad nose, small round eyes set far apart, very thick slanting eyebrows, large protruding ears, broad thin lips and a left cheek mole",
+      "hairDesign": "short soft black curls, large round brown spectacles",
+      "bodyDesign": "short plump adult body, sloping shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_18",
@@ -2924,15 +3210,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_18.png",
+      "asset": "assets/portraits/source/customer_person_18-v4.png",
       "visualAge": 28,
-      "appearance": "long face, soft drooping brows, black hair in high bun, thoughtful smile",
-      "outfit": "dusty lilac cardigan over ivory shirt, ink blue skirt",
-      "prop": "holding a small blank phone low at waist",
+      "appearance": "long narrow adult face with high forehead and broad angular chin, thin high nose, wide-set small upturned eyes, fine long brows, a broad low mouth with thin lips and a subtle chin cleft; very short straight black pixie cut swept forward, no ponytail or bun",
+      "outfit": "pale lavender office blouse, dark green sleeveless pullover, plain trousers",
+      "prop": "one hand holding a folded unmarked umbrella, other relaxed",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "5282aab193dbfbdb4bd8520be74e8b271e1cd94e18f923390450acab11ed37db"
+      "sha256": "746b5c13cca2bd7ee8cf77aadfb7ca4651b3a25686a5537f88daf329886052dc",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_18.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_18.png",
+          "sha256": "5282aab193dbfbdb4bd8520be74e8b271e1cd94e18f923390450acab11ed37db"
+        }
+      ],
+      "faceDesign": "long narrow adult face with high forehead and broad angular chin, thin high nose, wide-set small upturned eyes, fine long brows, a broad low mouth with thin lips and a subtle chin cleft",
+      "hairDesign": "very short straight black pixie cut swept forward, no ponytail or bun",
+      "bodyDesign": "tall very slim adult build",
+      "artRevision": 4
     },
     {
       "key": "customer_person_19",
@@ -2948,15 +3247,28 @@
       "sex": "m",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_19.png",
+      "asset": "assets/portraits/source/customer_person_19-v4.png",
       "visualAge": 36,
-      "appearance": "rectangular face, pronounced chin, thick eyebrows, black hair with shaved sides and wavy top",
-      "outfit": "olive work jacket over cream henley shirt, brown trousers",
-      "prop": "holding a plain canvas tool roll closed",
+      "appearance": "short triangular adult face with very wide temples and small flattened chin, wide flattened nose, small deep-set widely spaced eyes, thick level eyebrows, long thin mouth with a diagonal smile, tan skin; dark hair completely shaved at sides with a short narrow crest, faint moustache",
+      "outfit": "faded olive work vest over off-white crewneck, brown cargo trousers",
+      "prop": "holding an entirely blank smartphone faced inward and a plain key ring",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "416edbb831a4fa6626e227e69adee864084376ceb8cfb9e179d4e8a67dd8b1aa"
+      "sha256": "dcd03058da4c8e740ee6b893795068970273717ff431022445df3de0d526e72e",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_19.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_19.png",
+          "sha256": "416edbb831a4fa6626e227e69adee864084376ceb8cfb9e179d4e8a67dd8b1aa"
+        }
+      ],
+      "faceDesign": "short triangular adult face with very wide temples and small flattened chin, wide flattened nose, small deep-set widely spaced eyes, thick level eyebrows, long thin mouth with a diagonal smile, tan skin",
+      "hairDesign": "dark hair completely shaved at sides with a short narrow crest, faint moustache",
+      "bodyDesign": "small wiry adult build, lean forearms",
+      "artRevision": 4
     },
     {
       "key": "customer_person_20",
@@ -2972,15 +3284,28 @@
       "sex": "f",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_20.png",
+      "asset": "assets/portraits/source/customer_person_20-v4.png",
       "visualAge": 37,
-      "appearance": "broad oval face, confident narrow eyes, black hair in a low loose braid, sturdy build",
-      "outfit": "warm mustard blouse, dark brown sleeveless vest, charcoal trousers",
-      "prop": "hands gently clasping a cloth market bag",
+      "appearance": "broad asymmetric diamond face, high strong cheekbones and short square jaw, broad upturned nose, small almond eyes with heavy upper lids, thick short arched brows, full lower lip, freckles over cheeks; thick dark hair in one long heavy braid over shoulder, no bangs",
+      "outfit": "mustard long-sleeve cotton shirt, charcoal skirt, plain brown apron tied at waist",
+      "prop": "holding a blank kraft-paper account folder",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "c3c0f2497a3a4e9aa15799443c3bf59b0dabfd934749bdde2c383d374443c31f"
+      "sha256": "447b32eec7c23e1e13be893c5e42b32ef22e2ecac74003ee29a573754f530bd9",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_20.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_20.png",
+          "sha256": "c3c0f2497a3a4e9aa15799443c3bf59b0dabfd934749bdde2c383d374443c31f"
+        }
+      ],
+      "faceDesign": "broad asymmetric diamond face, high strong cheekbones and short square jaw, broad upturned nose, small almond eyes with heavy upper lids, thick short arched brows, full lower lip, freckles over cheeks",
+      "hairDesign": "thick dark hair in one long heavy braid over shoulder, no bangs",
+      "bodyDesign": "medium athletic adult body with strong arms",
+      "artRevision": 4
     },
     {
       "key": "customer_person_21",
@@ -2996,15 +3321,28 @@
       "sex": "m",
       "note": "企业主客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_21.png",
+      "asset": "assets/portraits/source/customer_person_21-v4.png",
       "visualAge": 38,
-      "appearance": "angular face, cropped black hair with greying temples, deep-set eyes, broad shoulders",
-      "outfit": "muted midnight blue suit with open-collar light tan shirt",
-      "prop": "holding a thin blank portfolio under arm",
+      "appearance": "large oblong adult face, long squared chin, sunken cheeks, very long angular nose, narrow tired eyes with heavy bags, short straight brows and thin wide mouth; very short black hair with receding temples, clean shaven",
+      "outfit": "deep navy relaxed suit, pale beige shirt, no tie",
+      "prop": "standing slightly turned with a closed brown unmarked folio",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "8fd1be30065ae0de05d1779638ebd7c31b6f56f26524b5b065bc9f3e4c693c90"
+      "sha256": "8d1017ce4f13339bdf7517f04312a6e4656b8002fd866517d334b5bcfa808867",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_21.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_21.png",
+          "sha256": "8fd1be30065ae0de05d1779638ebd7c31b6f56f26524b5b065bc9f3e4c693c90"
+        }
+      ],
+      "faceDesign": "large oblong adult face, long squared chin, sunken cheeks, very long angular nose, narrow tired eyes with heavy bags, short straight brows and thin wide mouth",
+      "hairDesign": "very short black hair with receding temples, clean shaven",
+      "bodyDesign": "very tall thin body with angular shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_22",
@@ -3020,15 +3358,28 @@
       "sex": "f",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_22.png",
+      "asset": "assets/portraits/source/customer_person_22-v4.png",
       "visualAge": 70,
-      "appearance": "older heart-shaped face, visible wrinkles, silver chin-length bob, narrow oval spectacles",
-      "outfit": "dusty pink Chinese-collar jacket, navy trousers, small jade brooch",
-      "prop": "holding a closed unmarked passbook sleeve",
+      "appearance": "long rectangular elderly face, prominent broad chin, hollow temples and lower cheeks, long crooked nose, deep-set small uneven eyes, thick straight grey brows, thin compressed lips, deeply lined forehead; very short white practical crop with exposed ears, no spectacles",
+      "outfit": "dusty rose traditional stand-collar jacket, dark grey trousers",
+      "prop": "holding a folded plain handkerchief and small unmarked purse",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "c22a6263ac6310d5809640a2c009793da23e36e567b1a954d94331671b7d995f"
+      "sha256": "056d695e65764ba4ab449c06c232e089529a116efee529240b7b6cf7c32d6744",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_22.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_22.png",
+          "sha256": "c22a6263ac6310d5809640a2c009793da23e36e567b1a954d94331671b7d995f"
+        }
+      ],
+      "faceDesign": "long rectangular elderly face, prominent broad chin, hollow temples and lower cheeks, long crooked nose, deep-set small uneven eyes, thick straight grey brows, thin compressed lips, deeply lined forehead",
+      "hairDesign": "very short white practical crop with exposed ears, no spectacles",
+      "bodyDesign": "tall lean elderly body with straight proud posture",
+      "artRevision": 4
     },
     {
       "key": "customer_person_23",
@@ -3044,15 +3395,28 @@
       "sex": "m",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_23.png",
+      "asset": "assets/portraits/source/customer_person_23-v4.png",
       "visualAge": 33,
-      "appearance": "narrow face, high forehead, neat side-parted dark hair, sharp straight brows, lean build",
-      "outfit": "dark teal V-neck sweater over ivory shirt, stone trousers",
-      "prop": "holding a closed grey notebook with both hands",
+      "appearance": "a distinctly elongated rectangular adult face with completely straight vertical cheeks and a very broad flat jaw, prominent chin cleft, large ears, long broad straight nose, tiny horizontal widely spaced hooded eyes, heavy short straight eyebrows, wide thin asymmetric smiling lips and a deep left cheek dimple, warm tan skin; no glasses; completely shaved clean bald scalp, no hair and no facial hair",
+      "outfit": "dark teal crewneck sweater over white shirt collar, khaki chinos",
+      "prop": "holding a plain dark commuter backpack by one strap",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "177354311342d637dae701f61e0dcceb62fc5b6c7e60913224d91840bed18522"
+      "sha256": "ce7132c7a65f209350b2d38be67dd6c05eb297f0aa8696d40274b4ade34c0c9b",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_23.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_23.png",
+          "sha256": "177354311342d637dae701f61e0dcceb62fc5b6c7e60913224d91840bed18522"
+        }
+      ],
+      "faceDesign": "a distinctly elongated rectangular adult face with completely straight vertical cheeks and a very broad flat jaw, prominent chin cleft, large ears, long broad straight nose, tiny horizontal widely spaced hooded eyes, heavy short straight eyebrows, wide thin asymmetric smiling lips and a deep left cheek dimple, warm tan skin; no glasses",
+      "hairDesign": "completely shaved clean bald scalp, no hair and no facial hair",
+      "bodyDesign": "short muscular adult body, broad shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_24",
@@ -3068,15 +3432,28 @@
       "sex": "f",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_24.png",
+      "asset": "assets/portraits/source/customer_person_24-v4.png",
       "visualAge": 41,
-      "appearance": "square face, rounded nose, short straight black bob with blunt bangs, friendly small eyes",
-      "outfit": "dusty blue denim jacket, cream apron tied at waist, dark trousers",
-      "prop": "one hand on a blank tan delivery pouch",
+      "appearance": "long thin trapezoid face, narrow forehead and broad sharp jaw corners, long flat chin, long blunt nose, small close-set slanted eyes, high short eyebrows and a wry thin-lipped smile; chin-length straight black bob with strong side part, one temple grey streak",
+      "outfit": "denim blue work shirt under cream canvas waistcoat, brown trousers",
+      "prop": "holding a closed unmarked stock book at waist",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "7ca0106c4409b76a36b4bbd182be7d74679abf1adaa6981361f9eb01d80a5018"
+      "sha256": "f269cd41750d03accb7643a21a78cd499a348517ec0f25379bfdcd5a132e6421",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_24.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_24.png",
+          "sha256": "7ca0106c4409b76a36b4bbd182be7d74679abf1adaa6981361f9eb01d80a5018"
+        }
+      ],
+      "faceDesign": "long thin trapezoid face, narrow forehead and broad sharp jaw corners, long flat chin, long blunt nose, small close-set slanted eyes, high short eyebrows and a wry thin-lipped smile",
+      "hairDesign": "chin-length straight black bob with strong side part, one temple grey streak",
+      "bodyDesign": "tall wiry middle-aged body, straight shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_25",
@@ -3092,15 +3469,28 @@
       "sex": "m",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_25.png",
+      "asset": "assets/portraits/source/customer_person_25-v4.png",
       "visualAge": 61,
-      "appearance": "older round face, deep eye wrinkles, balding crown with grey side hair, relaxed smile",
-      "outfit": "burgundy knitted vest over pale beige long-sleeve shirt, navy trousers",
-      "prop": "holding a wooden-handled folded umbrella",
+      "appearance": "very round elderly face with low cheek pads and a pronounced double chin, short broad bulbous nose, tiny smiling nearly closed eyes, sparse long grey eyebrow hairs, wide downturned mouth and deep smile lines; mostly bald with sparse grey hair at sides, no beard or spectacles",
+      "outfit": "burgundy fine-knit sleeveless pullover over beige checked shirt, dark trousers",
+      "prop": "both hands around a plain ceramic tea mug",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "65cd3301114833c7e0760d46ab2ffae955bf4cd73b65d27b08f8425878a27ddd"
+      "sha256": "3ac6433c560801f139680405c7e549d1e4acf58982541bf792e5effc7c8d3082",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_25.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_25.png",
+          "sha256": "65cd3301114833c7e0760d46ab2ffae955bf4cd73b65d27b08f8425878a27ddd"
+        }
+      ],
+      "faceDesign": "very round elderly face with low cheek pads and a pronounced double chin, short broad bulbous nose, tiny smiling nearly closed eyes, sparse long grey eyebrow hairs, wide downturned mouth and deep smile lines",
+      "hairDesign": "mostly bald with sparse grey hair at sides, no beard or spectacles",
+      "bodyDesign": "short heavyset elderly body, large belly",
+      "artRevision": 4
     },
     {
       "key": "customer_person_26",
@@ -3116,15 +3506,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_26.png",
+      "asset": "assets/portraits/source/customer_person_26-v4.png",
       "visualAge": 36,
-      "appearance": "heart-shaped face, small beauty mark below left eye, long dark hair in low ponytail",
-      "outfit": "terracotta fine-knit cardigan, ivory blouse, olive skirt",
-      "prop": "holding a closed sage-green notebook",
+      "appearance": "short broad adult heart-shaped face with high cheekbones, short blunt chin, long straight thin nose, small horizontal widely spaced eyes with heavy lids, very thin arched eyebrows, broad lips and a prominent right dimple; thick black hair pulled back into a sleek low knot, no fringe",
+      "outfit": "rust-red fitted knit cardigan over ivory shirt, dark trousers",
+      "prop": "holding a closed unmarked white document case at hip",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "ab8f92a0cfe84300308263d37c459a9a19b20157a7b6ea1c27d4fa55b1e06966"
+      "sha256": "73f7a221ea4bb15ba2d503c661596356e4954bcc1337cddb37d6b05ef2889076",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_26.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_26.png",
+          "sha256": "ab8f92a0cfe84300308263d37c459a9a19b20157a7b6ea1c27d4fa55b1e06966"
+        }
+      ],
+      "faceDesign": "short broad adult heart-shaped face with high cheekbones, short blunt chin, long straight thin nose, small horizontal widely spaced eyes with heavy lids, very thin arched eyebrows, broad lips and a prominent right dimple",
+      "hairDesign": "thick black hair pulled back into a sleek low knot, no fringe",
+      "bodyDesign": "medium full-figured adult body, broad hips",
+      "artRevision": 4
     },
     {
       "key": "customer_person_27",
@@ -3140,15 +3543,28 @@
       "sex": "m",
       "note": "企业主客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_27.png",
+      "asset": "assets/portraits/source/customer_person_27-v4.png",
       "visualAge": 44,
-      "appearance": "broad rectangular face, salt-and-pepper buzz cut, thick brows, medium tan skin, sturdy build",
-      "outfit": "charcoal casual jacket over muted gold polo shirt, dark trousers",
-      "prop": "hands resting lightly around a closed leather folder",
+      "appearance": "a very broad round middle-aged face with a short tapered blunt chin, pronounced double chin and full low cheeks, very large protruding bulbous nose, tiny close-set drooping eyes, short sparse curved eyebrows, a wide crooked welcoming smile and deep dimples, a dense short curly salt-and-pepper beard framing jaw and upper lip; receding temples and thick wavy dark hair swept back, grey curly sideburns",
+      "outfit": "dark charcoal work jacket over tan button shirt, plain black trousers",
+      "prop": "arms relaxed, one hand holding a blank leather planner",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "60f9dc723169b22a801dece882eab9fc6f370d7098078947d9c95b4fb795aa98"
+      "sha256": "99e302a9b464a219b9b489a8e6f045559ac2f1783260d38af293e509a3cc417f",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_27.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_27.png",
+          "sha256": "60f9dc723169b22a801dece882eab9fc6f370d7098078947d9c95b4fb795aa98"
+        }
+      ],
+      "faceDesign": "a very broad round middle-aged face with a short tapered blunt chin, pronounced double chin and full low cheeks, very large protruding bulbous nose, tiny close-set drooping eyes, short sparse curved eyebrows, a wide crooked welcoming smile and deep dimples, a dense short curly salt-and-pepper beard framing jaw and upper lip",
+      "hairDesign": "receding temples and thick wavy dark hair swept back, grey curly sideburns",
+      "bodyDesign": "short heavyset middle-aged body, thick forearms and a round belly",
+      "artRevision": 4
     },
     {
       "key": "customer_person_28",
@@ -3164,15 +3580,28 @@
       "sex": "f",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_28.png",
+      "asset": "assets/portraits/source/customer_person_28-v4.png",
       "visualAge": 64,
-      "appearance": "older oval face, deep smile lines, silver hair in tidy bun with single loose curl",
-      "outfit": "dark teal quilted vest, beige cable-knit sweater, grey trousers",
-      "prop": "holding a plain soft cloth handbag",
+      "appearance": "short wide elderly oval face with soft cheeks and a tiny rounded chin, large broad hooked nose, small wide-set downturned eyes, thin crescent eyebrows, deep smile creases and pursed thin lips; dark-grey hair rolled into two low side coils behind ears, no spectacles",
+      "outfit": "deep green soft jacket over cream blouse, plain dark skirt",
+      "prop": "holding a small woven shopping basket with folded cloth",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "0e79ab5940f3f36f93d7c2a94d15e655eca79453bf41d643f24c0d1516e1704e"
+      "sha256": "21b65fb77b69ecfda6abb7159f30f0b9f4c5bd004023caed5e0e97a826dbf418",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_28.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_28.png",
+          "sha256": "0e79ab5940f3f36f93d7c2a94d15e655eca79453bf41d643f24c0d1516e1704e"
+        }
+      ],
+      "faceDesign": "short wide elderly oval face with soft cheeks and a tiny rounded chin, large broad hooked nose, small wide-set downturned eyes, thin crescent eyebrows, deep smile creases and pursed thin lips",
+      "hairDesign": "dark-grey hair rolled into two low side coils behind ears, no spectacles",
+      "bodyDesign": "petite older body, gently bowed shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_29",
@@ -3188,15 +3617,28 @@
       "sex": "m",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_29.png",
+      "asset": "assets/portraits/source/customer_person_29-v4.png",
       "visualAge": 65,
-      "appearance": "older long face, arched grey brows, brushed-back white hair, thin grey moustache",
-      "outfit": "warm brown cardigan, ivory collared shirt, slate trousers",
-      "prop": "holding a closed fabric spectacle case",
+      "appearance": "long weathered rectangular face, protruding cheekbones and small flat chin, thin long nose with bent tip, deep-set narrow eyes, bushy drooping grey brows, thick white moustache and thin mouth; silver hair parted centrally with a high bare forehead",
+      "outfit": "brown corduroy jacket over plain ivory shirt, dark trousers",
+      "prop": "holding a closed plain brown envelope under one arm",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "df786ae05d9978d65236c3ee09d468b1a99f234170e5d9c5e15411f60a8427fd"
+      "sha256": "53958fe7b8b1916a26671d4dabc5c05e2c9696f1c20ad335b240e70b3a4dc39c",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_29.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_29.png",
+          "sha256": "df786ae05d9978d65236c3ee09d468b1a99f234170e5d9c5e15411f60a8427fd"
+        }
+      ],
+      "faceDesign": "long weathered rectangular face, protruding cheekbones and small flat chin, thin long nose with bent tip, deep-set narrow eyes, bushy drooping grey brows, thick white moustache and thin mouth",
+      "hairDesign": "silver hair parted centrally with a high bare forehead",
+      "bodyDesign": "very tall bony elderly body with sloping shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_30",
@@ -3212,15 +3654,28 @@
       "sex": "f",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_30.png",
+      "asset": "assets/portraits/source/customer_person_30-v4.png",
       "visualAge": 66,
-      "appearance": "older square face, salt-and-pepper cropped curls, rounded cheeks, thin gold oval glasses",
-      "outfit": "muted brick-red collarless jacket over cream blouse, charcoal trousers",
-      "prop": "holding an unmarked red zip wallet",
+      "appearance": "large broad hexagonal elderly face with strong square jaw, low full cheeks and large flat chin, short wide nose, tiny close-set upturned eyes, thick straight grey brows and broad laughing mouth; short naturally curly grey hair combed away from forehead, slim rectangular dark-green glasses",
+      "outfit": "dark red open cardigan over simple ivory button blouse, charcoal trousers",
+      "prop": "holding an unmarked cloth purse in both hands",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "db42a883a25f87a4f107bff0d526ee1be60f07806d2376ae6b8817da3f898e1d"
+      "sha256": "48c9170b2cb4d3146abd4c56c6534a5201d87c740150d9c3bd37db6af54d7814",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_30.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_30.png",
+          "sha256": "db42a883a25f87a4f107bff0d526ee1be60f07806d2376ae6b8817da3f898e1d"
+        }
+      ],
+      "faceDesign": "large broad hexagonal elderly face with strong square jaw, low full cheeks and large flat chin, short wide nose, tiny close-set upturned eyes, thick straight grey brows and broad laughing mouth",
+      "hairDesign": "short naturally curly grey hair combed away from forehead, slim rectangular dark-green glasses",
+      "bodyDesign": "tall stout elderly body, thick wrists",
+      "artRevision": 4
     },
     {
       "key": "customer_person_31",
@@ -3236,15 +3691,28 @@
       "sex": "m",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_31.png",
+      "asset": "assets/portraits/source/customer_person_31-v4.png",
       "visualAge": 41,
-      "appearance": "small angular face, narrow bright eyes, thick black curls, slim short build",
-      "outfit": "pale sage short-sleeved shirt, charcoal vest, navy trousers",
-      "prop": "holding a closed slim dark laptop",
+      "appearance": "long narrow adult face with a large rounded chin, hollow cheeks, long convex nose, small round deep-set eyes, slanted thin brows, large ears and wide thin lips; dense black hair with high frizzy curls and a distinct receding V hairline",
+      "outfit": "muted olive casual jacket, pale grey crewneck, dark chinos",
+      "prop": "holding a plain dark messenger bag by its strap",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "0754736bed52be02aa2c8f77c615c7638da305802a3719d965363e1a99f4fb48"
+      "sha256": "0fd6eed164bb3d341ab0079d618ff16502ff994093474f1a011039c57516572b",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_31.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_31.png",
+          "sha256": "0754736bed52be02aa2c8f77c615c7638da305802a3719d965363e1a99f4fb48"
+        }
+      ],
+      "faceDesign": "long narrow adult face with a large rounded chin, hollow cheeks, long convex nose, small round deep-set eyes, slanted thin brows, large ears and wide thin lips",
+      "hairDesign": "dense black hair with high frizzy curls and a distinct receding V hairline",
+      "bodyDesign": "tall skinny middle-aged body, narrow shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_32",
@@ -3260,15 +3728,28 @@
       "sex": "f",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_32.png",
+      "asset": "assets/portraits/source/customer_person_32-v4.png",
       "visualAge": 42,
-      "appearance": "oval face, strong straight brows, shoulder-length dark hair with side fringe, composed gaze",
-      "outfit": "muted petrol-blue blouse and cream cardigan, charcoal skirt",
-      "prop": "holding a small dark shoulder bag strap",
+      "appearance": "broad pear-shaped adult face, narrow temples and broad square lower jaw, low cheekbones, short upturned nose, small downturned eyes behind dark cat-eye glasses, thick angled brows and a thin wide mouth; short straight dark hair with a precisely blunt fringe and exposed neck",
+      "outfit": "slate teal office blouse, charcoal sleeveless tunic, black trousers",
+      "prop": "holding a small closed blank work organizer",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "117e26c2b426fa1b67e6b10584015dd8a51162cc8f72c69789440580072b7a73"
+      "sha256": "05bbfa39cd04480d79f17dc5f50817b0993c546718166789ddba2ffc9d968d11",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_32.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_32.png",
+          "sha256": "117e26c2b426fa1b67e6b10584015dd8a51162cc8f72c69789440580072b7a73"
+        }
+      ],
+      "faceDesign": "broad pear-shaped adult face, narrow temples and broad square lower jaw, low cheekbones, short upturned nose, small downturned eyes behind dark cat-eye glasses, thick angled brows and a thin wide mouth",
+      "hairDesign": "short straight dark hair with a precisely blunt fringe and exposed neck",
+      "bodyDesign": "short solid middle-aged body",
+      "artRevision": 4
     },
     {
       "key": "customer_person_33",
@@ -3284,15 +3765,28 @@
       "sex": "m",
       "note": "上班族客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_33.png",
+      "asset": "assets/portraits/source/customer_person_33-v4.png",
       "visualAge": 43,
-      "appearance": "broad square face, short black spiky crop, faint stubble, athletic shoulders",
-      "outfit": "navy polo shirt with grey casual jacket, stone chinos",
-      "prop": "holding a folded plain cycling jacket",
+      "appearance": "short broad octagonal adult face with very wide jaw and flat chin, wide flat nose, small deep-set round eyes, bushy nearly connected eyebrows, thin compressed mouth, sunken eye bags; short coarse black hair in a flat straight crop, patchy short stubble beard",
+      "outfit": "grey-green cotton shirt, navy zip work vest, plain trousers",
+      "prop": "one hand holding an unmarked metal lunchbox at side",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "68982c2201524efad15bd0ef9a47499a0fe328916283f6a970edebbc2a36da46"
+      "sha256": "cb62ae75f24289214b8398cd906a23bcdfb486dc3fdac9d8200bedc5f5db740e",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_33.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_33.png",
+          "sha256": "68982c2201524efad15bd0ef9a47499a0fe328916283f6a970edebbc2a36da46"
+        }
+      ],
+      "faceDesign": "short broad octagonal adult face with very wide jaw and flat chin, wide flat nose, small deep-set round eyes, bushy nearly connected eyebrows, thin compressed mouth, sunken eye bags",
+      "hairDesign": "short coarse black hair in a flat straight crop, patchy short stubble beard",
+      "bodyDesign": "medium compact strong adult body",
+      "artRevision": 4
     },
     {
       "key": "customer_person_34",
@@ -3308,15 +3802,28 @@
       "sex": "f",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_34.png",
+      "asset": "assets/portraits/source/customer_person_34-v4.png",
       "visualAge": 51,
-      "appearance": "round face, short auburn-black curled bob, broad eyebrows, friendly open smile, solid build",
-      "outfit": "warm olive apron over cream roll-sleeve shirt, dark trousers",
-      "prop": "holding a plain closed brown order ledger",
+      "appearance": "long asymmetric middle-aged face, high angular cheekbones, broad flat chin, strong hooked nose, small almond eyes tilted downward, thick curved brows, broad full lips and deep laugh creases; dark auburn hair in very short brushed-back waves with grey sideburns",
+      "outfit": "ivory practical blouse with dark moss waist apron, dark long skirt",
+      "prop": "holding a closed plain customer order notebook with a pencil",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "195671d842ddbdb2a9d7371cdc9134741780f3d16fc63a7a82207e0ced8ca205"
+      "sha256": "2131d4cc67405311e37151578a46e6ad18cf077a953cea55cdbb963b6203d27f",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_34.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_34.png",
+          "sha256": "195671d842ddbdb2a9d7371cdc9134741780f3d16fc63a7a82207e0ced8ca205"
+        }
+      ],
+      "faceDesign": "long asymmetric middle-aged face, high angular cheekbones, broad flat chin, strong hooked nose, small almond eyes tilted downward, thick curved brows, broad full lips and deep laugh creases",
+      "hairDesign": "dark auburn hair in very short brushed-back waves with grey sideburns",
+      "bodyDesign": "tall strong middle-aged body, broad shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_35",
@@ -3332,15 +3839,28 @@
       "sex": "m",
       "note": "个体经营客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_35.png",
+      "asset": "assets/portraits/source/customer_person_35-v4.png",
       "visualAge": 52,
-      "appearance": "long face, prominent cheekbones, black side-part hair with white temple streak, wireframe glasses",
-      "outfit": "slate-grey collarless jacket, tan knit shirt, dark trousers",
-      "prop": "holding a plain cloth messenger bag",
+      "appearance": "large long pear-shaped face with narrow upper skull and heavy jowls, large bulbous nose, tiny horizontal eyes behind very small oval gold glasses, thick dark brows, wide thin mouth and deep neck folds; slicked-back thinning dark hair with grey sides and a high forehead",
+      "outfit": "muted sand linen jacket, plain navy collarless shirt, dark trousers",
+      "prop": "holding an entirely blank closed ledger low in both hands",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "afafcde6036e16a009f07d27cf7ec2f3e95f5b535cf63884c45b1b6b82ce7d2c"
+      "sha256": "1b7c0d0e12606cf6d9df2aca0b257e9eb4fd6064620e93b23855a349a0ccbab9",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_35.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_35.png",
+          "sha256": "afafcde6036e16a009f07d27cf7ec2f3e95f5b535cf63884c45b1b6b82ce7d2c"
+        }
+      ],
+      "faceDesign": "large long pear-shaped face with narrow upper skull and heavy jowls, large bulbous nose, tiny horizontal eyes behind very small oval gold glasses, thick dark brows, wide thin mouth and deep neck folds",
+      "hairDesign": "slicked-back thinning dark hair with grey sides and a high forehead",
+      "bodyDesign": "short heavyset middle-aged body, large belly",
+      "artRevision": 4
     },
     {
       "key": "customer_person_36",
@@ -3356,15 +3876,28 @@
       "sex": "f",
       "note": "企业主客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_36.png",
+      "asset": "assets/portraits/source/customer_person_36-v4.png",
       "visualAge": 53,
-      "appearance": "heart-shaped face, sharply arched brows, black hair in high ponytail, confident calm eyes",
-      "outfit": "muted aubergine trouser suit, ivory blouse, gold stud earrings",
-      "prop": "holding a compact cream handbag",
+      "appearance": "broad angular rectangular mature face with a strong square jaw, flat chin, high cheekbones, long broad straight nose, small narrow widely spaced eyes, thick straight brows, thin top lip and deep smile lines; silver-streaked black hair in a sculpted short swept-back crop, ears bare",
+      "outfit": "deep plum tailored jacket over ivory shell blouse, charcoal trousers, simple square silver earrings",
+      "prop": "holding a closed plain black business folder confidently at side",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "439f12cd2f81df3ea74642dc89ae490d9e046578fd9c2dae97f55603666e9eff"
+      "sha256": "aa88a062e13d1c6356d1fec354c6400930c205780c8f5043eea9a65e5887f21d",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_36.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_36.png",
+          "sha256": "439f12cd2f81df3ea74642dc89ae490d9e046578fd9c2dae97f55603666e9eff"
+        }
+      ],
+      "faceDesign": "broad angular rectangular mature face with a strong square jaw, flat chin, high cheekbones, long broad straight nose, small narrow widely spaced eyes, thick straight brows, thin top lip and deep smile lines",
+      "hairDesign": "silver-streaked black hair in a sculpted short swept-back crop, ears bare",
+      "bodyDesign": "tall imposing full-figured mature body, strong shoulders",
+      "artRevision": 4
     },
     {
       "key": "customer_person_37",
@@ -3380,15 +3913,28 @@
       "sex": "m",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_37.png",
+      "asset": "assets/portraits/source/customer_person_37-v4.png",
       "visualAge": 61,
-      "appearance": "older lean face, short grey swept-up hair, high cheekbones, slightly prominent ears",
-      "outfit": "warm ochre windbreaker, pale blue polo, navy trousers",
-      "prop": "holding a plain closed folding fan at waist",
+      "appearance": "long diamond-shaped elderly face with very high cheekbones and a narrow rounded chin, long pointed nose, small hooded widely spaced eyes, high thin brows, thin lips and a long white goatee; silver hair tied in a small low ponytail, high receding forehead",
+      "outfit": "muted ochre soft stand-collar shirt under simple brown vest, dark trousers",
+      "prop": "holding an unmarked folding fabric fan closed at waist",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "c6067d10e39cd01ea825587cbb5c96e472501baac4793f4982c91ff5cd91a52d"
+      "sha256": "b976ea6dad9ab9965f6f7949442efdddf3ff4fcc15d3b65fc018df37708761d1",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_37.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_37.png",
+          "sha256": "c6067d10e39cd01ea825587cbb5c96e472501baac4793f4982c91ff5cd91a52d"
+        }
+      ],
+      "faceDesign": "long diamond-shaped elderly face with very high cheekbones and a narrow rounded chin, long pointed nose, small hooded widely spaced eyes, high thin brows, thin lips and a long white goatee",
+      "hairDesign": "silver hair tied in a small low ponytail, high receding forehead",
+      "bodyDesign": "medium height wiry elderly body with long slender hands",
+      "artRevision": 4
     },
     {
       "key": "customer_person_38",
@@ -3404,15 +3950,28 @@
       "sex": "f",
       "note": "退休客户，专属人物形象。",
       "status": "ready",
-      "asset": "assets/portraits/source/customer_person_38.png",
+      "asset": "assets/portraits/source/customer_person_38-v4.png",
       "visualAge": 65,
-      "appearance": "older softly squared face, silver short waved hair, deep-set lively eyes, light smile lines",
-      "outfit": "slate blue knitted cardigan, cream blouse, grey trousers",
-      "prop": "holding a closed unmarked embroidered cloth purse",
+      "appearance": "broad oval elderly face with uneven sagging cheeks and a flat broad chin, long wide nose, tiny deep-set eyes under heavy lids, sparse straight grey brows, broad lower lip and gentle crooked smile; short silver straight bob with a very short fringe, no glasses",
+      "outfit": "dusty lavender knitted cardigan over pale grey blouse, plain navy skirt",
+      "prop": "holding a plain folded cloth grocery bag with both hands",
       "width": 1086,
       "height": 1448,
       "transparent": true,
-      "sha256": "a09e1c900cdbe74e224d99db80a03ddef833836dfc5495e3730a82f1ddd805f0"
+      "sha256": "5ac9b5ce6799a20d0c835c5cd3d8de09d6378748e6951387797ebc5854ab0fa2",
+      "previousAssets": [
+        "assets/portraits/source/customer_person_38.png"
+      ],
+      "previousPortraits": [
+        {
+          "asset": "assets/portraits/source/customer_person_38.png",
+          "sha256": "a09e1c900cdbe74e224d99db80a03ddef833836dfc5495e3730a82f1ddd805f0"
+        }
+      ],
+      "faceDesign": "broad oval elderly face with uneven sagging cheeks and a flat broad chin, long wide nose, tiny deep-set eyes under heavy lids, sparse straight grey brows, broad lower lip and gentle crooked smile",
+      "hairDesign": "short silver straight bob with a very short fringe, no glasses",
+      "bodyDesign": "medium stocky elderly body, softly rounded shoulders",
+      "artRevision": 4
     }
   ],
   "randomCustomerNames": [
@@ -3725,5 +4284,124 @@
       "rookie_0",
       "jianghong"
     ]
+  },
+  "customerFaceAudit": {
+    "audited": 43,
+    "redesigned": [
+      "zhangxf",
+      "ranguoq",
+      "chendg",
+      "weilc",
+      "fanyh",
+      "customer_person_01",
+      "customer_person_02",
+      "customer_person_03",
+      "customer_person_04",
+      "customer_person_05",
+      "customer_person_06",
+      "customer_person_07",
+      "customer_person_08",
+      "customer_person_09",
+      "customer_person_10",
+      "customer_person_11",
+      "customer_person_12",
+      "customer_person_13",
+      "customer_person_14",
+      "customer_person_15",
+      "customer_person_16",
+      "customer_person_17",
+      "customer_person_18",
+      "customer_person_19",
+      "customer_person_20",
+      "customer_person_21",
+      "customer_person_22",
+      "customer_person_23",
+      "customer_person_24",
+      "customer_person_25",
+      "customer_person_26",
+      "customer_person_27",
+      "customer_person_28",
+      "customer_person_29",
+      "customer_person_30",
+      "customer_person_31",
+      "customer_person_32",
+      "customer_person_33",
+      "customer_person_34",
+      "customer_person_35",
+      "customer_person_36",
+      "customer_person_37",
+      "customer_person_38"
+    ],
+    "revision": 4,
+    "retainedSourceHashes": {
+      "xiaoman": "8f1a1faa681e17ad8e3483fc6af2e2cafa65c4d85e61e9a76a1295fa337f9718",
+      "hejing": "8c65f302c3668ff85aa8886f87565726f93231e5d6714383fbdfe495891f6ed5",
+      "tangliang": "b6d217b15612062630a2e6771d83badbc4275609fa3c8950b71ec6f04190d940",
+      "suxw": "9902dccf4652392aacdc6810c1a67804a37f78c49352f063a357660e76be645b",
+      "luojian": "f9eceeea02cea28e20417b986aba5b94999786fb05e02eafd041e8ad77d48334",
+      "huang": "fd7a40c77987d98321a88dd3bfab203db85f42253db615be95a485c39794ae29",
+      "lu": "59910b0234b9cb2e1a46c41c0658ff053896c1b23a342ec129c24b8b3fbab493",
+      "gu": "fe773e727b8a4238ac379e2ac59c820746f48ce659722d36a2850c918f9723ff",
+      "dengyu": "bc3bc2eb089eab449f1394a92d364da1617e7861b8e069c56b81a941667cecf3",
+      "xulp": "2ea09f0a1b357adef8c59f743070615bdb15af34fff16cf4a9932df6068580e7",
+      "lizheng": "163118fe8076a328b94afe9b8bf4428ae4213ce529b24c101cd3538140eea833",
+      "zhouqm": "a890f7806f0f5d40a3ca57a60058fac37e3a29a880edb95baeed4ff62a4ca853",
+      "maben": "0925d53372ffc0fa3ae22fac89335ca20d0fe7e5991544bbfd3e3f97596f8cb6",
+      "xiongw": "af3d160ad5d5c647e55cb82a9af728434598fb0f7e5647b4c488913b07463a96",
+      "chengxy": "20e69fb09e88c8c48f8da6ba30cb773678a58c262a9656e0c34e879bb934d65b",
+      "fugh": "9bb56c45894a3c8a09bbfa820b649d99ed836f92065c4b4c25f6ed73dbc5dd00",
+      "moujun": "b0da1e82ba3a839a34630d3ca91d89b9ec385bf6cc57f8cc6c64d3a91b70e43d",
+      "ranggm": "0628011d66cae2c0999dba91eccab232da721f1082c91ee90543d6fa0c29ccd0",
+      "xianghong": "8b482ad80e09b3b6efa1ca067466450c1ecb7790e096c4717e678163521a48ef",
+      "dengjf": "fe2969eb1c9bb598df98b260dce3bef6789442ee6d419fb723ad66df86fa4ea5",
+      "tanmin": "42c68298ceb8f146c94c927bf3ea4a6681e1d06fd6010f854fa3a5e6ee076e10",
+      "wangming": "f9b9a4229c2d6aecf25efe658bfa54c325c26327e8e7a9c974a4540aa7fde0d5",
+      "duanbin": "ea155ecb90e3481a434f6b49242871f16af5bbe643d8cec9001d0f2300512fc2",
+      "liujia": "3596879d23d8ec2fe700013ac71719c834c21aea27bb1c166cf7fcdf5c5f3e78",
+      "huangwei": "e573e1d9df586939059c3db685134ebb8e76c7b8e6c1e99cbf5137f693a6d924",
+      "duheng": "fe95a39483ce2c945024c3f018d0c7aefde5027b082f37875bc3c0f88b4ba6d7",
+      "shenlan": "19d79457f8cd88a9b04055965015b65b19b30bf28725550ad4d2b1622e02b0ba",
+      "jianggd": "d1a6f84dab7f049a14c4d8f98b28f5371d85718947fe29e975f227b475e91f5e",
+      "songwy": "1e0bfbde2d2b14a0c0f6bf4eec3900266443d6bf89fe67f3852e7bbcccdbdc98",
+      "jiangke": "ccaac19ef9a8988b210ed8fdbae6df825b998c504b47474de014921bd06b243f",
+      "handong": "4a535f05f15a3d72ae534a2f146ef2a0aa2e2e36822feb794e1d1da376577388",
+      "rival_haitangxi": "34358b470831e7afd25eaea918bbbec360083c8976a4d725d02350988ebd97e6",
+      "rival_tongyuan": "35c561d14385214473232c3dc03097fbb5d69e3ac490fbb9961613bd53375065",
+      "rival_dafo": "93fe16f89b8431d941e36f94508dfa6c0f22d80f9ffc6bcb2f02e8fa052dbe1e",
+      "rival_nanshan": "e74045322b49a1ed9ebb62e420517a4048456f7ee8869ef34e23176f12c6a4cf",
+      "rival_yuzhong": "75887c4e0c7a2799e6f1f701ebb5c02e7ff5e8bae556b96310262434346c3687",
+      "rival_jiulongpo": "6f8d388608dd3379873abde5acadecac64f55e46e4ce5aa68dd64d6364c82f77",
+      "rival_shapingba": "1cec9e3f77b3e29216f80b3c6df1e5eb49e64292d958e4e946386eb026b93f4a",
+      "rival_beibei": "80fb48e65bfc05abcd15d25d43d1022789337a7f67df4bcbf94b66ad268cb922",
+      "rival_dadukou": "9d502c757896fc3a2093183a66811a8e3671f2ac8806655098e789a1106a3553",
+      "rival_banan": "07906fb7c8e97484980634b645deae173c9d252946ab80d3089557d89929c991",
+      "rival_fuling": "ea398262f2dcf371a396961fc2a085da37a7c69e49a39e63f3e15738d6b219ce",
+      "rival_yongchuan": "5f298d54620da188df1f25ea43a34075d823c5c92b7b996c5fc448ab7b2fe41a",
+      "rival_hechuan": "227d3a98cdf623b888687e7ba251beb47244b4ba5bb1097cbb646e19ac69fb08",
+      "rival_jiangjin": "c66e78b6b754d095c054934b0145509b3be4166bef89882ebf0633d7e4f1526c",
+      "rival_qianjiang": "507aa4b0240e8eea5f54037445e07380b4fe0ede0b64579b355d54aa9a35913e",
+      "rival_changshou": "0f9c542ffacd66160aa7a5003df50f5f3b43285c654eba090163a80cf5d65440",
+      "rival_qijiang": "a30731dd1f4d67f0cb61989da4bd90be1f9fa999d3f461131a0fe62300ad68f4",
+      "rival_sc": "63be5ccaeb9b22e6fc64648c101f0a47bfdd0d9bb61cdaec38f0de113831c4b9",
+      "rival_hb": "c294572afa37bbc1e1fed88e6794daab73efed9cfa5ecd1e9f6b20b3e43171ea",
+      "rival_hn": "1685f655b906409d0f1c9ef8b9895cf08efa8294283f48653704c7111276ceed",
+      "rival_sx": "4520b2f3522d1aa10e1814d591348a917e8030698d36d626b266a0b1cee5538f",
+      "rival_gz": "621bfaecd76a8d3e9ae9054362e46c5d2e8648fe1b6300fa5d14e4ee308be7eb",
+      "rival_yn": "02bf7cacc1f9be67dee010fa560722c6404d19e934d64d20630d5c4d9566d47b",
+      "rival_gx": "979b7823a78a5c8ff51015a7940fba4e144fe16465864c568f230d405a80beef",
+      "shenlan2": "add91db97dbc2b216c88c3fd474b35b9a7504be82bf3202f00d069f12067e763",
+      "yubeihead": "e51ccbab0bc0df45d616bd0623b9de8cffb6df77708d267b70c09b5c5fa21aee",
+      "jianghong": "229f57a4b83b36d69a2c8e226ccf341939379b819f9467dd1ced374f662a3da2",
+      "chengli": "614854ba5304d5c43fdf8ca1de2ee75b5b965d31b41c045484b530839ffbe7aa",
+      "kong": "0aa50a9f26ae0165f560966764df6e88fd5b60b2879bea0a0c17014039cac528",
+      "jbnw": "cddaf875acb5149b59feca9c748e9871f0946f18e108d911a95cecb682b95a36",
+      "rookie_0": "5e3ec8b27f170cc8bef013296000300b87e449595b276c3f7e816d85c92f1c61",
+      "rookie_1": "944780936961a4b48d6d8711ed1260f2b5d93f19564fd1ddfc4f7b693eb28ffd",
+      "rookie_2": "51550de1de86c6d7e244a73e5f4db745b44f7d9ff46672e4bcb267e7db20a1cf",
+      "rookie_3": "3b4174124f5eaf9e5d2b63eeced8f97a5c6c8ba77edf3ffdd158a4aa91e55b5c",
+      "player_m": "4dbe4ba08ed1b9e8bc376d203758dbd40bca40232c21445ae389f3605092e7a7",
+      "player_f": "ed9cc7d358cbac29f63ebfe8bb962caf5d3c232d3abfca71f51c167c9109c0ec"
+    },
+    "reason": "Cross-group face review after employee redesign: replace repeated face geometry in customers and story NPCs."
   }
 }

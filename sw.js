@@ -1,5 +1,5 @@
 // 银行升职记:离线缓存。代码走网络优先,图片走缓存优先。
-const VER = "thsz-v18-distinct-leaders-20261022";
+const VER = "thsz-v19-distinct-customers-20261022";
 importScripts('./assets/portraits/precache.js');
 const SHELL = ["./", "./index.html", "./site.webmanifest", "./favicon.ico", "./icon/icon-192.png", "./icon/icon-512.png", "./icon/icon-64.png", "./icon/icon-180.png"];
 self.addEventListener("install", e => {

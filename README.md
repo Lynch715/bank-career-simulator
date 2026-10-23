@@ -17,15 +17,17 @@ HTML 主文件配人物立绘资源，离线可玩，自动存档。手机上可
 
 ## 人物立绘
 
-110 张透明立绘：70 张原有角色图、38 张客户专属图、2 张玩家形象。客户姓名池逐人绑定，单局 40 位客户均有独立立绘，取消按职业和性别共用模板。员工、人脉、客户、排名、负责人和明确主体的事件使用固定身份映射；开局和菜单可选择玩家形象。点击员工或人物簿里的图片可以查看大图。旧存档按原有姓名直接识别，无需重开。
+110 张透明立绘：70 名固定角色、38 名姓名池客户、2 张玩家形象。客户姓名池逐人绑定，单局 40 位客户均有独立立绘，取消按职业和性别共用模板。员工、人脉、客户、排名、负责人和明确主体的事件使用固定身份映射；开局和菜单可选择玩家形象。点击员工或人物簿里的图片可以查看大图。旧存档按原有姓名直接识别，无需重开。
 
 员工及各级负责人共 65 位，逐人核查身份和面部设计，其中 62 位使用第三版重制立绘。脸型、眼鼻比例、发际线、年龄、体态分别设计，不用人物参考图重复套脸；同一个人跨岗位仍保持同一身份。旧原图在本地保留，重制图以 `-v3.png` 区分。
 
+随后对 38 位姓名池客户及张秀芬、冉国强、陈德贵、魏临川、范以恒共 43 位 NPC 进行跨分组面部复查，使用第四版专属设计，分别确定颅面比例、眼鼻结构、年龄、发型和体态，消除仅换发型和服装的相似面孔。对应本地原图为 `-v4.png`，65 位银行人物和两位玩家形象保持已核验版本。
+
 - 原图：`assets/portraits/source/`；内置 image_gen 制作，PNG 原图保留在本地美术目录。仓库提供运行 WebP、清单和出图提示词。
 - 运行资源：`assets/portraits/web/`，完整立绘和头像缩略图各一份。
-- 名单和出图提示词：`assets/portraits/inventory.json`、`production-prompts.json`、`unique-customer-prompts-v2.json`、`leader-prompts-v3.json`、`style-prompts-v1.json`。8 张旧客户模板已退役，原始 PNG 保留本地。
+- 名单和出图提示词：`assets/portraits/inventory.json`、`production-prompts.json`、`unique-customer-prompts-v2.json`、`leader-prompts-v3.json`、`customer-prompts-v4.json`、`style-prompts-v1.json`。8 张旧客户模板已退役，原始 PNG 保留本地。
 - 本地画册：`portraits.html`，可搜索人物并查看大图。
 
-在保留 PNG 原图的本地美术目录中构建资源：`python3 _build/build_portraits.py`。然后执行 `bash _build/build.sh` 和 `cp index.html 银行升职记.html`。画册用 `python3 _build/portrait_overview.py` 重建。立绘回归检查：`node tests/14-portraits.js`。
+在保留 PNG 原图的本地美术目录中构建资源：`python3 _build/build_portraits.py`。然后执行 `bash _build/build.sh` 和 `cp index.html 银行升职记.html`。画册用 `python3 _build/portrait_overview.py` 重建。立绘回归检查：`node tests/14-portraits.js`、`node tests/15-leader-portraits.js`、`node tests/17-customer-faces.js`。
 
 复制或发布游戏时，请同时保留 `assets/portraits/web/` 与 `assets/portraits/precache.js`。首次联网访问并完成缓存后，所有角色图片可离线加载；存档仍使用原有键和版本。
