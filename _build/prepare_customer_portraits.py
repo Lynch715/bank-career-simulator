@@ -69,9 +69,10 @@ for c in targets:
   assert(ROOT/source).is_file(),source
   if c['asset']!=source:
    c.setdefault('previousAssets',[]).append(c['asset']);c.setdefault('previousPortraits',[]).append(dict(asset=c['asset'],sha256=c['sha256']))
-  c.update(asset=source,status='pending',faceDesign=face,hairDesign=hair,bodyDesign=body,appearance=face+'; '+hair,outfit=outfit,prop=pose,artRevision=4)
+  status='ready' if c.get('asset')==source and c.get('status')=='ready' and c.get('artRevision')==4 else 'pending'
+  c.update(asset=source,status=status,faceDesign=face,hairDesign=hair,bodyDesign=body,appearance=face+'; '+hair,outfit=outfit,prop=pose,artRevision=4)
 (ROOT/'assets/portraits/customer-prompts-v4.json').write_text(json.dumps(dict(tool='built-in image_gen',transparent_background=True,referencePolicy='No face references; individual adult facial anatomy for all customer/story NPCs',jobs=jobs),ensure_ascii=False,indent=2)+'\n')
 if args.integrate:
  data['customerFaceAudit']=dict(audited=43,redesigned=list(DESIGNS),revision=4,retainedSourceHashes={c['key']:c['sha256'] for c in data['characters'] if c['key'] not in DESIGNS},reason='Cross-group face review after employee redesign: replace repeated face geometry in customers and story NPCs.')
- data['readyCount']=sum(c['status']=='ready'for c in data['characters']);data['stage']='production';path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+ data['readyCount']=sum(c['status']=='ready'for c in data['characters']);data['stage']='integrated'if data['readyCount']==len(data['characters'])else'production';path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
 print(f'Prepared {len(jobs)} individual customer/story NPC designs'+(' and integrated sources'if args.integrate else ''))
