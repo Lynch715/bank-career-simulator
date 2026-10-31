@@ -23,7 +23,7 @@ const REGIONS_L5 = [
 const L5_ACTIONS = [
   {id:"survey",  name:"下去调研",   desc:"选一个片区，那边两个半年长得快一截"},
   {id:"reg5",    name:"监管沟通",   desc:"去监管总局汇报，评级好说一点"},
-  {id:"reform",  name:"机构改革",   desc:"压一层管理层级，省费用，下面不高兴（只能做一次）"},
+  {id:"reform",  name:"机构改革",   desc:"提交董事会审议，获批后试点与分批推广（只能完成一次）"},
   {id:"visit5",  name:"看看老同事", desc:"给以前的人打个电话，口碑回来一点"},
 ];
 const STRAT_OPTS = [
@@ -46,10 +46,8 @@ function ratingL5(){ const r = B5().rating; const npl = S.biz.npl/S.biz.loans*10
   return clamp(r1(r.base + (npl-1.3)*r.nplK - (S.kpi.comp-90)*r.compK - (S.biz.regScore||0)*0.1 - ((person("gu")?person("gu").fav:50)-50)/100), 1, 5); }
 function rankL5(){ const me = S.biz.dep; return 1 + S.biz.peers.filter(p=>p.dep > me).length; }
 function subsL5(){
-  const g=S.biz.career;
-  const cabinet=g?.engaged&&g.executives?g.executives.map(d=>person(d.id)).filter(Boolean):["zhouqm","duheng","shenlan","jianggd"].map(person).filter(Boolean).slice(0,3);
-  const regions=g?.engaged?S.biz.regions.map(r=>person(r.headId)).filter(Boolean):[];
-  return cabinet.concat(S.people.filter(p=>p.kind==="sub" && p.lvMet<=2).slice(0,3),regions).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
+  const g=careerEnsure();
+  return g.executives.map(d=>person(d.id)).concat(S.biz.firstBranches.map(r=>person(r.headId))).filter((p,i,a)=>careerLive(p)&&a.findIndex(x=>x?.id===p.id)===i);
 }
 
 function initL5(){
@@ -114,7 +112,7 @@ function settleL5(){
   S.biz.outlets = Math.max(15000, S.biz.outlets + (D.branch-3)*d.branch.outletsPer);
   S.biz.csat = c100(S.biz.csat + (D.branch-3)*Math.abs(d.branch.rep) + (60 - S.biz.csat)*0.1);
   // 存款
-  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * careerRegionK(r) * (r.boost>0 ? b.survey.g : 1), 0) * careerLineK('retail');
+  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * governanceRegionK(r) * (r.boost>0 ? b.survey.g : 1), 0) * careerLineK('retail');
   const depG = (b.baseDepG + (S.biz.csat-60)*0.0003 + (D.price-3)*d.price.depG + (digiK-0.1)*d.digital.depG*10 + (D.branch-3)*d.branch.depG) * reg * (st.g||1);
   S.biz.dep = Math.round(S.biz.dep * (1 + depG + gauss()*0.002));
   S.biz.regions.forEach(r => { if(r.boost>0) r.boost--; });
@@ -162,9 +160,11 @@ function yearEndL5(){ S.biz.scoreLog.push(S.kpi.score); }
 
 /* 行动 */
 function canActL5(id){
+  const authority=managementCheck(5);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"这半年的行动点用完了"};
   if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
+  if(id==="reform" && governanceActive().some(x=>x.kind==="reform"))return {ok:false,why:"已有改革方案待审或实施中"};
   if(id==="reform" && S.biz.reformDone) return {ok:false, why:"机构改革已经做过了"};
   return {ok:true};
 }
@@ -196,12 +196,8 @@ function doReg5(){
   return true;
 }
 function doReform(){
-  const ck = canActL5("reform"); if(!ck.ok) return null;
-  const r = B5().reform;
-  apUse(apCost("reform")); S.biz.reformDone = true; S.biz.expenseK *= r.expense; S.biz.csat = c100(S.biz.csat + r.rep);
-  keyEvent("推动总行机构改革，压减一个管理层级");
-  log("warn", "机构改革的文件发下去了。全国二级分行的管理层级压掉一层，四千多个岗位要重新竞聘。那一周，你的手机响了两百多次。");
-  return true;
+  if(!canActL5('reform').ok)return null;
+  return governanceSubmit('reform','nationwide','全国机构改革',{ });
 }
 function doVisit5(){
   const ck = canActL5("visit5"); if(!ck.ok) return null;
@@ -213,13 +209,12 @@ function doVisit5(){
   return true;
 }
 function issueCapital(){
-  const c = B5().dial.capital;
-  if(S.biz.capIssued >= 2) return {ok:false, why:"这一任已经发过两次了"};
-  if(S.core.trust < c.needTrust) return {ok:false, why:"上面没批"};
-  S.biz.capital += c.add; S.biz.capIssued++;
-  log("good", `二级资本债发出去了，一千亿，认购倍数二点一。<span class="num">资本+${fmtWy(c.add)}</span>`);
-  return {ok:true};
+  if(!managementCheck(5).ok)return {ok:false,why:'当前无发行权限'};
+  if(S.biz.capIssued>=2)return {ok:false,why:'本任已发过两次'};
+  if(careerEnsure().board<BALANCE.authority.reviewBoard)return {ok:false,why:'董事会支持不足'};
+  const row=governanceSubmit('capital','capital','二级资本债发行',{ },0);
+  return row?{ok:true,pending:true}:{ok:false,why:'已有发行方案待审或待执行'};
 }
-function setDial(k, v){ if(S.lv!==5 || !S.biz.dials || !(k in S.biz.dials)) return false; S.biz.dials[k] = clamp(Math.round(v),1,5); return true; }
-function setStrategy(id){ S.biz.strategy = id; (S.biz.stratLog = S.biz.stratLog || []).push({year:S.year, id}); const o = STRAT_OPTS.find(x=>x.id===id); keyEvent(`年度战略会定调：${o.name}`); log("", `年度战略会定了调子：${o.name}。`); }
+function setDial(k, v){ if(!managementCheck(5).ok || S.lv!==5 || !S.biz.dials || !(k in S.biz.dials)) return false; S.biz.dials[k] = clamp(Math.round(v),1,5); return true; }
+function setStrategy(id){ if(!managementCheck(5).ok||!STRAT_OPTS.some(x=>x.id===id))return false; S.biz.strategy = id; (S.biz.stratLog = S.biz.stratLog || []).push({year:S.year, id}); const o = STRAT_OPTS.find(x=>x.id===id); keyEvent(`年度战略会定调：${o.name}`); log("", `年度战略会定了调子：${o.name}。`); }
 function fmtWy(v){ return (v/100000000).toFixed(2) + "万亿"; }

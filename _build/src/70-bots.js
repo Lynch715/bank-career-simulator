@@ -54,6 +54,7 @@ function botExpertL1(){
   }
 }
 function botPlay(mode){
+  governanceActive().filter(x=>x.status==='approved').forEach(x=>governanceExecute(x.id));
   if(mode === "expert"){ if(S.lv === 1) return botExpertL1(); mode = "balanced"; }
   if(S.lv === 2) return botPlayL2(mode);
   if(S.lv === 3) return botPlayL3(mode);
@@ -116,6 +117,11 @@ function botPlay(mode){
   }
 }
 /* ---------- L2 机器人 ---------- */
+function botAppoint(postId,pid){
+  const r=careerRecord(pid);
+  if(r.assessedUntil<S.monthAbs)return careerAssess(pid);
+  return careerAppoint(postId,pid);
+}
 function loanVisibleScore(it){ const ts = B2().tierScore; return ts.coll[it.coll] + ts.flow[it.flow] + ts.tax[it.tax]; }
 function botPlayL2(mode){
   const b = B2();
@@ -140,18 +146,18 @@ function botPlayL2(mode){
       else if(id==="push" && ap.length) doPush(pick(ap).id);
       else if(id==="visit" && ap.length) doVisit(pick(ap).id, R()<0.5 && S.biz.budget>=b.project.giftCost);
       else if(id==="campaign") doCampaign();
-      else if(id==="appoint"){ const o = pick(S.biz.outlets), c = appointCands(o.id); if(c.length) doAppoint(o.id, pick(c).id); else doReportUp() || doSupervise(o.id); }
+      else if(id==="appoint"){ const o = pick(S.biz.outlets), c = appointCands(o.id); if(c.length) botAppoint(o.id,pick(c).id); else doReportUp() || doSupervise(o.id); }
       else doReportUp() || doSupervise(pick(S.biz.outlets).id);
       continue;
     }
     // 空缺的网点先补人
     const empty = S.biz.outlets.find(o=>!o.mgr);
-    if(!steady && empty && canActL2("appoint").ok){ const c = appointCands(empty.id).sort((a,b)=>b.skill-a.skill)[0]; if(c){ doAppoint(empty.id, c.id); continue; } }
+    if(!steady && empty && canActL2("appoint").ok){ const c = appointCands(empty.id).sort((a,b)=>b.skill-a.skill)[0]; if(c&&botAppoint(empty.id,c.id))continue; }
     // 能力差太多的负责人换掉
     if(mode!=="greedy" && !steady){
       const weak = S.biz.outlets.filter(o=>o.mgr).sort((a,b)=>skillOf(a.mgr)-skillOf(b.mgr))[0];
       const c = weak ? appointCands(weak.id).sort((a,b)=>b.skill-a.skill)[0] : null;
-      if(c && c.skill > skillOf(weak.mgr) + 20){ doAppoint(weak.id, c.id); continue; }
+      if(c && c.skill > skillOf(weak.mgr) + 20&&botAppoint(weak.id,c.id))continue;
     }
     const ap = activeProjects().sort((a,b)=>b.stage-a.stage || b.prog-a.prog);
     const inAppr = ap.find(p=>p.stage===2);
@@ -195,8 +201,8 @@ function botPlayL3(mode){
       else if(id==="renovate") doRenovate(pick(S.biz.branches).id) || doReportUpL3();
       else if(id==="squat") doSquatL3(pick(S.biz.branches.filter(x=>!x.squat)).id);
       else if(id==="tilt") doTilt(pick(LINES_L3).id) || doReportUpL3();
-      else if(id==="appoint"){ const x = pick(S.biz.branches), c = appointCandsL3(x.id); if(c.length) doAppointL3(x.id, pick(c).id); else doReportUpL3() || apUse(1); }
-      else if(id==="platform"){ doPlatform(); decidePlatform(R()<0.5); }
+      else if(id==="appoint"){ const x = pick(S.biz.branches), c = appointCandsL3(x.id); if(c.length) botAppoint(x.id,pick(c).id); else doReportUpL3() || apUse(1); }
+      else if(id==="platform"){ doPlatform(); decidePlatform(R()<0.5?'gray':false); }
       else doReportUpL3() || apUse(1);
       continue;
     }
@@ -204,10 +210,10 @@ function botPlayL3(mode){
     if(!steady){
       const weak = S.biz.branches.slice().sort((a,c)=>skillOf(a.mgr)-skillOf(c.mgr))[0];
       const c = appointCandsL3(weak.id).sort((a,d)=>d.skill-a.skill)[0];
-      if(c && c.skill > skillOf(weak.mgr) + 15 && canActL3("appoint").ok){ doAppointL3(weak.id, c.id); continue; }
+      if(c && c.skill > skillOf(weak.mgr) + 15 && canActL3("appoint").ok&&botAppoint(weak.id,c.id))continue;
     }
-    if(canActL3("platform").ok && S.turn >= 3 && ((mode==="greedy") || (mode==="balanced" && R()<0.05))){ doPlatform(); decidePlatform(mode!=="clean"); continue; }
-    if(canActL3("open").ok && S.biz.newOutlets.length < 3){ const a = S.biz.areas.slice().sort((x,y)=>(y.heat-y.comp*0.5)-(x.heat-x.comp*0.5))[0]; doOpenOutlet(a.id); continue; }
+    if(canActL3("platform").ok && S.turn >= 3 && ((mode==="greedy") || (mode==="balanced" && R()<0.05))){ doPlatform(); decidePlatform(mode==='greedy'?'gray':mode!=='clean'?'submit':false); continue; }
+    if(canActL3("open").ok && S.biz.newOutlets.length+governanceActive().filter(x=>x.kind==="open").length < 3){ const a=S.biz.areas.filter(a=>!governanceActive().some(x=>x.kind==="open"&&x.data.aid===a.id)).sort((x,y)=>(y.heat-y.comp*0.5)-(x.heat-x.comp*0.5))[0]; if(a&&doOpenOutlet(a.id))continue; }
     if(!S.biz.reported && person("lu").fav < 65){ doReportUpL3(); continue; }
     if(canActL3("renovate").ok){ const x = S.biz.branches.filter(y=>y.renov<0.3).sort((a,c)=>c.dep-a.dep)[0]; if(x && doRenovate(x.id)) continue; }
     if(!S.biz.reported){ doReportUpL3(); continue; }
@@ -327,6 +333,7 @@ function simGame(mode, seed, maxTurns, opts){
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
+  governance:{active:governanceActive,execute:governanceExecute,cancel:governanceCancel,check:governanceExecuteCheck,monthStart:governanceMonthStart,roles:governanceRoles,regionK:governanceRegionK,platformRoom,requestQuota:governanceRequestQuota},
   career:{level:careerLevel,link:careerLink,alm:careerALM,lineK:careerLineK,teamK:careerTeamK,ensure:careerEnsure,people:careerPeople,positions:careerPositions,available:careerAvailable,record:careerRecord,train:careerTrain,assess:careerAssess,appoint:careerAppoint,talk:careerTalk,style:careerStyle,plan:careerPlan,start:careerStart,choose:careerChoose,push:careerPush,council:careerCouncilChoice,startCheck:careerStartCheck,execution:careerExecution,reserved:careerReserved,monthStart:careerMonthStart,settle:careerSettle,deputySpec:careerDeputySpec,deputyChoice:careerDeputyChoice,projects:CAREER_PROJECTS},
   act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,

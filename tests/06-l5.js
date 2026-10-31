@@ -65,13 +65,15 @@ T.ok("撤并网点:网点少了", S().biz.outlets < o0);
 T.ok("拨盘限在 1~5", (A.setDial("price", 9), S().biz.dials.price===5) && (A.setDial("price", -3), S().biz.dials.price===1));
 
 /* ---------- 资本 ---------- */
-toL5(); S().core.trust = 80;
-const car0 = I.carL5();
-T.ok("发二级资本债:资本充足率上去", A.issueCapital().ok && I.carL5() > car0 + 0.5, car0.toFixed(1)+"→"+I.carL5().toFixed(1));
-A.issueCapital();
-T.ok("一任最多发两次", !A.issueCapital().ok && S().biz.capIssued===2);
-toL5(); S().core.trust = 30;
-T.ok("上级信任不够,资本债批不下来", !A.issueCapital().ok);
+toL5();
+const car0=I.carL5(),capRequest=A.issueCapital();
+T.ok("资本债先报批，不提前到账",capRequest.ok&&capRequest.pending&&I.carL5()===car0);
+I.advance(true);G.governance.execute(G.governance.active().find(x=>x.kind==='capital').id);
+T.ok("发行批复后资本充足率上去",I.carL5()>car0+0.5);
+A.issueCapital();I.advance(true);G.governance.execute(G.governance.active().find(x=>x.kind==='capital').id);
+T.ok("一任最多发两次",!A.issueCapital().ok&&S().biz.capIssued===2);
+toL5();S().biz.career.board=30;
+T.ok("董事会支持不足不能报批资本债",!A.issueCapital().ok);
 toL5(); S().biz.capital = Math.round(I.carL5 ? S().biz.loans*B.rwaK*0.10 : 0);
 const lo = S().biz.loans; A.setDial("credit",5); half();
 T.ok("资本充足率低于 10.5%,贷款放不出去", S().biz.loans/lo - 1 < 0.01);
@@ -82,8 +84,10 @@ T.ok("利润留存补资本", S().biz.capital > cap0);
 toL5(); S().ap = 6;
 A.survey("xn");
 T.ok("调研:片区两个半年长得快", S().biz.regions.find(r=>r.id==="xn").boost===B.survey.turns);
-A.reform();
-T.ok("机构改革:费用系数下降,一任一次", S().biz.expenseK < 1 && S().biz.reformDone && !A.reform());
+const reform=A.reform();
+T.ok("改革提案不立即改变费用",!!reform&&S().biz.expenseK===1&&!S().biz.reformDone);
+I.advance(true);G.governance.execute(reform.id);I.advance(true);I.advance(true);
+T.ok("机构改革审议、试点和推广后节约费用，一任一次", S().biz.expenseK < 1 && S().biz.reformDone && !A.reform());
 const gf = I.person("gu").fav, rs0 = S().biz.regScore||0; A.reg5();
 T.ok("监管沟通:顾清越好感和监管分上去", I.person("gu").fav >= Math.min(100, gf+1) && (S().biz.regScore||0) > rs0, gf+"→"+I.person("gu").fav);
 
@@ -111,9 +115,9 @@ function end5(name, setup, mode, dials){ toL5(); setup(S()); const o = playOut(m
 T.ok("结局 · 出事(极严重违规)", end5("caught", s=>{ I.dirt(100,"极严重违规"); }, "balanced")==="caught");
 T.ok("结局 · 干干净净(一路干净度 ≥90)", end5("clean", s=>{ s.core.clean = 96; s.track.minClean = 96; }, "clean")==="clean");
 T.ok("结局 · 三次破格", end5("bt3", s=>{ s.core.clean = 80; s.track.minClean = 70; s.track.btLv = [1,2,3]; }, "balanced")==="bt3");
-T.ok("结局 · 做到同业前二", end5("top", s=>{ s.core.clean = 80; s.track.minClean = 70; s.track.btLv = []; }, "balanced")==="top");
+T.ok("结局 · 做到同业前二", end5("top", s=>{ s.core.clean = 80; s.track.minClean = 70; s.track.btLv = [];s.biz.scoreLog=Array(12).fill(110);s.biz.peers.forEach(p=>p.dep*=0.5); }, "balanced")==="top");
 T.ok("结局 · 平稳交班", end5("mid", s=>{ s.core.clean = 80; s.track.minClean = 70; s.track.btLv = []; }, "clean")==="mid");
-T.ok("结局 · 做得不好", end5("low", s=>{ s.core.clean = 80; s.track.minClean = 70; s.track.btLv = []; }, null, {price:1,credit:1,digital:1,branch:1})==="low");
+T.ok("结局 · 做得不好", end5("low", s=>{ s.core.clean = 80; s.track.minClean = 70; s.track.btLv = [];s.biz.scoreLog=Array(12).fill(0); }, null, {price:1,credit:1,digital:1,branch:1})==="low");
 
 /* ---------- L1~L4 结局:各种打法跑出来 ---------- */
 const got = {};

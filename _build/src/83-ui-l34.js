@@ -73,8 +73,8 @@ Object.assign(UI, {
       <div class="box"><h3>片区 <em>点片区开网点</em></h3><div class="scene" id="l3map">${wzMapSvg()}</div>
         <p class="hint" style="margin-top:8px">深色点是支行网点，金色是你开的新网点。热度高、竞争少的片区，新网点长得快。</p></div>
       <div class="box"><h3>支行 <em>点一行改造、换人、撤网点</em></h3><div class="tscroll"><table class="l2t"><tr><th>支行</th><th>行长</th><th>存款</th><th>上季</th></tr>${rows}${newRows}</table></div></div>
-      <div class="box"><h3>信贷结构 <em>每季最多挪五个点 · 额度还剩${fmtYi1(Math.max(0, S.biz.quota - (loansTotalL3()-L.platform)))}</em></h3>${mix}
-        <p class="hint">小微息差最高，不良也最高。平台贷款${L.platform?fmtYi1(L.platform):"没有"}，不占额度。</p></div>
+      <div class="box"><h3>信贷结构 <em>每季最多挪五个点 · 额度还剩${fmtYi1(Math.max(0, S.biz.quota - (loansTotalL3()-L.platform+(S.biz.platformCompliant||0))))}</em></h3>${mix}
+        <p class="hint">小微息差最高，不良也最高。平台贷款${L.platform?fmtYi1(L.platform):"没有"}，合规批复占额度；违规绕行另计风险。</p></div>
       <div class="box"><h3>不良处置 <em>本季还能处置${Math.max(0,cap-S.biz.disposedQ)}户 · 今年核销额度还剩${fmtYi1(b.dispose.writeoff.quotaY - S.biz.writeoffUsed)}</em></h3>
         <p class="hint">催收：两个季度收回三成。诉讼：四个季度收回五成，可能上论坛。重组：马上出表，四成会再违约。核销：马上出表，吃额度。</p><div class="lq">${npa || '<p class="muted">没有不良。</p>'}</div></div>`;
     $("colM").querySelectorAll("[data-act3]").forEach(el => el.onclick = () => UI.onAct3(el.dataset.act3));
@@ -105,7 +105,7 @@ Object.assign(UI, {
   pickArea(){
     const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
     opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:"新网点开在哪", body:`投入${B3().outlet.build}万，一年费用${B3().outlet.costY}万。`, opts});
+    UI.modal({kind:"pick", title:"新网点开在哪", body:`先提交上级机构规划审批，获批后投入${B3().outlet.build}万筹建；验收后营业，一年费用${B3().outlet.costY}万。`, opts});
   },
   areaModal(aid){
     const a = area(aid);
@@ -117,23 +117,17 @@ Object.assign(UI, {
     UI.modal({kind:"pick", title:x.name, portrait:m, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。\n改造存款增长加成${Math.round(x.renov*100)}%，季末生效${x.renov>=0.3?"，已达改造上限":"，达到30%后不能继续改造"}。`, opts:[
       {t:"下去蹲点", s:"1点行动 · 这季存款长得快一点", odds:ODDS[3].squat(x), disabled:!canActL3("squat").ok || x.squat, fn:()=>doSquatL3(bid)},
       {t:"网点改造", s:x.renov>=0.3 ? "已达改造上限" : (!canActL3("renovate").ok ? canActL3("renovate").why : `${B3().renovate.cost}万 · 1点行动 · 季末生效`), disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
-      {t:"撤一个网点", s:"1点行动 · 片区口碑掉", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
+      {t:"撤一个网点", s:"提交审批1点，获批后迁移客户1点", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
       {t:"换行长", s:"1点行动", disabled:!canActL3("appoint").ok, fn:()=>setTimeout(()=>UI.appointModalL3(bid),0)},
       {t:"关掉", s:""}]});
   },
-  appointModalL3(bid){
-    const x = branch(bid), cur = person(x.mgr);
-    const cands = appointCandsL3(bid).sort((a,c)=>c.skill-a.skill);
-    const opts = cands.map(p => ({t:`${p.name} · 能力${p.skill}`, s:`${p.pos}${p.lvMet<3?" · 老部下":""}`, fn:()=>doAppointL3(bid, p.id)}));
-    if(!opts.length) opts.push({t:"没有合适的人", s:"", disabled:true});
-    opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:`${x.name}换行长`, body: cur ? `现在是${cur.name}，能力${cur.skill}。` : "", opts});
-  },
+  appointModalL3(bid){UI.careerAppointModal(bid);},
   platformModal(){
     const off = S.biz.platformOffer; if(!off) return;
     const pf = PLATFORMS_L3.find(p=>p.id===off.id);
     UI.modal({kind:"event", title:"区里的项目", body:`区财政局的人带着${pf.name}的材料来了。${pf.what}，要${fmtYi1(off.size)}。\n\n${pf.note}\n\n「区里会全力支持，」对方把一份没盖章的情况说明推过来，「还款的事，您放心。」`, opts:[
-      {t:"「做。」", s:`贷款+${fmtYi1(off.size)} · 不占额度 · 息差薄 · 留底`, gray:true, fn:()=>decidePlatform(true)},
+      {t:"补齐担保与还款材料，报上级贷审会", s:`${fmtYi1(off.size)} · 审批后占用信贷额度，批复前不放款`, fn:()=>decidePlatform('submit')},
+      {t:"绕过审批，凭情况说明直接放款", s:`贷款+${fmtYi1(off.size)} · 违规绕行额度 · 合规风险增加`, gray:true, fn:()=>decidePlatform('gray')},
       {t:"「这个方案我们做不了。」", s:"区里不太高兴", fn:()=>decidePlatform(false)},
     ]});
   },

@@ -32,7 +32,7 @@ const EVENTS_L5 = [
 {id:"capwin", title:"窗口", cd:2, fixed:true, when:S=>S.turn===4 || S.turn===6,
  body:S=>`资负部的总经理来汇报：债券市场这个月利率低，二级资本债的窗口开了。\n\n「发一千亿，资本充足率能上去一个点，」他把一张表放在桌上，「但是分子大了，ROE 要掉。」\n\n现在的资本充足率是${carL5().toFixed(1)}%。`,
  opts:S=>[
-  {t:"「发。」", s:"资本+1000亿 · ROE 掉一点", fn:()=>{ const r = issueCapital(); if(!r.ok) log("bad", `资本债的方案报上去，没批下来：${r.why}。`); }},
+  {t:"提交发行方案", s:"董事会审议及发行报批，通过后再办理到账", fn:()=>{ const r = issueCapital(); if(!r.ok) log("bad", `资本债的方案报上去，没批下来：${r.why}。`); }},
   {t:"「再等等。」", s:"不发", fn:()=>{ log("", "窗口关了。资负部的总经理把那张表收回去了。"); }},
  ]},
 

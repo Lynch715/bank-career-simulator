@@ -10,7 +10,7 @@ const BALANCE = {
   start: { age:30, careerYear:8, lv:1 },
   ap: {1:4, 2:5, 3:6, 4:6, 5:6},
   // 大事占几个点
-  apCost: { 3:{open:2, platform:2}, 4:{startp:2, quota:2}, 5:{survey:2, reform:3} },
+  apCost: { 3:{open:1, platform:2}, 4:{startp:2, quota:2}, 5:{survey:2, reform:1} },
   // 推不掉的会:每回合 0/1/2/3 件的概率
   meet: { dist: { 2:[.55,.4,.05], 3:[.25,.5,.25], 4:[.1,.4,.4,.1], 5:[.05,.25,.4,.3] } },
   turnMonths: {1:1, 2:1, 3:3, 4:3, 5:6},

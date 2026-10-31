@@ -8,10 +8,14 @@ const I = G.internals, A = G.act;
 const T = runner("04-l34");
 const S = () => G.S;
 
+// 事件的每个选项使用同一独立基线，避免为相同场景反复模拟整段职业生涯。
+const levelCache=new Map();
 function toLevel(lv, seed, mode){
+  const key=[lv,seed,mode||'balanced'].join(':');
+  if(levelCache.has(key)){const row=levelCache.get(key);G.S=JSON.parse(row.state);G.setBot(mode||'balanced');return row.seed;}
   for(let sd = seed; sd < seed + 60; sd++){
     G.simGame(mode||"balanced", sd, 600, {until:"l"+lv});
-    if(S().lv === lv && S().phase === "play") return sd;
+    if(S().lv === lv && S().phase === "play"){levelCache.set(key,{state:JSON.stringify(S()),seed:sd});return sd;}
   }
   throw new Error("没打到 L"+lv);
 }
@@ -29,9 +33,11 @@ T.ok("一回合走三个月", S().m === m0 + 3, S().m);
 // 开网点
 S().ap = 4; S().biz.budget = 1000;
 const n0 = I.effL3(), out0 = S().biz.newOutlets.length;
-A.openOutlet("gaotie");
-T.ok("开网点:扣 300 万,多一个新网点", S().biz.newOutlets.length === out0+1 && S().biz.budget === 700);
-T.ok("新网点刚开,网点效能先掉", I.effL3() < n0);
+const proposal=A.openOutlet("gaotie");
+T.ok("开网点先报批，不提前记账",S().biz.newOutlets.length===out0&&S().biz.budget===1000);
+I.advance(true);G.governance.execute(proposal.id);const buildingBudget=S().biz.budget;I.advance(true);
+T.ok("开网点:扣 300 万,多一个新网点", S().biz.newOutlets.length === out0+1 && buildingBudget===1000+G.BALANCE.L3.budgetQ-300);
+T.ok("新网点验收后从零存款爬坡", S().biz.newOutlets.at(-1).dep===0);
 // 处置
 S().biz.disposedQ = 0;
 const cap = 3 + (S().biz.tilt==="risk"?1:0);
@@ -50,7 +56,7 @@ T.ok("信贷结构往目标挪,每季挪 5 个点(另加各类增速差)", share
 // 平台
 S().ap = 4;
 const pl0 = S().biz.loans.platform, cl0 = S().core.clean;
-const off = A.platform(); A.decidePlatform(true);
+const off = A.platform(); A.decidePlatform("gray");
 const pb = S().loanBook.find(l=>l.src==="platform");
 T.ok("平台贷款:规模大、不占额度、干净度下降", S().biz.loans.platform === pl0 + off.size && S().core.clean < cl0);
 T.ok("平台贷款的违约时间落在两到四年后(L4 才冒)", pb.defAt - pb.at >= 24 && pb.defAt - pb.at <= 48);

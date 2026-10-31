@@ -258,12 +258,12 @@ function computeCore(){
   S.core.rep = Math.round(c100(favAvg*c.repStaff + S.biz.csat*c.repCsat));
   const w = c.trustByLv[S.lv] || c.trustByLv[1];
   S.track.minClean = Math.min(S.track.minClean==null?100:S.track.minClean, S.core.clean);
-  S.core.trust = Math.round(c100(Object.entries(w).reduce((a,[id,k]) => a + (person(id) ? person(id).fav : 50) * k, 0)));
+  S.core.trust = Math.round(c100(S.lv>=4?governanceTrust():Object.entries(w).reduce((a,[id,k]) => a + (person(id) ? person(id).fav : 50) * k, 0)));
 }
 function computeAll(){ computeKpi(Math.max(1, S.m)); stepRivals(false); computeRank(); computeCore(); }
 
 /* ---------- 回合开始 ---------- */
-function supId(){ return [null,"huang","zhouqm","lu","lu","songwy"][S.lv]; }
+function supId(){ return S.lv>=4?governanceChair().id:[null,"huang","zhouqm","lu"][S.lv]; }
 function myUnitName(){ return [null,"弹子石网点","南岸支行","万州分行","重庆分行","泰和银行"][S.lv] || ""; }
 function subordinates(){ return [null,()=>S.staff,subsL2,subsL3,subsL4,subsL5][S.lv](); }
 function monthStart(first){ const result=[null,monthStartL1,monthStartL2,monthStartL3,monthStartL4,monthStartL5][S.lv](first); careerMonthStart(); return result; }

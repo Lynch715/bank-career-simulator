@@ -128,7 +128,7 @@ T2.ok("委托系数 = 0.6 + skill/100×0.6", Math.abs(I.delegK(o0.mgr) - (0.6 + 
 // 贷款审批与不良滞后
 G.S.ap = 4;
 const loans0 = G.S.biz.loans, it = G.S.biz.queue[0];
-if(it){ G.act.decideLoan(it.id, true); }
+if(it){ it.amt=400;it.type="micro";it.tier="low";it.coll="房产抵押";it.flow="稳定";it.tax="A";G.act.decideLoan(it.id, true); }
 T2.ok("批贷款:贷款余额增加,进台账", !it || (G.S.biz.loans === loans0 + it.amt && G.S.loanBook.some(l=>l.name===it.name)));
 T2.ok("台账里的贷款带 6~18 个月的违约时间", G.S.loanBook.filter(l=>l.lv===2 && l.src==="queue").every(l=> l.defAt - l.at >= 6 && l.defAt - l.at <= 18));
 I.bookLoan("测试高风险", 5000, "high", "test");
@@ -148,7 +148,7 @@ T2.ok("督导:士气上升,本月标记", ot.supervised && ot.morale >= m0);
 // 任免
 G.S.ap = 4;
 const cands = I.appointCands("nanping");
-if(cands.length){ const old = G.S.biz.outlets[1].mgr; G.act.appoint("nanping", cands[0].id); T2.ok("任免:换上人脉簿里的旧部,原负责人不高兴", G.S.biz.outlets[1].mgr===cands[0].id && I.person(old).pos==="南岸支行后台"); }
+if(cands.length){ const old = G.S.biz.outlets[1].mgr; G.career.assess(cands[0].id);G.act.appoint("nanping", cands[0].id); T2.ok("任免:换上人脉簿里的旧部,原负责人不高兴", G.S.biz.outlets[1].mgr===cands[0].id && I.person(old).pos==="南岸支行后台"); }
 // 指标分解压太重:士气掉
 G.newGame({seed:40}); G.simGame("balanced", 40, 400, {until:"l2"});
 const f = I.decompFair(); const al = I.decompProportional(); const mv = Math.round(f.fair[1]*0.5/1000)*1000; al[1]+=mv; al[2]-=mv;

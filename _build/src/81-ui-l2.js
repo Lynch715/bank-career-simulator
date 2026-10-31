@@ -70,7 +70,7 @@ Object.assign(UI, {
       return `<div class="ln"><div class="lh"><b>${it.name}</b><span class="num">${fmtWan(it.amt)}</span></div>
         <div class="lm">${it.type==="micro"?"小微":"对公"} · ${it.ind} · ${it.coll}</div>
         <div class="lm">流水${it.flow} · 纳税${it.tax}级</div>${rel}
-        <div class="lb"><button class="btn sm" data-loan="${it.id}" data-ok="1">批</button><button class="btn sm ghost" data-loan="${it.id}" data-ok="0">退</button></div></div>`;
+        <div class="lb"><button class="btn sm" data-loan="${it.id}" data-ok="1">${loanAuthority(it)?'报批':'批'}</button><button class="btn sm ghost" data-loan="${it.id}" data-ok="0">退</button></div></div>`;
     }).join("") || `<p class="muted" style="margin:0">这个月的申请都处理完了。</p>`;
     $("colM").innerHTML = `
       <div class="box">
@@ -88,7 +88,7 @@ Object.assign(UI, {
       <div class="box"><h3>网点 <em>点一行看详情、督导、换人</em></h3>
         <div class="tscroll"><table class="l2t"><tr><th>网点</th><th>负责人</th><th>存款</th><th>本月</th><th>任务</th><th>士气</th></tr>${rows}
         <tr><td>对公团队</td><td>${lead?lead.name:"—"}${lead?`<br><small class="muted">能力${lead.skill}</small>`:""}</td><td class="num">${fmtYi(S.biz.corp.dep)}</td><td></td><td></td><td></td></tr></table></div></div>
-      <div class="box"><h3>贷款审批 <em>本月 ${S.biz.queue.length} 笔</em></h3><p class="hint">抵押、流水、纳税看得见，真实风险看不见。批出去的贷款一年左右才见分晓。</p><div class="lq">${q}</div></div>
+      <div class="box"><h3>贷款审批 <em>本月 ${S.biz.queue.length} 笔</em></h3><p class="hint">抵押、流水、纳税看得见，真实风险看不见。本级授权：小微600万元、对公1000万元；超限或已识别高风险须报上级贷审会，获批后在经营项目台账办理放款。批出去的贷款一年左右才见分晓。</p><div class="lq">${q}</div></div>
       <div class="box"><h3>对公项目 <em>${lost.length?"丢了："+lost.join("、"):"推进和拜访都在行动里"}</em></h3><div class="kanban">${cols}</div></div>`;
     $("colM").querySelectorAll("[data-act2]").forEach(el => el.onclick = () => UI.onAct2(el.dataset.act2));
     $("colM").querySelectorAll("[data-outlet]").forEach(el => { el.onclick = () => UI.outletModal(el.dataset.outlet); el.onkeydown = e => { if(e.key==="Enter") UI.outletModal(el.dataset.outlet); }; });
@@ -142,14 +142,7 @@ Object.assign(UI, {
       {t:"关掉", s:""},
     ]});
   },
-  appointModal(oid){
-    const o = outlet(oid), cur = o.mgr ? person(o.mgr) : null;
-    const cands = appointCands(oid).sort((a,b)=>b.skill-a.skill);
-    const opts = cands.map(p => ({t:`${p.name} · 能力${p.skill}`, s:`${p.pos} · ${p.recent||p.note||""}`, fn:()=>doAppoint(oid, p.id)}));
-    if(!opts.length) opts.push({t:"没有合适的人", s:"人脉簿里弹子石的旧部都有位子了", disabled:true});
-    opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:`${o.name}换人`, body: cur ? `现在是${cur.name}，能力${cur.skill}。换下来的人会去支行后台，心里有数。` : "这个位子空着。", opts});
-  },
+  appointModal(oid){UI.careerAppointModal(oid);},
 
   decompModal(done){
     const f = decompFair(), step = f.step;

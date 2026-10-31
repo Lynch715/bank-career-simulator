@@ -100,7 +100,7 @@ const UI = {
       <div class="cores">
         <div class="core"><b class="num" data-roll="perf">${c.perf}</b><span>业绩</span></div>
         <div class="core"><b class="num" data-roll="rep">${c.rep}</b><span>口碑</span></div>
-        <div class="core"><b class="num" data-roll="trust">${c.trust}</b><span>上级信任</span></div>
+        <div class="core"><b class="num" data-roll="trust">${c.trust}</b><span>${S.lv===5?"治理支持":"上级信任"}</span></div>
         <div class="core" title="越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。"><b class="num" data-roll="risk">${100-c.clean}</b><span>廉政风险</span></div>
         <button class="topbtn" id="btnPeople">人脉簿</button>
         <button class="topbtn" id="btnMenu">菜单</button>

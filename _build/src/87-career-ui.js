@@ -14,6 +14,7 @@ Object.assign(UI, {
   renderCareer(){
     if(!S || S.phase!=='play')return;
     const g=careerEnsure();
+    if(S.discipline?.removed){const box=document.createElement('section');box.className='box career-ui';box.id='careerPanel';box.innerHTML='<h3>管理权限暂停</h3><p class="hint">撤职整改期间仅开放客户维护和厅堂服务。完成整改并复任后恢复干部、项目和团队管理。</p>';document.querySelector('#colM').append(box);return;}
     const panel=document.createElement('section');panel.className='box career-ui';panel.id='careerPanel';
     const tabs=[['projects','经营项目'],['people','干部人才'],['council',S.lv>=4?'班子议事':'团队议事']];
     const period=S.lv<=2?'本月':S.lv<=4?'本季':'这半年';
@@ -56,6 +57,7 @@ Object.assign(UI, {
       }).join('')||'<p class="career-empty">本任期还没有新项目。选择牵头人和承办单位后即可启动；以前的经营操作仍在下方。</p>'}</div>
       ${!available.length?'<p class="hint">本任期项目已全部启动，落地项目会继续经营。</p>':''}
       ${!careerCheck(0).ok?'<p class="hint">行动点用完了，可以结束回合，查看项目进展。</p>':''}`;
+    UI.governancePanel(node);
     node.querySelector('#careerPlan').onclick=()=>UI.careerPlanModal();
     node.querySelector('#careerNew').onclick=()=>UI.careerNewModal();
     if(node.querySelector('#careerALM'))node.querySelector('#careerALM').onclick=()=>UI.careerALMModal();
@@ -72,7 +74,7 @@ Object.assign(UI, {
       <div class="career-toolbar">${[['current','当前管理'],['reserve',S.lv>=3?'本级后备':'旧部后备'],['all',S.lv>=3?'本级全部':'全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
       <div class="career-people">${people.map(p=>{
         const r=careerRecord(p.id),line=CAREER_LINES.find(x=>x.id===r.specialty),load=careerLoad(p.id);
-        return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
+        return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}${S.lv===3&&governanceRoles(p.id).length>1?' · 兼任：'+esc(governanceRoles(p.id).join('、'))+'（负荷增加）':''}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
       }).join('')||'<p class="career-empty">没有符合条件的干部，可以切换范围或修改搜索。</p>'}</div>`;
     if(node.querySelector('#careerAppoint'))node.querySelector('#careerAppoint').onclick=()=>UI.careerAppointModal();
     node.querySelectorAll('[data-cscope]').forEach(el=>el.onclick=()=>{UI.careerPeopleScope=el.dataset.cscope;UI.careerPeoplePanel(node);PORTRAITS.bind(node);});
@@ -103,16 +105,31 @@ Object.assign(UI, {
     const a=careerEnsure().alm;
     UI.careerPick('资产负债安排',`流动性指数${Math.round(a.liquidity)}，低于${BC().liquidityFloor}会增加应急资金成本。每半年最多调整一次。`,BC().alm.map(o=>UI.careerOption(o.name,o.desc+' · 1点行动',()=>careerALM(o.id),a.policy===o.id?'当前策略':a.changedAt===S.monthAbs?'本半年已调整':!careerCheck(0).ok?careerCheck(0).why:'')));
   },
-  careerAppointModal(){
-    UI.careerPick('调整哪个岗位',CAREER_MANAGEMENT[S.lv].desc+'新任人选须有有效考察记录；现任其他岗位的干部不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
+  careerAppointModal(postId){
+    const select=slot=>{
       const candidates=careerAvailable(slot.id);
-      UI.careerPick('任用 · '+slot.name,candidates.length?'候选人职务与履历符合本岗位范围，任用后进入履职观察。':'暂无符合本岗位职务和履历要求的可调配人选。基层旧部可在人脉簿查看。',candidates.map(p=>{
-        const r=careerRecord(p.id),why=!careerCheck(0).ok?careerCheck(0).why:r.training?'正在专项培养':r.assessedUntil<S.monthAbs?'请先到干部人才中完成履职考察':'';
-        const option=UI.careerOption(p.name,'',()=>careerAppoint(slot.id,p.id),why);
-        option.s=`${p.pos} · ${why||`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`}`;
-        return option;
+      UI.careerPick('任用 · '+slot.name,candidates.length?'须有有效履职考察，同一人不得占用多个岗位。'+(S.lv>=4?'先提交组织审议及上级任免报批；收到批复后办理任命，批复前现任继续履职。':'任用后进入履职观察。'):'暂无符合本级岗位要求的可调配人选。',candidates.map(p=>{
+        const why=governanceAppointCheck(slot,p)||(!careerCheck(0).ok?careerCheck(0).why:'');
+        return UI.careerOption(p.name,p.pos+' · 能力'+Math.round(careerSkill(p))+' · '+(S.lv>=4?'提交任用建议 · 1点':'任用 · 1点'),()=>careerAppoint(slot.id,p.id),why);
       }));
-    }})));
+    };
+    if(postId){const slot=careerPositions().find(x=>x.id===postId);if(slot)select(slot);return;}
+    UI.careerPick('调整哪个岗位',CAREER_MANAGEMENT[S.lv].desc+'新任人选须先考察。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>select(slot)})));
+  },
+  governancePanel(node){
+    const all=careerEnsure().approvals,active=all.filter(x=>['submitted','approved','executing'].includes(x.status));
+    if(!all.length)return;
+    const rows=active.concat(all.filter(x=>!active.includes(x)).slice(-4));
+    const label={submitted:'待上级审议',approved:'已获批 · 待实施',executing:'实施中',done:'已完成',rejected:'未获批',cancelled:'已撤回'};
+    const box=document.createElement('div');box.className='career-projects';box.id='governancePanel';
+    box.innerHTML='<h4>报批与实施</h4><p class="hint">提交后下回合反馈。获得批复后办理实施；网点与改革还需筹建、迁移或试点。未实施不改变岗位、贷款或经营规模。</p>'+rows.map(a=>{
+      const ck=governanceExecuteCheck(a),ap=['loan','capital'].includes(a.kind)?0:1;
+      return `<article class="career-project"><div class="career-title"><b>${esc(a.title)}</b><span class="tagx">${a.status==='submitted'&&['capital','reform'].includes(a.kind)?'待董事会审议':a.status==='submitted'&&a.kind==='appoint'?'待组织审议／报批':label[a.status]}</span></div><p class="hint">${esc(a.reason|| (a.status==='executing'?(a.kind==='reform'&&a.stage===1?'试点完成，分批推广中':'筹建／迁移／试点进行中'):a.status==='submitted'?'下回合反馈审议结果':''))}</p>${a.status==='approved'?`<button class="btn gold" data-gexec="${a.id}" ${ck.ok?'':'disabled'}>办理实施${ap?' · '+ap+'点':''}</button>${!ck.ok?'<p class="hint">'+esc(ck.why)+'</p>':''}`:''}${a.kind==='loan'&&S.lv===3&&a.status==='approved'&&platformRoom()<a.data.loan.amt?` <button class="btn ghost" data-gquota="${a.id}" ${careerCheck(0).ok?'':'disabled'}>向上申请配套额度 · 1点</button>`:''}${['submitted','approved'].includes(a.status)?` <button class="btn ghost" data-gcancel="${a.id}">撤回方案</button>`:''}</article>`;
+    }).join('');
+    node.prepend(box);
+    box.querySelectorAll('[data-gexec]').forEach(el=>el.onclick=()=>UI.careerRun(()=>governanceExecute(el.dataset.gexec)));
+    box.querySelectorAll('[data-gquota]').forEach(el=>el.onclick=()=>UI.careerRun(()=>governanceRequestQuota(el.dataset.gquota)));
+    box.querySelectorAll('[data-gcancel]').forEach(el=>el.onclick=()=>UI.careerRun(()=>governanceCancel(el.dataset.gcancel)));
   },
   careerPlanModal(){
     const g=careerEnsure(),wait=BC().planMonths-(S.monthAbs-g.planAt);
@@ -123,7 +140,7 @@ Object.assign(UI, {
   },
   careerUnitsPick(title,count,ids,done){
     if(ids.length===count){done(ids);return;}
-    UI.careerPick(title,`选择第${ids.length+1}个单位${count===3?'，占'+BC().allocation[S.lv][ids.length]+'%':'；'+(ids.length===0?'负责牵头承办':'负责协办')}。`,careerUnits().filter(x=>!ids.includes(x.id)).map(x=>({t:x.name,s:S.lv===5?'全国片区':x.dep!=null?'存款 '+fmtWan(x.dep):'承办单位',fn:()=>UI.careerUnitsPick(title,count,ids.concat(x.id),done)})));
+    UI.careerPick(title,`选择第${ids.length+1}个单位${count===3?'，占'+BC().allocation[S.lv][ids.length]+'%':'；'+(ids.length===0?'负责牵头承办':'负责协办')}。`,careerUnits().filter(x=>!ids.includes(x.id)).map(x=>({t:x.name,s:S.lv===5?'一级分行 · '+S.biz.regions.find(r=>r.id===x.regionId)?.name:x.dep!=null?'存款 '+fmtWan(x.dep):'承办单位',fn:()=>UI.careerUnitsPick(title,count,ids.concat(x.id),done)})));
   },
   careerNewModal(){
     const defs=CAREER_PROJECTS.filter(d=>d.lv===S.lv&&!careerEnsure().projects.some(p=>p.id===d.id));

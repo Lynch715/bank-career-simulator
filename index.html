@@ -479,7 +479,7 @@ const BALANCE = {
   start: { age:30, careerYear:8, lv:1 },
   ap: {1:4, 2:5, 3:6, 4:6, 5:6},
   // 大事占几个点
-  apCost: { 3:{open:2, platform:2}, 4:{startp:2, quota:2}, 5:{survey:2, reform:3} },
+  apCost: { 3:{open:1, platform:2}, 4:{startp:2, quota:2}, 5:{survey:2, reform:1} },
   // 推不掉的会:每回合 0/1/2/3 件的概率
   meet: { dist: { 2:[.55,.4,.05], 3:[.25,.5,.25], 4:[.1,.4,.4,.1], 5:[.05,.25,.4,.3] } },
   turnMonths: {1:1, 2:1, 3:3, 4:3, 5:6},
@@ -1150,12 +1150,12 @@ function computeCore(){
   S.core.rep = Math.round(c100(favAvg*c.repStaff + S.biz.csat*c.repCsat));
   const w = c.trustByLv[S.lv] || c.trustByLv[1];
   S.track.minClean = Math.min(S.track.minClean==null?100:S.track.minClean, S.core.clean);
-  S.core.trust = Math.round(c100(Object.entries(w).reduce((a,[id,k]) => a + (person(id) ? person(id).fav : 50) * k, 0)));
+  S.core.trust = Math.round(c100(S.lv>=4?governanceTrust():Object.entries(w).reduce((a,[id,k]) => a + (person(id) ? person(id).fav : 50) * k, 0)));
 }
 function computeAll(){ computeKpi(Math.max(1, S.m)); stepRivals(false); computeRank(); computeCore(); }
 
 /* ---------- 回合开始 ---------- */
-function supId(){ return [null,"huang","zhouqm","lu","lu","songwy"][S.lv]; }
+function supId(){ return S.lv>=4?governanceChair().id:[null,"huang","zhouqm","lu"][S.lv]; }
 function myUnitName(){ return [null,"弹子石网点","南岸支行","万州分行","重庆分行","泰和银行"][S.lv] || ""; }
 function subordinates(){ return [null,()=>S.staff,subsL2,subsL3,subsL4,subsL5][S.lv](); }
 function monthStart(first){ const result=[null,monthStartL1,monthStartL2,monthStartL3,monthStartL4,monthStartL5][S.lv](first); careerMonthStart(); return result; }
@@ -1325,6 +1325,7 @@ const PRODUCTS = [
 ];
 
 function canAct(id){
+  if(!S||S.lv!==1)return {ok:false,why:"当前职务无此网点操作权限"};
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本月行动点用完了"};
   if(S.discipline && S.discipline.removed && !["maintain","hall"].includes(id)) return {ok:false, why:"撤职整改期间仅开放客户维护和厅堂服务"};
@@ -1500,6 +1501,7 @@ function doBoss(){
 }
 
 function setRole(staffId, role){
+  if(!managementCheck(1).ok)return false;
   const s = staff(staffId); if(!s || !ROLE_NAME[role]) return false;
   if(S.phase!=="play") return false;
   if(S.discipline && S.discipline.removed) return false;
@@ -2102,20 +2104,15 @@ function bookLoan(name, amt, tier, src){
   S.biz.loans += amt;
 }
 function decideLoan(id, ok){
-  const i = S.biz.queue.findIndex(x=>x.id===id); if(i<0) return null;
-  const it = S.biz.queue[i];
-  S.biz.queue.splice(i,1);
-  if(ok){
-    bookLoan(it.name, it.amt, it.tier, "queue");
-    const fee = r1(it.amt * B2().loanFee);
-    S.biz.ytd.fee += fee; S.month.fee += fee;
-    if(it.rel) fav(it.rel, 3);
-    log("", `批了<b>${it.name}</b>的贷款。<span class="num">贷款+${fmtWan(it.amt)}</span>`);
-  } else {
-    if(it.rel){ fav(it.rel, -4); log("", `退了<b>${it.name}</b>的材料。${person(it.rel).name}那边没再提这事。`); }
-    else log("", `退了<b>${it.name}</b>的材料。`);
-  }
-  return it;
+  if(!managementCheck(2).ok)return null;
+  const i=S.biz.queue.findIndex(x=>x.id===id);if(i<0)return null;
+  const it=S.biz.queue[i];
+  if(ok&&loanAuthority(it)){
+    const row=governanceSubmit('loan',it.id,it.name+'授信报批',{loan:Object.assign({},it)},0);
+    if(!row)return null;
+  }else if(ok)governanceBookL2(it);
+  else{if(it.rel)fav(it.rel,-4);log('',`退了<b>${it.name}</b>的材料。`);}
+  S.biz.queue.splice(i,1);save();return it;
 }
 
 /* ---------- 回合开始 ---------- */
@@ -2292,12 +2289,13 @@ function outletCount(){ return S.biz.branches.reduce((a,b)=>a+b.outlets,0) + S.b
 function effL3(){ return depTotalL3() / 10000 / Math.max(1, outletCount()); }
 function subsL3(){ return S.biz.branches.map(b=>b.mgr).concat(Object.values(S.biz.lineHeads)).filter((v,i,a)=>v && a.indexOf(v)===i).map(person).filter(Boolean); }
 function areaGrowth(a){ const g = B3().area; return g.g0 + a.heat/100*g.heatK - a.comp/100*g.compK; }
-function delegK3(id){ const d = B3().deleg; return d.base + skillOf(id)/100 * d.k; }
+function delegK3(id){ const d=B3().deleg;return (d.base+skillOf(id)/100*d.k)*(governanceRoles(id).length>1?0.9:1); }
 function qName(){ return ["一","二","三","四"][Math.max(0, Math.round(S.m/3)-1)] + "季度"; }
 
 /* ---------- 进入 L3 ---------- */
 function initL3(){
   const b = B3();
+  if(!person('ops3'))S.people.push({id:'ops3',name:'林远和',role:'运营部总经理',pos:'万州分行运营部总经理',kind:'sub',group:'部下',met:true,alive:true,lvMet:3,skill:65,fav:50,trait:'稳健',recent:'负责运营与服务管理'});
   PEOPLE_L3.concat(RESERVES_L3).forEach(d => { if(!person(d.id)) S.people.push(Object.assign({lvMet:3, pos:d.role, met:true, recent:"", kind:"sub", alive:true, group:"部下"}, d)); });
   RESERVES_L3.forEach(d => { const p = person(d.id); p.kind = "reserve"; });
   const branches = BRANCHES_L3.map(x => Object.assign({}, x, {renov:0, y0:x.dep, dep0:x.dep, lastInc:0}));
@@ -2315,7 +2313,7 @@ function initL3(){
     loans, mixTarget: Object.assign({}, b.loanMix),
     npa: [], npaSeq: 0, restr: [], writeoffUsed: 0,
     budget: b.budgetQ, tilt: null,
-    lineHeads: {corp:corpHead, retail:"liujia", risk:"wangming", ops:"xiongw", hr:"tanmin"},
+    lineHeads: {corp:corpHead, retail:"liujia", risk:"wangming", ops:"ops3", hr:"tanmin"},
     csat: 55, ytd: {profit:0, fee:0}, disposedQ: 0, platformDone: [], platformOffer: null,
     rankStreak: 0, reported: false, opened: 0, closed: 0,
   };
@@ -2404,7 +2402,7 @@ function settleL3(){
   // 4 贷款增长与结构
   const L = S.biz.loans;
   const base = loansTotalL3() - L.platform;
-  let room = Math.max(0, S.biz.quota - base);
+  let room = Math.max(0, S.biz.quota - base - (S.biz.platformCompliant||0));
   const gk = {corp: tilt==="corp" ? t.corpLoan : 1, micro: tilt==="retail" ? t.retailLoan : 1, retail: tilt==="retail" ? t.retailLoan : 1};
   let want = {}; let sumW = 0;
   LOAN_TYPES.forEach(k => { want[k] = L[k] * b.loanGrowthQ * gk[k] * (0.9 + gauss()*0.05); sumW += want[k]; });
@@ -2493,7 +2491,7 @@ function rwaL4(){ return careerReserved() + loansL4() * B4().rwaK + S.biz.projec
 function capRoom(){ return S.biz.capital / B4().minCar - rwaL4(); }
 function deputy(line){ return S.biz.deputies.find(d=>d.line===line); }
 function lineK(line){ const d = deputy(line); const L = B4().lineK; const fit = d ? d.fit[line] : 50; return (L.base + fit/100*L.k) * (0.9 + S.biz.unity/100*0.2); }
-function subsL4(){ return S.biz.deputies.map(d=>person(d.id)).filter(Boolean); }
+function subsL4(){careerEnsure();return S.biz.deputies.map(d=>person(d.id)).concat(S.biz.inst.map(x=>person(x.headId))).filter((p,i,a)=>careerLive(p)&&a.findIndex(x=>x?.id===p.id)===i);}
 function ratingNow(){
   const r = B4().rating;
   const npl = nplL4()/loansL4()*100;
@@ -2678,7 +2676,7 @@ const REGIONS_L5 = [
 const L5_ACTIONS = [
   {id:"survey",  name:"下去调研",   desc:"选一个片区，那边两个半年长得快一截"},
   {id:"reg5",    name:"监管沟通",   desc:"去监管总局汇报，评级好说一点"},
-  {id:"reform",  name:"机构改革",   desc:"压一层管理层级，省费用，下面不高兴（只能做一次）"},
+  {id:"reform",  name:"机构改革",   desc:"提交董事会审议，获批后试点与分批推广（只能完成一次）"},
   {id:"visit5",  name:"看看老同事", desc:"给以前的人打个电话，口碑回来一点"},
 ];
 const STRAT_OPTS = [
@@ -2701,10 +2699,8 @@ function ratingL5(){ const r = B5().rating; const npl = S.biz.npl/S.biz.loans*10
   return clamp(r1(r.base + (npl-1.3)*r.nplK - (S.kpi.comp-90)*r.compK - (S.biz.regScore||0)*0.1 - ((person("gu")?person("gu").fav:50)-50)/100), 1, 5); }
 function rankL5(){ const me = S.biz.dep; return 1 + S.biz.peers.filter(p=>p.dep > me).length; }
 function subsL5(){
-  const g=S.biz.career;
-  const cabinet=g?.engaged&&g.executives?g.executives.map(d=>person(d.id)).filter(Boolean):["zhouqm","duheng","shenlan","jianggd"].map(person).filter(Boolean).slice(0,3);
-  const regions=g?.engaged?S.biz.regions.map(r=>person(r.headId)).filter(Boolean):[];
-  return cabinet.concat(S.people.filter(p=>p.kind==="sub" && p.lvMet<=2).slice(0,3),regions).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
+  const g=careerEnsure();
+  return g.executives.map(d=>person(d.id)).concat(S.biz.firstBranches.map(r=>person(r.headId))).filter((p,i,a)=>careerLive(p)&&a.findIndex(x=>x?.id===p.id)===i);
 }
 
 function initL5(){
@@ -2769,7 +2765,7 @@ function settleL5(){
   S.biz.outlets = Math.max(15000, S.biz.outlets + (D.branch-3)*d.branch.outletsPer);
   S.biz.csat = c100(S.biz.csat + (D.branch-3)*Math.abs(d.branch.rep) + (60 - S.biz.csat)*0.1);
   // 存款
-  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * careerRegionK(r) * (r.boost>0 ? b.survey.g : 1), 0) * careerLineK('retail');
+  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * governanceRegionK(r) * (r.boost>0 ? b.survey.g : 1), 0) * careerLineK('retail');
   const depG = (b.baseDepG + (S.biz.csat-60)*0.0003 + (D.price-3)*d.price.depG + (digiK-0.1)*d.digital.depG*10 + (D.branch-3)*d.branch.depG) * reg * (st.g||1);
   S.biz.dep = Math.round(S.biz.dep * (1 + depG + gauss()*0.002));
   S.biz.regions.forEach(r => { if(r.boost>0) r.boost--; });
@@ -2817,9 +2813,11 @@ function yearEndL5(){ S.biz.scoreLog.push(S.kpi.score); }
 
 /* 行动 */
 function canActL5(id){
+  const authority=managementCheck(5);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"这半年的行动点用完了"};
   if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
+  if(id==="reform" && governanceActive().some(x=>x.kind==="reform"))return {ok:false,why:"已有改革方案待审或实施中"};
   if(id==="reform" && S.biz.reformDone) return {ok:false, why:"机构改革已经做过了"};
   return {ok:true};
 }
@@ -2851,12 +2849,8 @@ function doReg5(){
   return true;
 }
 function doReform(){
-  const ck = canActL5("reform"); if(!ck.ok) return null;
-  const r = B5().reform;
-  apUse(apCost("reform")); S.biz.reformDone = true; S.biz.expenseK *= r.expense; S.biz.csat = c100(S.biz.csat + r.rep);
-  keyEvent("推动总行机构改革，压减一个管理层级");
-  log("warn", "机构改革的文件发下去了。全国二级分行的管理层级压掉一层，四千多个岗位要重新竞聘。那一周，你的手机响了两百多次。");
-  return true;
+  if(!canActL5('reform').ok)return null;
+  return governanceSubmit('reform','nationwide','全国机构改革',{ });
 }
 function doVisit5(){
   const ck = canActL5("visit5"); if(!ck.ok) return null;
@@ -2868,15 +2862,14 @@ function doVisit5(){
   return true;
 }
 function issueCapital(){
-  const c = B5().dial.capital;
-  if(S.biz.capIssued >= 2) return {ok:false, why:"这一任已经发过两次了"};
-  if(S.core.trust < c.needTrust) return {ok:false, why:"上面没批"};
-  S.biz.capital += c.add; S.biz.capIssued++;
-  log("good", `二级资本债发出去了，一千亿，认购倍数二点一。<span class="num">资本+${fmtWy(c.add)}</span>`);
-  return {ok:true};
+  if(!managementCheck(5).ok)return {ok:false,why:'当前无发行权限'};
+  if(S.biz.capIssued>=2)return {ok:false,why:'本任已发过两次'};
+  if(careerEnsure().board<BALANCE.authority.reviewBoard)return {ok:false,why:'董事会支持不足'};
+  const row=governanceSubmit('capital','capital','二级资本债发行',{ },0);
+  return row?{ok:true,pending:true}:{ok:false,why:'已有发行方案待审或待执行'};
 }
-function setDial(k, v){ if(S.lv!==5 || !S.biz.dials || !(k in S.biz.dials)) return false; S.biz.dials[k] = clamp(Math.round(v),1,5); return true; }
-function setStrategy(id){ S.biz.strategy = id; (S.biz.stratLog = S.biz.stratLog || []).push({year:S.year, id}); const o = STRAT_OPTS.find(x=>x.id===id); keyEvent(`年度战略会定调：${o.name}`); log("", `年度战略会定了调子：${o.name}。`); }
+function setDial(k, v){ if(!managementCheck(5).ok || S.lv!==5 || !S.biz.dials || !(k in S.biz.dials)) return false; S.biz.dials[k] = clamp(Math.round(v),1,5); return true; }
+function setStrategy(id){ if(!managementCheck(5).ok||!STRAT_OPTS.some(x=>x.id===id))return false; S.biz.strategy = id; (S.biz.stratLog = S.biz.stratLog || []).push({year:S.year, id}); const o = STRAT_OPTS.find(x=>x.id===id); keyEvent(`年度战略会定调：${o.name}`); log("", `年度战略会定了调子：${o.name}。`); }
 function fmtWy(v){ return (v/100000000).toFixed(2) + "万亿"; }
 /* =====================================================================
    行动成败:每次行动掷一次。成功率挂在关系、能力、口碑上,
@@ -3076,9 +3069,9 @@ const MEETINGS = {
   ],
   5: [
     {id:"m5_dongshi", title:"董事会",
-      body:"董事会审议半年经营情况和资本规划，你要列席汇报。陆明远是董事长。",
-      go:{s:"董事会那边稳一点", fn:()=>fav("lu",2), log:"董事会开了五个小时。独立董事问了三个问题，两个关于不良。"},
-      skip:{t:"「请分管副行长汇报。」", s:"陆明远不高兴", fn:()=>fav("lu",-6), log:"会后陆明远打来电话，问你那天在忙什么。"}},
+      body:"董事会审议半年经营情况和资本规划，你要列席汇报。由在任董事长主持。",
+      go:{s:"董事会那边稳一点", fn:()=>{fav(governanceChair().id,2);careerEnsure().board=c100(careerEnsure().board+2);}, log:"董事会开了五个小时。独立董事问了三个问题，两个关于不良。"},
+      skip:{t:"「请分管副行长汇报。」", s:"董事会支持下降", fn:()=>{fav(governanceChair().id,-6);careerEnsure().board=c100(careerEnsure().board-6);}, log:"会后董事长打来电话，问你那天在忙什么。"}},
     {id:"m5_jianguan", title:"监管通报会",
       body:"金融监管总局召开年度监管通报会，各家大行行长到场。顾清越坐在主席台第二排。",
       go:{s:"评级好说一点 · 顾清越知道", fn:()=>{ fav("gu",2); S.biz.regScore = Math.min(10,(S.biz.regScore||0)+0.5); }, log:"通报会两个小时，点了四家行的名，没有泰和。"},
@@ -3111,7 +3104,7 @@ function meetPick(){
 }
 function meetSpec(m){
   const can = S.ap >= 1;
-  const hosts={m2_jyfx:'zhouqm',m2_hanghang:'zhouqm',m3_jyfx:'lu',m4_zonghang:'songwy',m4_jianguanju:'gu',m5_dongshi:'lu',m5_jianguan:'gu'};
+  const hosts={m2_jyfx:'zhouqm',m2_hanghang:'zhouqm',m3_jyfx:'lu',m4_zonghang:'songwy',m4_jianguanju:'gu',m5_dongshi:S.lv===5?governanceChair().id:'lu',m5_jianguan:'gu'};
   return {kind:"event", id:m.id, portrait:hosts[m.id]||null, title:m.title, body:m.body + "<br><small class=\"muted\">推不掉的会：去要占 1 个行动点。</small>", opts:[
     {t:"「我去。」", s:"占1点 · " + m.go.s, disabled:!can, fn:()=>{ apUse(1); m.go.fn(); log("", m.go.log); S.track.meetGo = (S.track.meetGo||0)+1; }},
     {t:m.skip.t, s:m.skip.s, fn:()=>{ m.skip.fn(); log("warn", m.skip.log); S.track.meetSkip = (S.track.meetSkip||0)+1; }},
@@ -3174,6 +3167,7 @@ function careerEnsure(){
     });
     g.seniorRoster=true;
   }
+  governanceEnsure(g);
   return g;
 }
 function careerExecs(){ const g=careerEnsure(); return S.lv===4?S.biz.deputies:S.lv===5?g.executives:[]; }
@@ -3193,7 +3187,7 @@ function careerLevel(p){
   if(!p)return -1;
   // 已任用的岗位是现任职务。旧档中的任命继续有效，不因规则收紧撤人或清空岗位。
   const g=S.biz.career;
-  if(S.lv===5){if(g?.executives?.some(d=>d.id===p.id))return 5;if(S.biz.regions.some(x=>x.headId===p.id))return 4;}
+  if(S.lv===5){if(g?.executives?.some(d=>d.id===p.id))return 5;if((S.biz.firstBranches||[]).some(x=>x.headId===p.id))return 4;}
   if(S.lv===4){if(S.biz.deputies.some(d=>d.id===p.id))return 4;const row=S.biz.inst.find(x=>x.headId===p.id);if(row)return row.name.includes('分行')?3:2;}
   if(S.lv===3&&(S.biz.branches.some(x=>x.mgr===p.id)||Object.values(S.biz.lineHeads).includes(p.id)))return 2;
   if(S.lv===2&&(S.biz.outlets.some(x=>x.mgr===p.id)||S.biz.corp.lead===p.id||Object.values(g?.teams||{}).includes(p.id)))return 1;
@@ -3223,16 +3217,16 @@ function careerPeople(){
 function careerPositions(){
   careerEnsure();
   if(S.lv===2) return S.biz.outlets.map(x=>({id:x.id,name:x.name+'负责人',pid:x.mgr,row:x,field:'mgr',line:'retail'})).concat(Object.keys(S.biz.career.teams).map(line=>({id:'team_'+line,name:CAREER_LINES.find(x=>x.id===line).name+'专业团队负责人',pid:S.biz.career.teams[line],row:S.biz.career.teams,field:line,line,team:true})));
-  if(S.lv===3) return S.biz.branches.map(x=>({id:x.id,name:x.name+'行长',pid:x.mgr,row:x,field:'mgr',line:'corp'}));
+  if(S.lv===3) return S.biz.branches.map(x=>({id:x.id,name:x.name+(x.id==='yyb'?'总经理':'行长'),pid:x.mgr,row:x,field:'mgr',line:'corp'})).concat(LINES_L3.map(x=>({id:'dept_'+x.id,name:x.name+'负责人',pid:S.biz.lineHeads[x.id],row:S.biz.lineHeads,field:x.id,line:x.id==='hr'?'ops':x.id,department:true})));
   if(S.lv===4) return S.biz.inst.map(x=>({id:x.id,name:x.name+'负责人',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:2})).concat(S.biz.deputies.map(x=>({id:'exec_'+x.line,name:'分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:3})));
-  if(S.lv===5) return S.biz.regions.map(x=>({id:x.id,name:CAREER_L5_BRANCHES[x.id]+'行长',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:4})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:4})));
+  if(S.lv===5) return S.biz.firstBranches.map(x=>({id:x.id,name:x.name+'行长',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:4})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:4})));
   return [];
 }
 function careerUnits(){
   if(S.lv===1) return [{id:'dzs',name:'弹子石网点'}];
   if(S.lv===2) return S.biz.outlets;
   if(S.lv===3) return S.biz.branches;
-  return S.lv===4?S.biz.inst:S.biz.regions;
+  return S.lv===4?S.biz.inst:S.biz.firstBranches;
 }
 function careerFit(p,line){
   const d=careerExecs().find(x=>x.id===p.id);
@@ -3248,7 +3242,7 @@ function careerAvailable(postId){
   return careerPeople().filter(p=>!used.has(p.id) && careerSkill(p)>=BC().minSkill[S.lv]&&careerLevel(p)>=(target?.minLevel??CAREER_MANAGEMENT[S.lv].min));
 }
 function careerCheck(cost,ap){
-  if(S.phase!=='play') return {ok:false,why:'当前不能办理'};
+  const authority=managementCheck();if(!authority.ok)return authority;
   if(S.ap<(ap==null?1:ap)) return {ok:false,why:'行动点不足'};
   if(cost && S.lv<=3 && S.biz.budget<cost) return {ok:false,why:'经营费用不足'};
   return {ok:true,why:''};
@@ -3280,28 +3274,34 @@ function careerAssess(id){
   return careerDone();
 }
 function careerAppoint(postId,id){
-  const slot=careerPositions().find(x=>x.id===postId),p=careerAvailable(postId).find(x=>x.id===id);
-  if(!slot || !p || careerRecord(id).assessedUntil<S.monthAbs || careerRecord(id).training || !careerCheck(0).ok) return null;
-  const old=person(slot.pid);
-  if(S.lv===2&&!slot.team){if(!doAppoint(postId,id)) return null;}
-  else if(S.lv===3){if(!doAppointL3(postId,id)) return null;}
+  const slot=careerPositions().find(x=>x.id===postId),p=person(id);
+  if(!careerCheck(0).ok || governanceAppointCheck(slot,p))return null;
+  if(S.lv>=4&&governanceActive().some(x=>x.kind==='appoint'&&x.data.pid===id))return null;
+  if(S.lv>=4)return governanceSubmit('appoint',postId,'任用'+p.name+'为'+slot.name,{postId,pid:id,oldId:slot.pid});
+  careerApplyAppointment(slot,p);return careerDone();
+}
+function careerApplyAppointment(slot,p){
+  const old=person(slot.pid),id=p.id,postId=slot.id;
+  if(S.lv===2&&!slot.team)applyAppointOutlet(postId,id);
+  else if(S.lv===3&&!slot.department)applyAppointBranch(postId,id);
   else{
     careerSpend(0);
     const fit=slot.exec?Object.fromEntries(CAREER_LINES.map(l=>[l.id,careerFit(p,l.id)])):null;
     slot.row[slot.field]=id;
     if(slot.exec){slot.row.name=p.name;slot.row.fit=fit;}
-    else if(!slot.team){slot.row.headName=p.name;slot.row.skill=careerSkill(p);}
-    p.pos=myUnitName()+'·'+slot.name;p.kind='sub';p.recent='经考察任用，正在履职观察';
-    fav(id,BC().appointFav);
-    if(old){old.pos=S.lv===5?'总行专项岗位':myUnitName()+'专项岗位';old.recent='调整工作分工';fav(old.id,BC().oldFav);}
-    keyEvent(`经考察任用${p.name}担任${slot.name}`);
-    log('', `${slot.name}由${p.name}担任。${old?old.name+'调整到专项岗位。':''}行动点-1，任用后进入履职观察。`);
+    else if(!slot.team&&!slot.department){slot.row.headName=p.name;slot.row.skill=careerSkill(p);}
+    p.pos=(S.lv===5?'':myUnitName()+'·')+slot.name;p.kind='sub';p.recent='经考察任用，正在履职观察';fav(id,BC().appointFav);
+    if(old){
+      const remaining=governanceRoles(old.id);
+      old.pos=remaining.length?remaining.join('（兼任）'):S.lv===5?'总行专项岗位':myUnitName()+'专项岗位';old.recent=remaining.length?'解除原兼任，保留现任岗位':'调整工作分工';fav(old.id,BC().oldFav);
+    }
+    keyEvent(`经考察任用${p.name}担任${slot.name}`);log('',`${slot.name}由${p.name}担任，进入履职观察。行动点-1。`);
   }
+  if(S.lv===3&&old){const roles=governanceRoles(old.id);if(roles.length){old.pos=roles.join('（兼任）');old.kind='sub';}}
   const g=careerEnsure();g.engaged=true;g.coord=c100(g.coord-BC().coordPenalty/2);
   careerRecord(id).probation={until:S.monthAbs+BC().probationMonths,lv:S.lv,post:slot.name};
   careerRecord(id).history.push({at:S.monthAbs,lv:S.lv,type:'appoint',post:slot.name});
-  if(old && !g.council)g.council={id:'people',at:S.turn,lead:old.id,partner:id};
-  return careerDone();
+  if(old&&!g.council)g.council={id:'people',at:S.turn,lead:old.id,partner:id};
 }
 function careerTalk(id,mode){
   const p=careerPeople().find(x=>x.id===id),r=p&&careerRecord(id),g=careerEnsure();
@@ -3442,6 +3442,7 @@ function careerDeputyChoice(id){
   keyEvent(`${CAREER_DEPUTY.titles[S.lv]}：${o.name}`);save();return true;
 }
 function careerMonthStart(){
+  governanceMonthStart();
   const g=careerEnsure(),prev=S.deputyTerms&&S.deputyTerms[S.lv-1];
   if(prev && !g.deputyApplied){g.coord=c100(g.coord+prev.coord);g.deputyApplied=true;}
   if(S.turn-g.lastCouncil>=BC().councilInterval[S.lv]){
@@ -3586,6 +3587,182 @@ function careerSettle(){
     }
   }
 }
+/* 游戏内授权与组织流程。阈值用于玩法，不代表现实银行的法定授权。旧档只补字段，不重记账。 */
+BALANCE.authority={loanLimit:{2:{micro:600,corp:1000},3:{platform:100000}},reviewCoord:45,reviewBoard:45,reviewComp:70};
+const FIRST_BRANCHES_L5={
+  db:['辽宁','吉林','黑龙江','大连'],hb:['北京','天津','河北','山西','内蒙古'],
+  xb:['陕西','甘肃','青海','宁夏','新疆'],hd:['上海','江苏','浙江','安徽','福建','江西','山东','宁波','厦门','青岛'],
+  hz:['湖北','河南','湖南'],xn:['重庆','四川','贵州','云南','西藏'],hn:['广东','广西','海南','深圳']
+};
+function managementCheck(lv){
+  if(!S||S.phase!=='play')return {ok:false,why:'当前不能办理'};
+  if(lv&&S.lv!==lv)return {ok:false,why:'当前职务无此权限'};
+  if(S.discipline?.removed)return {ok:false,why:'撤职整改期间管理权限暂停'};
+  return {ok:true,why:''};
+}
+function governanceEnsure(g){
+  if(!g.approvals)g.approvals=[];
+  if(g.approvalSeq==null)g.approvalSeq=0;
+  if(S.lv===5&&!S.biz.firstBranches){
+    S.biz.firstBranches=[];
+    S.biz.regions.forEach(r=>FIRST_BRANCHES_L5[r.id].forEach((name,i,all)=>{
+      const id=i===0?r.id:r.id+'_'+i;
+      const known=S.people.find(p=>careerLive(p)&&p.pos===name+'分行行长'&&!S.biz.firstBranches.some(x=>x.headId===p.id)&&!g.executives.some(x=>x.id===p.id));
+      const headId=i===0&&r.headId?r.headId:known?known.id:'chief5_'+id;
+      const row={id,name:name+'分行',regionId:r.id,headId,share:r.share/all.length,g:r.g};
+      S.biz.firstBranches.push(row);
+      if(!person(headId))S.people.push({id:headId,name:['沈','程','许','林','陈','方','叶'][Object.keys(FIRST_BRANCHES_L5).indexOf(r.id)]+['远衡','嘉宁','正安','明川','知行','文清','景和','若平','启明','思源'][i],skill:60,fav:50,kind:'sub',group:'一级分行',met:true,alive:true,lvMet:5,pos:row.name+'行长',role:row.name+'行长',trait:'稳健',recent:'现任一级分行负责人'});
+    }));
+    // 保留原交流人选，省分行已有现任时按总行专项岗位管理，避免同一省出现两个现任行长。
+    S.people.filter(p=>p.kind==='reserve'&&careerLive(p)&&!S.biz.firstBranches.some(x=>x.headId===p.id)&&S.biz.firstBranches.some(x=>p.pos===x.name+'行长')).forEach(p=>{p.pos='总行专项岗位';});
+    ['公司业务部','零售业务部','风险管理部','运营管理部'].forEach((name,i)=>{
+      const id='hqdept5_'+i;if(!person(id))S.people.push({id,name:['陆承安','徐文澜','董明远','苏静宜'][i],kind:'reserve',group:'总行部门',met:true,alive:true,lvMet:5,skill:70,fav:50,pos:'总行'+name+'总经理',role:'总行'+name+'总经理',recent:'总行部门干部，可考察交流'});
+    });
+  }
+  if(S.lv>=4)governanceChair();
+}
+function governanceChair(){
+  const current=person('lu');
+  if(current&&careerLive(current)){if(S.lv===5&&current.pos!=='总行董事长'){current.pos='总行董事长';current.recent='任总行董事长，主持董事会审议';}return current;}
+  let p=person('chair5');
+  if(!p){p={id:'chair5',name:'梁知远',kind:'sup',group:'董事会',met:true,alive:true,lvMet:4,skill:75,fav:60,pos:'总行董事长',role:'总行董事长',recent:'接任董事长，按任内经营和治理评价履职'};S.people.push(p);}
+  return p;
+}
+function governanceTrust(){
+  const chair=governanceChair(),g=S.biz.career;
+  if(S.lv===5)return c100((g?.board??BC().boardStart)*0.7+(50+(S.biz.regScore||0)*5)*0.3);
+  // 一级分行继续接受在任总行领导评价，退休前任不再作为正式上级。
+  const weights=BALANCE.core.trustByLv[4],entries=Object.entries(weights).map(([id,k])=>[id==='lu'?chair:person(id),k]).filter(([p])=>careerLive(p));
+  const total=entries.reduce((n,[p,k])=>n+k,0);
+  return total?entries.reduce((n,[p,k])=>n+p.fav*k,0)/total:50;
+}
+function governanceRegionK(row){
+  const rows=(S.biz.firstBranches||[]).filter(b=>b.regionId===row.id),share=rows.reduce((n,b)=>n+b.share,0);
+  return share?rows.reduce((n,b)=>n+b.share*careerRegionK(b),0)/share:1;
+}
+function governanceRoles(id){
+  if(S.lv!==3)return [];
+  return S.biz.branches.filter(x=>x.mgr===id).map(x=>x.name+(x.id==='yyb'?'总经理':'行长')).concat(Object.entries(S.biz.lineHeads).filter(([k,pid])=>pid===id).map(([k])=>LINES_L3.find(x=>x.id===k).name+'负责人'));
+}
+function governanceActive(){return careerEnsure().approvals.filter(x=>['submitted','approved','executing'].includes(x.status));}
+function governanceSubmit(kind,key,title,data,ap){
+  const ck=careerCheck(0,ap==null?1:ap);if(!ck.ok)return null;
+  const g=careerEnsure();
+  if(governanceActive().some(x=>x.kind===kind&&x.key===key))return null;
+  const row={id:'approval_'+(++g.approvalSeq),kind,key,title,data,status:'submitted',at:S.turn,lv:S.lv,reviewAt:S.turn+1};
+  careerSpend(0,ap==null?1:ap);g.approvals.push(row);
+  log('',`${title}已提交${kind==='appoint'?'组织审议与任免报批':kind==='loan'?'上级贷审会':kind==='quota'?'上级授信额度审批':kind==='open'||kind==='close'?'上级机构规划审批':'董事会审议及后续报批'}，下回合反馈；批复前不生效。`);
+  careerDone();return row;
+}
+function governanceAppointCheck(slot,p){
+  if(!slot||!p||!careerAvailable(slot.id).some(x=>x.id===p.id))return '人选不符合本级岗位要求或已任其他岗位';
+  const r=careerRecord(p.id);
+  if(r.assessedUntil<S.monthAbs)return r.assessedUntil<0?'请先完成履职考察':'履职考察已过期，请重新考察';
+  if(r.training)return '正在专项培养';
+  return '';
+}
+function governanceReviewReason(a){
+  const g=careerEnsure();
+  if(g.coord<BALANCE.authority.reviewCoord)return '班子协调不足，需先沟通后重新提交';
+  if(S.lv===5&&g.board<BALANCE.authority.reviewBoard)return '董事会支持不足，需先完善经营与治理';
+  if(a.kind==='appoint')return governanceAppointCheck(careerPositions().find(x=>x.id===a.data.postId),person(a.data.pid));
+  if(['loan','quota'].includes(a.kind)&&(S.kpi.comp<BALANCE.authority.reviewComp||(a.kind==='loan'&&loanVisibleRisk(a.data.loan)&&S.kpi.comp<90)))return '风险审查未通过，材料退回';
+  return '';
+}
+function governanceExecuteCheck(a){
+  const ck=careerCheck(0,['loan','capital'].includes(a?.kind)?0:1);if(!ck.ok)return ck;
+  if(!a||a.lv!==S.lv||a.status!=='approved')return {ok:false,why:'尚无有效批复'};
+  if(a.kind==='appoint'){
+    const why=governanceAppointCheck(careerPositions().find(x=>x.id===a.data.postId),person(a.data.pid));
+    if(why)return {ok:false,why};
+    if(careerPositions().find(x=>x.id===a.data.postId).pid!==a.data.oldId)return {ok:false,why:'岗位已变动，请撤回后重新报批'};
+  }
+  if(a.kind==='open'&&S.biz.budget<B3().outlet.build)return {ok:false,why:'筹建费用不足'};
+  if(a.kind==='close'&&(!branch(a.data.bid)||branch(a.data.bid).outlets<=1))return {ok:false,why:'须保留支行基本服务网点'};
+  if(a.kind==='loan'&&S.lv===3&&platformRoom()<a.data.loan.amt)return {ok:false,why:'信贷额度不足，批复不等于额度，可暂缓或撤回'};
+  if(a.kind==='quota'&&(!careerEnsure().approvals.some(x=>x.id===a.data.loanId&&x.status==='approved')))return {ok:false,why:'对应融资已撤回或实施，请撤回额度方案'};
+  if(a.kind==='capital'&&S.biz.capIssued>=2)return {ok:false,why:'本任资本债次数已用完'};
+  return {ok:true,why:''};
+}
+function governanceExecute(id){
+  const a=careerEnsure().approvals.find(x=>x.id===id);if(!governanceExecuteCheck(a).ok)return null;
+  if(a.kind==='appoint'){
+    const slot=careerPositions().find(x=>x.id===a.data.postId);
+    careerApplyAppointment(slot,person(a.data.pid));a.status='done';
+  }else if(a.kind==='loan'){
+    const it=a.data.loan;
+    if(S.lv===2)governanceBookL2(it);
+    else{
+      const b=B3().platform;S.biz.loans.platform+=it.amt;S.biz.platformCompliant=(S.biz.platformCompliant||0)+it.amt;
+      S.loanBook.push({id:'pf_ok_'+a.id,name:it.name,amt:it.amt,tier:it.tier,src:'platform',approved:true,lv:3,at:S.monthAbs,defAt:S.monthAbs+ri(b.delayM),def:R()<b.defP/2,done:false});
+      log('good',`${it.name}按上级批复落实授信与担保条件，发放${fmtYi(it.amt)}，占用信贷额度。`);
+    }
+    a.status='done';
+  }else if(a.kind==='quota'){
+    careerSpend(0);S.biz.quota+=a.data.amount;a.status='done';log('good',`上级批复补充信贷额度${fmtYi(a.data.amount)}，尚未发放贷款。`);
+  }else if(a.kind==='capital'){
+    S.biz.capital+=B5().dial.capital.add;S.biz.capIssued++;a.status='done';
+    log('good',`完成董事会审议及发行报批后，二级资本债发行到账，资本+${fmtWy(B5().dial.capital.add)}。`);
+  }else{
+    careerSpend(a.kind==='open'?B3().outlet.build:0);
+    a.status='executing';a.stage=0;a.nextAt=S.turn+1;
+    log('',`${a.title}按批复启动${a.kind==='open'?'筹建':a.kind==='close'?'客户迁移与人员安置':'试点及人员安置'}，下回合验收，不立即改变经营机构。`);
+  }
+  return careerDone();
+}
+function governanceCancel(id){
+  if(!managementCheck().ok)return null;
+  const a=governanceActive().find(x=>x.id===id&&x.status!=='executing');if(!a)return null;
+  a.status='cancelled';log('',a.title+'已撤回，尚未发生放款或机构变动。');return careerDone();
+}
+function governanceMonthStart(){
+  if(!managementCheck().ok)return;
+  const g=careerEnsure(),stamp=S.lv+':'+S.turn+':'+S.monthAbs;
+  if(g.approvalTick===stamp)return;g.approvalTick=stamp;
+  g.approvals.forEach(a=>{
+    if(a.lv!==S.lv)return;
+    if(a.status==='submitted'&&S.turn>=a.reviewAt){
+      const why=governanceReviewReason(a);a.status=why?'rejected':'approved';a.reason=why;
+      log(why?'warn':'good',`${a.title}${why?'未获批：'+why:'已获批，请在职务经营台账办理实施；尚未入账或换人'}。`);
+    }else if(a.status==='executing'&&S.turn>=a.nextAt){
+      if(a.kind==='open')executeOpenOutlet(a.data.aid);
+      else if(a.kind==='close'){
+        if(!branch(a.data.bid)||branch(a.data.bid).outlets<=1){a.status='cancelled';a.reason='服务网点数量变化，停止撤并';return;}
+        executeCloseOutlet(a.data.bid);
+      }else if(a.kind==='reform'){
+        if(a.stage===0){a.stage=1;a.nextAt=S.turn+1;log('','机构改革试点通过，开始分批推广与岗位竞聘，下回合完成评估。');return;}
+        if(!S.biz.reformDone){S.biz.reformDone=true;S.biz.expenseK*=B5().reform.expense;S.biz.csat=c100(S.biz.csat+B5().reform.rep);keyEvent('经董事会审议、试点及分批推广完成机构改革');log('warn','机构改革分批落地，管理层级压减完成，费用节约从本期开始体现。');}
+      }
+      a.status='done';
+    }
+  });
+}
+function loanVisibleRisk(it){
+  const score=B2().tierScore;
+  const risk=(score.coll[it.coll]||0)+(score.flow[it.flow]||0)+(score.tax[it.tax]||0);
+  // 授权按尽调已识别的风险办理，不通过按钮泄露隐藏的真实违约风险层级。
+  return it.riskFlag===true||risk>=score.high;
+}
+function loanAuthority(it){
+  const limits=BALANCE.authority.loanLimit[S.lv];
+  return it.amt>(limits?.[it.type]??0)||loanVisibleRisk(it);
+}
+function governanceBookL2(it){
+  bookLoan(it.name,it.amt,it.tier,'queue');
+  const fee=r1(it.amt*B2().loanFee);S.biz.ytd.fee+=fee;S.month.fee+=fee;
+  if(it.rel)fav(it.rel,3);
+  log('',`${it.name}按有效授信权限办理放款，贷款+${fmtWan(it.amt)}。`);
+}
+function platformRoom(){return Math.max(0,S.biz.quota-(loansTotalL3()-S.biz.loans.platform+(S.biz.platformCompliant||0)));}
+
+function governanceRequestQuota(id){
+  if(!managementCheck(3).ok)return null;
+  const a=careerEnsure().approvals.find(x=>x.id===id&&x.kind==='loan'&&x.status==='approved');
+  if(!a)return null;
+  const amount=Math.max(0,a.data.loan.amt+loansTotalL3()-S.biz.loans.platform+(S.biz.platformCompliant||0)-S.biz.quota);
+  if(!amount)return null;
+  return governanceSubmit('quota','quota','平台项目配套信贷额度',{amount,loanId:id});
+}
 /* =====================================================================
    L2 行动(每个 1 AP)。贷款审批不占行动点。
    ===================================================================== */
@@ -3599,6 +3776,7 @@ const ACTIONS_L2 = [
 ];
 
 function canActL2(id){
+  const authority=managementCheck(2);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本月行动点用完了"};
   const b = B2();
@@ -3670,12 +3848,9 @@ function doVisit(pid, gift){
 }
 
 /* 任免候选:L1 的旧部 + 现任负责人之外的人 */
-function appointCands(oid){
-  const o = outlet(oid);
-  const used = new Set(S.biz.outlets.map(x=>x.mgr).concat([S.biz.corp.lead]));
-  return S.people.filter(p => p.alive && p.met && p.kind==="staff" && p.skill!=null && !used.has(p.id) && p.pos.indexOf("离职")<0);
-}
-function doAppoint(oid, pid){
+function appointCands(oid){return S.lv===2?careerAvailable(oid):[];}
+function doAppoint(oid,pid){return S.lv===2?careerAppoint(oid,pid):null;}
+function applyAppointOutlet(oid, pid){
   const ck = canActL2("appoint"); if(!ck.ok) return null;
   const o = outlet(oid), np = person(pid); if(!o || !np) return null;
   const b = B2().appoint;
@@ -3726,8 +3901,8 @@ function doReportUp(){
    L3 行动(每个 1 AP)。不良处置、信贷结构滑杆不占行动点。
    ===================================================================== */
 const ACTIONS_L3 = [
-  {id:"open",     name:"开网点",     desc:"在一个片区开新网点，投入三百万"},
-  {id:"close",    name:"撤并网点",   desc:"撤掉一个网点，省费用，片区口碑掉"},
+  {id:"open",     name:"开网点",     desc:"上报网点规划，获批后筹建与验收，投入三百万"},
+  {id:"close",    name:"撤并网点",   desc:"上报撤并方案，获批后迁移客户与安置人员"},
   {id:"squat",    name:"下支行蹲点", desc:"去一个支行蹲几天，这个季度存款长得快一点"},
   {id:"renovate", name:"网点改造",   desc:"投入200万和1点行动，提高支行季末存款增长加成，上限30%"},
   {id:"tilt",     name:"条线倾斜",   desc:"资源往一个部门偏，其他部门不高兴"},
@@ -3737,6 +3912,7 @@ const ACTIONS_L3 = [
 ];
 
 function canActL3(id){
+  const authority=managementCheck(3);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
   if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
@@ -3752,11 +3928,13 @@ function canActL3(id){
 }
 
 function doOpenOutlet(aid){
-  const ck = canActL3("open"); if(!ck.ok) return null;
+  if(!canActL3("open").ok||!area(aid))return null;
+  return governanceSubmit("open",aid,area(aid).name+"新网点筹建",{aid});
+}
+function executeOpenOutlet(aid){
   const a = area(aid); if(!a) return null;
   const o = B3().outlet;
-  apUse(apCost("open"));
-  S.biz.budget -= o.build; S.month.spent += o.build;
+  // 筹建费用已在按批复启动时扣除，验收不重复扣费。
   // 爬坡速度看热度和竞争,封顶看人口
   const cold = !roll(ODDS[3].open(a));
   const ramp = Math.round((o.rampMin + (o.rampMax - o.rampMin) * clamp((a.heat - a.comp*0.5)/80, 0, 1)) * (cold ? BALANCE.odds.L3.open.coldRamp : 1));
@@ -3772,10 +3950,12 @@ function doOpenOutlet(aid){
 }
 
 function doCloseOutlet(bid){
-  const ck = canActL3("close"); if(!ck.ok) return null;
+  if(!canActL3("close").ok||!branch(bid)||branch(bid).outlets<=1)return null;
+  return governanceSubmit("close",bid,branch(bid).name+"网点撤并",{bid});
+}
+function executeCloseOutlet(bid){
   const x = branch(bid); if(!x || x.outlets <= 1) return null;
   const c = B3().closeOutlet;
-  apUse(1);
   const loss = Math.round(x.dep / x.outlets * c.lossShare);
   x.outlets--; x.dep -= loss;
   S.biz.expenseQ = Math.max(0, S.biz.expenseQ - c.saveY/4);
@@ -3819,12 +3999,9 @@ function doTilt(line){
   return true;
 }
 
-function appointCandsL3(bid){
-  const used = new Set(S.biz.branches.map(x=>x.mgr).concat(Object.values(S.biz.lineHeads)));
-  const pool = S.people.filter(p => p.alive && p.met && !used.has(p.id) && p.skill != null && (p.kind==="reserve" || ((p.lvMet<=2) && p.skill >= 60 && p.pos.indexOf("离职")<0 && p.pos.indexOf("被查")<0 && p.pos !== "南岸支行行长")));
-  return pool.filter(p => !["zhouqm","maben","weilc","lu","gu","huang"].includes(p.id)&&careerLevel(p)>=1&&careerLevel(p)<=2);
-}
-function doAppointL3(bid, pid){
+function appointCandsL3(bid){return S.lv===3?careerAvailable(bid):[];}
+function doAppointL3(bid,pid){return S.lv===3?careerAppoint(bid,pid):null;}
+function applyAppointBranch(bid, pid){
   const ck = canActL3("appoint"); if(!ck.ok) return null;
   const x = branch(bid), np = person(pid); if(!x || !np) return null;
   if(!careerLive(np)||careerLevel(np)<1||careerLevel(np)>2)return null;
@@ -3832,7 +4009,7 @@ function doAppointL3(bid, pid){
   apUse(1);
   const old = person(x.mgr);
   if(old){ fav(old.id, b.oldFavHit); old.pos = "万州分行调研员"; old.recent = `从${x.name}调下来`; old.kind = "npc"; }
-  x.mgr = pid; np.pos = x.name + "行长"; np.kind = "sub"; np.recent = np.lvMet < 3 ? "从主城调来万州，你点的名" : "你提上来的";
+  x.mgr = pid; np.pos = x.name + (x.id==="yyb"?"总经理":"行长"); np.kind = "sub"; np.recent = np.lvMet < 3 ? "从主城调来万州，你点的名" : "你提上来的";
   fav(pid, b.newFav);
   keyEvent(`提拔${np.name}任${x.name}行长`);
   log("", `${x.name}换了行长：${np.name}。${old ? old.name + "搬办公室那天，把墙上的锦旗一面面取下来，卷好带走了。" : ""}`);
@@ -3840,6 +4017,7 @@ function doAppointL3(bid, pid){
 }
 
 function doPlatform(){
+  if(S.biz.platformOffer)return null;
   const ck = canActL3("platform"); if(!ck.ok) return null;
   const pf = PLATFORMS_L3.find(p => !S.biz.platformDone.includes(p.id));
   if(!pf) return null;
@@ -3850,10 +4028,16 @@ function doPlatform(){
   return S.biz.platformOffer;
 }
 function decidePlatform(accept){
+  if(!managementCheck(3).ok)return null;
   const off = S.biz.platformOffer; if(!off) return null;
   const pf = PLATFORMS_L3.find(p=>p.id===off.id), b = B3().platform;
+  if(accept && accept!=='gray'){
+    const loan={id:'pf_'+off.id,name:pf.name,amt:off.size,tier:'mid'};
+    if(!governanceSubmit('loan',loan.id,pf.name+'平台授信报批',{loan},0))return null;
+    S.biz.platformDone.push(off.id);S.biz.platformOffer=null;return true;
+  }
   S.biz.platformDone.push(off.id); S.biz.platformOffer = null;
-  if(accept){
+  if(accept==='gray'){
     S.biz.loans.platform += off.size;
     dirt(b.clean);
     const def = R() < b.defP;
@@ -3885,6 +4069,7 @@ function doReportUpL3(){
 /* 不良处置(不占行动点,每季有上限) */
 function disposeCap(){ return B3().dispose.perQ + (S.biz.tilt==="risk" ? B3().dispose.riskBonus : 0); }
 function disposeNpa(id, how){
+  if(!managementCheck(3).ok)return null;
   const x = S.biz.npa.find(n=>n.id===id); if(!x || x.stage) return null;
   if(S.biz.disposedQ >= disposeCap()) return null;
   const d = B3().dispose;
@@ -3913,6 +4098,7 @@ function disposeNpa(id, how){
   return true;
 }
 function setMix(corp, micro, retail){
+  if(!managementCheck(3).ok)return null;
   const s = corp + micro + retail; if(s <= 0) return false;
   S.biz.mixTarget = {corp: corp/s, micro: micro/s, retail: retail/s};
   return true;
@@ -3930,6 +4116,7 @@ const ACTIONS_L4 = [
   {id:"regulator",name:"监管沟通",   desc:"去监管局汇报，评级好说一点"},
 ];
 function canActL4(id){
+  const authority=managementCheck(4);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
   if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
@@ -5012,7 +5199,7 @@ const EVENTS_L5 = [
 {id:"capwin", title:"窗口", cd:2, fixed:true, when:S=>S.turn===4 || S.turn===6,
  body:S=>`资负部的总经理来汇报：债券市场这个月利率低，二级资本债的窗口开了。\n\n「发一千亿，资本充足率能上去一个点，」他把一张表放在桌上，「但是分子大了，ROE 要掉。」\n\n现在的资本充足率是${carL5().toFixed(1)}%。`,
  opts:S=>[
-  {t:"「发。」", s:"资本+1000亿 · ROE 掉一点", fn:()=>{ const r = issueCapital(); if(!r.ok) log("bad", `资本债的方案报上去，没批下来：${r.why}。`); }},
+  {t:"提交发行方案", s:"董事会审议及发行报批，通过后再办理到账", fn:()=>{ const r = issueCapital(); if(!r.ok) log("bad", `资本债的方案报上去，没批下来：${r.why}。`); }},
   {t:"「再等等。」", s:"不发", fn:()=>{ log("", "窗口关了。资负部的总经理把那张表收回去了。"); }},
  ]},
 
@@ -6818,6 +7005,7 @@ function botExpertL1(){
   }
 }
 function botPlay(mode){
+  governanceActive().filter(x=>x.status==='approved').forEach(x=>governanceExecute(x.id));
   if(mode === "expert"){ if(S.lv === 1) return botExpertL1(); mode = "balanced"; }
   if(S.lv === 2) return botPlayL2(mode);
   if(S.lv === 3) return botPlayL3(mode);
@@ -6880,6 +7068,11 @@ function botPlay(mode){
   }
 }
 /* ---------- L2 机器人 ---------- */
+function botAppoint(postId,pid){
+  const r=careerRecord(pid);
+  if(r.assessedUntil<S.monthAbs)return careerAssess(pid);
+  return careerAppoint(postId,pid);
+}
 function loanVisibleScore(it){ const ts = B2().tierScore; return ts.coll[it.coll] + ts.flow[it.flow] + ts.tax[it.tax]; }
 function botPlayL2(mode){
   const b = B2();
@@ -6904,18 +7097,18 @@ function botPlayL2(mode){
       else if(id==="push" && ap.length) doPush(pick(ap).id);
       else if(id==="visit" && ap.length) doVisit(pick(ap).id, R()<0.5 && S.biz.budget>=b.project.giftCost);
       else if(id==="campaign") doCampaign();
-      else if(id==="appoint"){ const o = pick(S.biz.outlets), c = appointCands(o.id); if(c.length) doAppoint(o.id, pick(c).id); else doReportUp() || doSupervise(o.id); }
+      else if(id==="appoint"){ const o = pick(S.biz.outlets), c = appointCands(o.id); if(c.length) botAppoint(o.id,pick(c).id); else doReportUp() || doSupervise(o.id); }
       else doReportUp() || doSupervise(pick(S.biz.outlets).id);
       continue;
     }
     // 空缺的网点先补人
     const empty = S.biz.outlets.find(o=>!o.mgr);
-    if(!steady && empty && canActL2("appoint").ok){ const c = appointCands(empty.id).sort((a,b)=>b.skill-a.skill)[0]; if(c){ doAppoint(empty.id, c.id); continue; } }
+    if(!steady && empty && canActL2("appoint").ok){ const c = appointCands(empty.id).sort((a,b)=>b.skill-a.skill)[0]; if(c&&botAppoint(empty.id,c.id))continue; }
     // 能力差太多的负责人换掉
     if(mode!=="greedy" && !steady){
       const weak = S.biz.outlets.filter(o=>o.mgr).sort((a,b)=>skillOf(a.mgr)-skillOf(b.mgr))[0];
       const c = weak ? appointCands(weak.id).sort((a,b)=>b.skill-a.skill)[0] : null;
-      if(c && c.skill > skillOf(weak.mgr) + 20){ doAppoint(weak.id, c.id); continue; }
+      if(c && c.skill > skillOf(weak.mgr) + 20&&botAppoint(weak.id,c.id))continue;
     }
     const ap = activeProjects().sort((a,b)=>b.stage-a.stage || b.prog-a.prog);
     const inAppr = ap.find(p=>p.stage===2);
@@ -6959,8 +7152,8 @@ function botPlayL3(mode){
       else if(id==="renovate") doRenovate(pick(S.biz.branches).id) || doReportUpL3();
       else if(id==="squat") doSquatL3(pick(S.biz.branches.filter(x=>!x.squat)).id);
       else if(id==="tilt") doTilt(pick(LINES_L3).id) || doReportUpL3();
-      else if(id==="appoint"){ const x = pick(S.biz.branches), c = appointCandsL3(x.id); if(c.length) doAppointL3(x.id, pick(c).id); else doReportUpL3() || apUse(1); }
-      else if(id==="platform"){ doPlatform(); decidePlatform(R()<0.5); }
+      else if(id==="appoint"){ const x = pick(S.biz.branches), c = appointCandsL3(x.id); if(c.length) botAppoint(x.id,pick(c).id); else doReportUpL3() || apUse(1); }
+      else if(id==="platform"){ doPlatform(); decidePlatform(R()<0.5?'gray':false); }
       else doReportUpL3() || apUse(1);
       continue;
     }
@@ -6968,10 +7161,10 @@ function botPlayL3(mode){
     if(!steady){
       const weak = S.biz.branches.slice().sort((a,c)=>skillOf(a.mgr)-skillOf(c.mgr))[0];
       const c = appointCandsL3(weak.id).sort((a,d)=>d.skill-a.skill)[0];
-      if(c && c.skill > skillOf(weak.mgr) + 15 && canActL3("appoint").ok){ doAppointL3(weak.id, c.id); continue; }
+      if(c && c.skill > skillOf(weak.mgr) + 15 && canActL3("appoint").ok&&botAppoint(weak.id,c.id))continue;
     }
-    if(canActL3("platform").ok && S.turn >= 3 && ((mode==="greedy") || (mode==="balanced" && R()<0.05))){ doPlatform(); decidePlatform(mode!=="clean"); continue; }
-    if(canActL3("open").ok && S.biz.newOutlets.length < 3){ const a = S.biz.areas.slice().sort((x,y)=>(y.heat-y.comp*0.5)-(x.heat-x.comp*0.5))[0]; doOpenOutlet(a.id); continue; }
+    if(canActL3("platform").ok && S.turn >= 3 && ((mode==="greedy") || (mode==="balanced" && R()<0.05))){ doPlatform(); decidePlatform(mode==='greedy'?'gray':mode!=='clean'?'submit':false); continue; }
+    if(canActL3("open").ok && S.biz.newOutlets.length+governanceActive().filter(x=>x.kind==="open").length < 3){ const a=S.biz.areas.filter(a=>!governanceActive().some(x=>x.kind==="open"&&x.data.aid===a.id)).sort((x,y)=>(y.heat-y.comp*0.5)-(x.heat-x.comp*0.5))[0]; if(a&&doOpenOutlet(a.id))continue; }
     if(!S.biz.reported && person("lu").fav < 65){ doReportUpL3(); continue; }
     if(canActL3("renovate").ok){ const x = S.biz.branches.filter(y=>y.renov<0.3).sort((a,c)=>c.dep-a.dep)[0]; if(x && doRenovate(x.id)) continue; }
     if(!S.biz.reported){ doReportUpL3(); continue; }
@@ -7091,6 +7284,7 @@ function simGame(mode, seed, maxTurns, opts){
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
+  governance:{active:governanceActive,execute:governanceExecute,cancel:governanceCancel,check:governanceExecuteCheck,monthStart:governanceMonthStart,roles:governanceRoles,regionK:governanceRegionK,platformRoom,requestQuota:governanceRequestQuota},
   career:{level:careerLevel,link:careerLink,alm:careerALM,lineK:careerLineK,teamK:careerTeamK,ensure:careerEnsure,people:careerPeople,positions:careerPositions,available:careerAvailable,record:careerRecord,train:careerTrain,assess:careerAssess,appoint:careerAppoint,talk:careerTalk,style:careerStyle,plan:careerPlan,start:careerStart,choose:careerChoose,push:careerPush,council:careerCouncilChoice,startCheck:careerStartCheck,execution:careerExecution,reserved:careerReserved,monthStart:careerMonthStart,settle:careerSettle,deputySpec:careerDeputySpec,deputyChoice:careerDeputyChoice,projects:CAREER_PROJECTS},
   act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,
@@ -7268,7 +7462,7 @@ const UI = {
       <div class="cores">
         <div class="core"><b class="num" data-roll="perf">${c.perf}</b><span>业绩</span></div>
         <div class="core"><b class="num" data-roll="rep">${c.rep}</b><span>口碑</span></div>
-        <div class="core"><b class="num" data-roll="trust">${c.trust}</b><span>上级信任</span></div>
+        <div class="core"><b class="num" data-roll="trust">${c.trust}</b><span>${S.lv===5?"治理支持":"上级信任"}</span></div>
         <div class="core" title="越低越好。违规会累积风险，影响审计与升职；业务亏损不等于廉政问题。"><b class="num" data-roll="risk">${100-c.clean}</b><span>廉政风险</span></div>
         <button class="topbtn" id="btnPeople">人脉簿</button>
         <button class="topbtn" id="btnMenu">菜单</button>
@@ -7677,7 +7871,7 @@ Object.assign(UI, {
       return `<div class="ln"><div class="lh"><b>${it.name}</b><span class="num">${fmtWan(it.amt)}</span></div>
         <div class="lm">${it.type==="micro"?"小微":"对公"} · ${it.ind} · ${it.coll}</div>
         <div class="lm">流水${it.flow} · 纳税${it.tax}级</div>${rel}
-        <div class="lb"><button class="btn sm" data-loan="${it.id}" data-ok="1">批</button><button class="btn sm ghost" data-loan="${it.id}" data-ok="0">退</button></div></div>`;
+        <div class="lb"><button class="btn sm" data-loan="${it.id}" data-ok="1">${loanAuthority(it)?'报批':'批'}</button><button class="btn sm ghost" data-loan="${it.id}" data-ok="0">退</button></div></div>`;
     }).join("") || `<p class="muted" style="margin:0">这个月的申请都处理完了。</p>`;
     $("colM").innerHTML = `
       <div class="box">
@@ -7695,7 +7889,7 @@ Object.assign(UI, {
       <div class="box"><h3>网点 <em>点一行看详情、督导、换人</em></h3>
         <div class="tscroll"><table class="l2t"><tr><th>网点</th><th>负责人</th><th>存款</th><th>本月</th><th>任务</th><th>士气</th></tr>${rows}
         <tr><td>对公团队</td><td>${lead?lead.name:"—"}${lead?`<br><small class="muted">能力${lead.skill}</small>`:""}</td><td class="num">${fmtYi(S.biz.corp.dep)}</td><td></td><td></td><td></td></tr></table></div></div>
-      <div class="box"><h3>贷款审批 <em>本月 ${S.biz.queue.length} 笔</em></h3><p class="hint">抵押、流水、纳税看得见，真实风险看不见。批出去的贷款一年左右才见分晓。</p><div class="lq">${q}</div></div>
+      <div class="box"><h3>贷款审批 <em>本月 ${S.biz.queue.length} 笔</em></h3><p class="hint">抵押、流水、纳税看得见，真实风险看不见。本级授权：小微600万元、对公1000万元；超限或已识别高风险须报上级贷审会，获批后在经营项目台账办理放款。批出去的贷款一年左右才见分晓。</p><div class="lq">${q}</div></div>
       <div class="box"><h3>对公项目 <em>${lost.length?"丢了："+lost.join("、"):"推进和拜访都在行动里"}</em></h3><div class="kanban">${cols}</div></div>`;
     $("colM").querySelectorAll("[data-act2]").forEach(el => el.onclick = () => UI.onAct2(el.dataset.act2));
     $("colM").querySelectorAll("[data-outlet]").forEach(el => { el.onclick = () => UI.outletModal(el.dataset.outlet); el.onkeydown = e => { if(e.key==="Enter") UI.outletModal(el.dataset.outlet); }; });
@@ -7749,14 +7943,7 @@ Object.assign(UI, {
       {t:"关掉", s:""},
     ]});
   },
-  appointModal(oid){
-    const o = outlet(oid), cur = o.mgr ? person(o.mgr) : null;
-    const cands = appointCands(oid).sort((a,b)=>b.skill-a.skill);
-    const opts = cands.map(p => ({t:`${p.name} · 能力${p.skill}`, s:`${p.pos} · ${p.recent||p.note||""}`, fn:()=>doAppoint(oid, p.id)}));
-    if(!opts.length) opts.push({t:"没有合适的人", s:"人脉簿里弹子石的旧部都有位子了", disabled:true});
-    opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:`${o.name}换人`, body: cur ? `现在是${cur.name}，能力${cur.skill}。换下来的人会去支行后台，心里有数。` : "这个位子空着。", opts});
-  },
+  appointModal(oid){UI.careerAppointModal(oid);},
 
   decompModal(done){
     const f = decompFair(), step = f.step;
@@ -7874,8 +8061,8 @@ Object.assign(UI, {
       <div class="box"><h3>片区 <em>点片区开网点</em></h3><div class="scene" id="l3map">${wzMapSvg()}</div>
         <p class="hint" style="margin-top:8px">深色点是支行网点，金色是你开的新网点。热度高、竞争少的片区，新网点长得快。</p></div>
       <div class="box"><h3>支行 <em>点一行改造、换人、撤网点</em></h3><div class="tscroll"><table class="l2t"><tr><th>支行</th><th>行长</th><th>存款</th><th>上季</th></tr>${rows}${newRows}</table></div></div>
-      <div class="box"><h3>信贷结构 <em>每季最多挪五个点 · 额度还剩${fmtYi1(Math.max(0, S.biz.quota - (loansTotalL3()-L.platform)))}</em></h3>${mix}
-        <p class="hint">小微息差最高，不良也最高。平台贷款${L.platform?fmtYi1(L.platform):"没有"}，不占额度。</p></div>
+      <div class="box"><h3>信贷结构 <em>每季最多挪五个点 · 额度还剩${fmtYi1(Math.max(0, S.biz.quota - (loansTotalL3()-L.platform+(S.biz.platformCompliant||0))))}</em></h3>${mix}
+        <p class="hint">小微息差最高，不良也最高。平台贷款${L.platform?fmtYi1(L.platform):"没有"}，合规批复占额度；违规绕行另计风险。</p></div>
       <div class="box"><h3>不良处置 <em>本季还能处置${Math.max(0,cap-S.biz.disposedQ)}户 · 今年核销额度还剩${fmtYi1(b.dispose.writeoff.quotaY - S.biz.writeoffUsed)}</em></h3>
         <p class="hint">催收：两个季度收回三成。诉讼：四个季度收回五成，可能上论坛。重组：马上出表，四成会再违约。核销：马上出表，吃额度。</p><div class="lq">${npa || '<p class="muted">没有不良。</p>'}</div></div>`;
     $("colM").querySelectorAll("[data-act3]").forEach(el => el.onclick = () => UI.onAct3(el.dataset.act3));
@@ -7906,7 +8093,7 @@ Object.assign(UI, {
   pickArea(){
     const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
     opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:"新网点开在哪", body:`投入${B3().outlet.build}万，一年费用${B3().outlet.costY}万。`, opts});
+    UI.modal({kind:"pick", title:"新网点开在哪", body:`先提交上级机构规划审批，获批后投入${B3().outlet.build}万筹建；验收后营业，一年费用${B3().outlet.costY}万。`, opts});
   },
   areaModal(aid){
     const a = area(aid);
@@ -7918,23 +8105,17 @@ Object.assign(UI, {
     UI.modal({kind:"pick", title:x.name, portrait:m, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。\n改造存款增长加成${Math.round(x.renov*100)}%，季末生效${x.renov>=0.3?"，已达改造上限":"，达到30%后不能继续改造"}。`, opts:[
       {t:"下去蹲点", s:"1点行动 · 这季存款长得快一点", odds:ODDS[3].squat(x), disabled:!canActL3("squat").ok || x.squat, fn:()=>doSquatL3(bid)},
       {t:"网点改造", s:x.renov>=0.3 ? "已达改造上限" : (!canActL3("renovate").ok ? canActL3("renovate").why : `${B3().renovate.cost}万 · 1点行动 · 季末生效`), disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
-      {t:"撤一个网点", s:"1点行动 · 片区口碑掉", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
+      {t:"撤一个网点", s:"提交审批1点，获批后迁移客户1点", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
       {t:"换行长", s:"1点行动", disabled:!canActL3("appoint").ok, fn:()=>setTimeout(()=>UI.appointModalL3(bid),0)},
       {t:"关掉", s:""}]});
   },
-  appointModalL3(bid){
-    const x = branch(bid), cur = person(x.mgr);
-    const cands = appointCandsL3(bid).sort((a,c)=>c.skill-a.skill);
-    const opts = cands.map(p => ({t:`${p.name} · 能力${p.skill}`, s:`${p.pos}${p.lvMet<3?" · 老部下":""}`, fn:()=>doAppointL3(bid, p.id)}));
-    if(!opts.length) opts.push({t:"没有合适的人", s:"", disabled:true});
-    opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:`${x.name}换行长`, body: cur ? `现在是${cur.name}，能力${cur.skill}。` : "", opts});
-  },
+  appointModalL3(bid){UI.careerAppointModal(bid);},
   platformModal(){
     const off = S.biz.platformOffer; if(!off) return;
     const pf = PLATFORMS_L3.find(p=>p.id===off.id);
     UI.modal({kind:"event", title:"区里的项目", body:`区财政局的人带着${pf.name}的材料来了。${pf.what}，要${fmtYi1(off.size)}。\n\n${pf.note}\n\n「区里会全力支持，」对方把一份没盖章的情况说明推过来，「还款的事，您放心。」`, opts:[
-      {t:"「做。」", s:`贷款+${fmtYi1(off.size)} · 不占额度 · 息差薄 · 留底`, gray:true, fn:()=>decidePlatform(true)},
+      {t:"补齐担保与还款材料，报上级贷审会", s:`${fmtYi1(off.size)} · 审批后占用信贷额度，批复前不放款`, fn:()=>decidePlatform('submit')},
+      {t:"绕过审批，凭情况说明直接放款", s:`贷款+${fmtYi1(off.size)} · 违规绕行额度 · 合规风险增加`, gray:true, fn:()=>decidePlatform('gray')},
       {t:"「这个方案我们做不了。」", s:"区里不太高兴", fn:()=>decidePlatform(false)},
     ]});
   },
@@ -8041,7 +8222,7 @@ Object.assign(UI, {
   },
   onAct5(id){
     if(id==="reg5"){ doReg5(); UI.refresh(); return; }
-    if(id==="reform"){ UI.modal({kind:"pick", title:"机构改革", body:"压掉一个管理层级，费用省下一截。四千多个岗位要重新竞聘，下面会有怨气。这件事一任只能做一次。", opts:[{t:"「做。」", s:"费用省8% · 口碑掉", fn:()=>doReform()},{t:"再想想", s:""}]}); return; }
+    if(id==="reform"){ UI.modal({kind:"pick", title:"机构改革", body:"行长提出改革方案，经董事会审议及后续报批，再开展试点、岗位安置和分批推广；完成后节约费用。本任只能完成一次。", opts:[{t:"提交改革方案", s:"1点行动 · 批复前不改变机构与费用", fn:()=>doReform()},{t:"再想想", s:""}]}); return; }
     if(id==="visit5"){ doVisit5(); UI.refresh(); return; }
     if(id==="survey"){ const opts = S.biz.regions.map(r => ({t:r.name+(r.cq?"（有重庆）":""), s:`占全行存款${Math.round(r.share*100)}%`, odds:ODDS[5].survey(), fn:()=>doSurvey(r.id)})); opts.push({t:"算了", s:""}); UI.modal({kind:"pick", title:"去哪里调研", body:"", opts}); }
   },
@@ -8384,6 +8565,7 @@ Object.assign(UI, {
   renderCareer(){
     if(!S || S.phase!=='play')return;
     const g=careerEnsure();
+    if(S.discipline?.removed){const box=document.createElement('section');box.className='box career-ui';box.id='careerPanel';box.innerHTML='<h3>管理权限暂停</h3><p class="hint">撤职整改期间仅开放客户维护和厅堂服务。完成整改并复任后恢复干部、项目和团队管理。</p>';document.querySelector('#colM').append(box);return;}
     const panel=document.createElement('section');panel.className='box career-ui';panel.id='careerPanel';
     const tabs=[['projects','经营项目'],['people','干部人才'],['council',S.lv>=4?'班子议事':'团队议事']];
     const period=S.lv<=2?'本月':S.lv<=4?'本季':'这半年';
@@ -8426,6 +8608,7 @@ Object.assign(UI, {
       }).join('')||'<p class="career-empty">本任期还没有新项目。选择牵头人和承办单位后即可启动；以前的经营操作仍在下方。</p>'}</div>
       ${!available.length?'<p class="hint">本任期项目已全部启动，落地项目会继续经营。</p>':''}
       ${!careerCheck(0).ok?'<p class="hint">行动点用完了，可以结束回合，查看项目进展。</p>':''}`;
+    UI.governancePanel(node);
     node.querySelector('#careerPlan').onclick=()=>UI.careerPlanModal();
     node.querySelector('#careerNew').onclick=()=>UI.careerNewModal();
     if(node.querySelector('#careerALM'))node.querySelector('#careerALM').onclick=()=>UI.careerALMModal();
@@ -8442,7 +8625,7 @@ Object.assign(UI, {
       <div class="career-toolbar">${[['current','当前管理'],['reserve',S.lv>=3?'本级后备':'旧部后备'],['all',S.lv>=3?'本级全部':'全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
       <div class="career-people">${people.map(p=>{
         const r=careerRecord(p.id),line=CAREER_LINES.find(x=>x.id===r.specialty),load=careerLoad(p.id);
-        return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
+        return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}${S.lv===3&&governanceRoles(p.id).length>1?' · 兼任：'+esc(governanceRoles(p.id).join('、'))+'（负荷增加）':''}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
       }).join('')||'<p class="career-empty">没有符合条件的干部，可以切换范围或修改搜索。</p>'}</div>`;
     if(node.querySelector('#careerAppoint'))node.querySelector('#careerAppoint').onclick=()=>UI.careerAppointModal();
     node.querySelectorAll('[data-cscope]').forEach(el=>el.onclick=()=>{UI.careerPeopleScope=el.dataset.cscope;UI.careerPeoplePanel(node);PORTRAITS.bind(node);});
@@ -8473,16 +8656,31 @@ Object.assign(UI, {
     const a=careerEnsure().alm;
     UI.careerPick('资产负债安排',`流动性指数${Math.round(a.liquidity)}，低于${BC().liquidityFloor}会增加应急资金成本。每半年最多调整一次。`,BC().alm.map(o=>UI.careerOption(o.name,o.desc+' · 1点行动',()=>careerALM(o.id),a.policy===o.id?'当前策略':a.changedAt===S.monthAbs?'本半年已调整':!careerCheck(0).ok?careerCheck(0).why:'')));
   },
-  careerAppointModal(){
-    UI.careerPick('调整哪个岗位',CAREER_MANAGEMENT[S.lv].desc+'新任人选须有有效考察记录；现任其他岗位的干部不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
+  careerAppointModal(postId){
+    const select=slot=>{
       const candidates=careerAvailable(slot.id);
-      UI.careerPick('任用 · '+slot.name,candidates.length?'候选人职务与履历符合本岗位范围，任用后进入履职观察。':'暂无符合本岗位职务和履历要求的可调配人选。基层旧部可在人脉簿查看。',candidates.map(p=>{
-        const r=careerRecord(p.id),why=!careerCheck(0).ok?careerCheck(0).why:r.training?'正在专项培养':r.assessedUntil<S.monthAbs?'请先到干部人才中完成履职考察':'';
-        const option=UI.careerOption(p.name,'',()=>careerAppoint(slot.id,p.id),why);
-        option.s=`${p.pos} · ${why||`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`}`;
-        return option;
+      UI.careerPick('任用 · '+slot.name,candidates.length?'须有有效履职考察，同一人不得占用多个岗位。'+(S.lv>=4?'先提交组织审议及上级任免报批；收到批复后办理任命，批复前现任继续履职。':'任用后进入履职观察。'):'暂无符合本级岗位要求的可调配人选。',candidates.map(p=>{
+        const why=governanceAppointCheck(slot,p)||(!careerCheck(0).ok?careerCheck(0).why:'');
+        return UI.careerOption(p.name,p.pos+' · 能力'+Math.round(careerSkill(p))+' · '+(S.lv>=4?'提交任用建议 · 1点':'任用 · 1点'),()=>careerAppoint(slot.id,p.id),why);
       }));
-    }})));
+    };
+    if(postId){const slot=careerPositions().find(x=>x.id===postId);if(slot)select(slot);return;}
+    UI.careerPick('调整哪个岗位',CAREER_MANAGEMENT[S.lv].desc+'新任人选须先考察。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>select(slot)})));
+  },
+  governancePanel(node){
+    const all=careerEnsure().approvals,active=all.filter(x=>['submitted','approved','executing'].includes(x.status));
+    if(!all.length)return;
+    const rows=active.concat(all.filter(x=>!active.includes(x)).slice(-4));
+    const label={submitted:'待上级审议',approved:'已获批 · 待实施',executing:'实施中',done:'已完成',rejected:'未获批',cancelled:'已撤回'};
+    const box=document.createElement('div');box.className='career-projects';box.id='governancePanel';
+    box.innerHTML='<h4>报批与实施</h4><p class="hint">提交后下回合反馈。获得批复后办理实施；网点与改革还需筹建、迁移或试点。未实施不改变岗位、贷款或经营规模。</p>'+rows.map(a=>{
+      const ck=governanceExecuteCheck(a),ap=['loan','capital'].includes(a.kind)?0:1;
+      return `<article class="career-project"><div class="career-title"><b>${esc(a.title)}</b><span class="tagx">${a.status==='submitted'&&['capital','reform'].includes(a.kind)?'待董事会审议':a.status==='submitted'&&a.kind==='appoint'?'待组织审议／报批':label[a.status]}</span></div><p class="hint">${esc(a.reason|| (a.status==='executing'?(a.kind==='reform'&&a.stage===1?'试点完成，分批推广中':'筹建／迁移／试点进行中'):a.status==='submitted'?'下回合反馈审议结果':''))}</p>${a.status==='approved'?`<button class="btn gold" data-gexec="${a.id}" ${ck.ok?'':'disabled'}>办理实施${ap?' · '+ap+'点':''}</button>${!ck.ok?'<p class="hint">'+esc(ck.why)+'</p>':''}`:''}${a.kind==='loan'&&S.lv===3&&a.status==='approved'&&platformRoom()<a.data.loan.amt?` <button class="btn ghost" data-gquota="${a.id}" ${careerCheck(0).ok?'':'disabled'}>向上申请配套额度 · 1点</button>`:''}${['submitted','approved'].includes(a.status)?` <button class="btn ghost" data-gcancel="${a.id}">撤回方案</button>`:''}</article>`;
+    }).join('');
+    node.prepend(box);
+    box.querySelectorAll('[data-gexec]').forEach(el=>el.onclick=()=>UI.careerRun(()=>governanceExecute(el.dataset.gexec)));
+    box.querySelectorAll('[data-gquota]').forEach(el=>el.onclick=()=>UI.careerRun(()=>governanceRequestQuota(el.dataset.gquota)));
+    box.querySelectorAll('[data-gcancel]').forEach(el=>el.onclick=()=>UI.careerRun(()=>governanceCancel(el.dataset.gcancel)));
   },
   careerPlanModal(){
     const g=careerEnsure(),wait=BC().planMonths-(S.monthAbs-g.planAt);
@@ -8493,7 +8691,7 @@ Object.assign(UI, {
   },
   careerUnitsPick(title,count,ids,done){
     if(ids.length===count){done(ids);return;}
-    UI.careerPick(title,`选择第${ids.length+1}个单位${count===3?'，占'+BC().allocation[S.lv][ids.length]+'%':'；'+(ids.length===0?'负责牵头承办':'负责协办')}。`,careerUnits().filter(x=>!ids.includes(x.id)).map(x=>({t:x.name,s:S.lv===5?'全国片区':x.dep!=null?'存款 '+fmtWan(x.dep):'承办单位',fn:()=>UI.careerUnitsPick(title,count,ids.concat(x.id),done)})));
+    UI.careerPick(title,`选择第${ids.length+1}个单位${count===3?'，占'+BC().allocation[S.lv][ids.length]+'%':'；'+(ids.length===0?'负责牵头承办':'负责协办')}。`,careerUnits().filter(x=>!ids.includes(x.id)).map(x=>({t:x.name,s:S.lv===5?'一级分行 · '+S.biz.regions.find(r=>r.id===x.regionId)?.name:x.dep!=null?'存款 '+fmtWan(x.dep):'承办单位',fn:()=>UI.careerUnitsPick(title,count,ids.concat(x.id),done)})));
   },
   careerNewModal(){
     const defs=CAREER_PROJECTS.filter(d=>d.lv===S.lv&&!careerEnsure().projects.some(p=>p.id===d.id));

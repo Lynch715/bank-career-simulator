@@ -34,13 +34,13 @@ T.ok("案防进点会不去,合规扣分", S().kpi.comp < c0, c0+"→"+S().kpi.c
 let n = 0; for(let i=0;i<400;i++) n += I.meetPick().length;
 T.ok("L2 每月平均 0.3~0.7 件会", n/400 > 0.3 && n/400 < 0.7, (n/400).toFixed(2));
 
-/* L3:开网点占两点,蹲点 */
+/* L3:开网点报批、筹建分两步各一点，蹲点 */
 toLevel(3, 100); G.setBot(null);
-T.ok("L3 开网点占 2 点", I.apCost("open") === 2 && I.apCost("platform") === 2 && I.apCost("renovate") === 1);
-S().ap = 1; S().biz.budget = 1000;
-T.ok("只剩 1 点开不了网点", !G.act.openOutlet(S().biz.areas[0].id) && S().ap === 1);
-S().ap = 2; const no0 = S().biz.newOutlets.length; G.act.openOutlet(S().biz.areas[1].id);
-T.ok("2 点开网点,点数清零", S().biz.newOutlets.length === no0 + 1 && S().ap === 0);
+T.ok("L3 开网点提案占1点，平台对接2点", I.apCost("open") === 1 && I.apCost("platform") === 2 && I.apCost("renovate") === 1);
+S().ap = 0; S().biz.budget = 1000;
+T.ok("0点不能提交网点规划", !G.act.openOutlet(S().biz.areas[0].id) && S().ap === 0);
+S().ap = 1; const no0 = S().biz.newOutlets.length; G.act.openOutlet(S().biz.areas[1].id);
+T.ok("1点提交规划，批复前不营业", S().biz.newOutlets.length === no0 && S().ap === 0&&G.governance.active().length===1);
 // 蹲点:成功时这季存款增量多三成
 Object.assign(B.odds, {min:1, max:1});
 S().ap = 3; const br = S().biz.branches[0];

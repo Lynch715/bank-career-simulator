@@ -14,12 +14,13 @@ function outletCount(){ return S.biz.branches.reduce((a,b)=>a+b.outlets,0) + S.b
 function effL3(){ return depTotalL3() / 10000 / Math.max(1, outletCount()); }
 function subsL3(){ return S.biz.branches.map(b=>b.mgr).concat(Object.values(S.biz.lineHeads)).filter((v,i,a)=>v && a.indexOf(v)===i).map(person).filter(Boolean); }
 function areaGrowth(a){ const g = B3().area; return g.g0 + a.heat/100*g.heatK - a.comp/100*g.compK; }
-function delegK3(id){ const d = B3().deleg; return d.base + skillOf(id)/100 * d.k; }
+function delegK3(id){ const d=B3().deleg;return (d.base+skillOf(id)/100*d.k)*(governanceRoles(id).length>1?0.9:1); }
 function qName(){ return ["一","二","三","四"][Math.max(0, Math.round(S.m/3)-1)] + "季度"; }
 
 /* ---------- 进入 L3 ---------- */
 function initL3(){
   const b = B3();
+  if(!person('ops3'))S.people.push({id:'ops3',name:'林远和',role:'运营部总经理',pos:'万州分行运营部总经理',kind:'sub',group:'部下',met:true,alive:true,lvMet:3,skill:65,fav:50,trait:'稳健',recent:'负责运营与服务管理'});
   PEOPLE_L3.concat(RESERVES_L3).forEach(d => { if(!person(d.id)) S.people.push(Object.assign({lvMet:3, pos:d.role, met:true, recent:"", kind:"sub", alive:true, group:"部下"}, d)); });
   RESERVES_L3.forEach(d => { const p = person(d.id); p.kind = "reserve"; });
   const branches = BRANCHES_L3.map(x => Object.assign({}, x, {renov:0, y0:x.dep, dep0:x.dep, lastInc:0}));
@@ -37,7 +38,7 @@ function initL3(){
     loans, mixTarget: Object.assign({}, b.loanMix),
     npa: [], npaSeq: 0, restr: [], writeoffUsed: 0,
     budget: b.budgetQ, tilt: null,
-    lineHeads: {corp:corpHead, retail:"liujia", risk:"wangming", ops:"xiongw", hr:"tanmin"},
+    lineHeads: {corp:corpHead, retail:"liujia", risk:"wangming", ops:"ops3", hr:"tanmin"},
     csat: 55, ytd: {profit:0, fee:0}, disposedQ: 0, platformDone: [], platformOffer: null,
     rankStreak: 0, reported: false, opened: 0, closed: 0,
   };
@@ -126,7 +127,7 @@ function settleL3(){
   // 4 贷款增长与结构
   const L = S.biz.loans;
   const base = loansTotalL3() - L.platform;
-  let room = Math.max(0, S.biz.quota - base);
+  let room = Math.max(0, S.biz.quota - base - (S.biz.platformCompliant||0));
   const gk = {corp: tilt==="corp" ? t.corpLoan : 1, micro: tilt==="retail" ? t.retailLoan : 1, retail: tilt==="retail" ? t.retailLoan : 1};
   let want = {}; let sumW = 0;
   LOAN_TYPES.forEach(k => { want[k] = L[k] * b.loanGrowthQ * gk[k] * (0.9 + gauss()*0.05); sumW += want[k]; });

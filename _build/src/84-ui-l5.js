@@ -36,7 +36,7 @@ Object.assign(UI, {
   },
   onAct5(id){
     if(id==="reg5"){ doReg5(); UI.refresh(); return; }
-    if(id==="reform"){ UI.modal({kind:"pick", title:"机构改革", body:"压掉一个管理层级，费用省下一截。四千多个岗位要重新竞聘，下面会有怨气。这件事一任只能做一次。", opts:[{t:"「做。」", s:"费用省8% · 口碑掉", fn:()=>doReform()},{t:"再想想", s:""}]}); return; }
+    if(id==="reform"){ UI.modal({kind:"pick", title:"机构改革", body:"行长提出改革方案，经董事会审议及后续报批，再开展试点、岗位安置和分批推广；完成后节约费用。本任只能完成一次。", opts:[{t:"提交改革方案", s:"1点行动 · 批复前不改变机构与费用", fn:()=>doReform()},{t:"再想想", s:""}]}); return; }
     if(id==="visit5"){ doVisit5(); UI.refresh(); return; }
     if(id==="survey"){ const opts = S.biz.regions.map(r => ({t:r.name+(r.cq?"（有重庆）":""), s:`占全行存款${Math.round(r.share*100)}%`, odds:ODDS[5].survey(), fn:()=>doSurvey(r.id)})); opts.push({t:"算了", s:""}); UI.modal({kind:"pick", title:"去哪里调研", body:"", opts}); }
   },

@@ -17,6 +17,7 @@ const PRODUCTS = [
 ];
 
 function canAct(id){
+  if(!S||S.lv!==1)return {ok:false,why:"当前职务无此网点操作权限"};
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本月行动点用完了"};
   if(S.discipline && S.discipline.removed && !["maintain","hall"].includes(id)) return {ok:false, why:"撤职整改期间仅开放客户维护和厅堂服务"};
@@ -192,6 +193,7 @@ function doBoss(){
 }
 
 function setRole(staffId, role){
+  if(!managementCheck(1).ok)return false;
   const s = staff(staffId); if(!s || !ROLE_NAME[role]) return false;
   if(S.phase!=="play") return false;
   if(S.discipline && S.discipline.removed) return false;

@@ -2,8 +2,8 @@
    L3 行动(每个 1 AP)。不良处置、信贷结构滑杆不占行动点。
    ===================================================================== */
 const ACTIONS_L3 = [
-  {id:"open",     name:"开网点",     desc:"在一个片区开新网点，投入三百万"},
-  {id:"close",    name:"撤并网点",   desc:"撤掉一个网点，省费用，片区口碑掉"},
+  {id:"open",     name:"开网点",     desc:"上报网点规划，获批后筹建与验收，投入三百万"},
+  {id:"close",    name:"撤并网点",   desc:"上报撤并方案，获批后迁移客户与安置人员"},
   {id:"squat",    name:"下支行蹲点", desc:"去一个支行蹲几天，这个季度存款长得快一点"},
   {id:"renovate", name:"网点改造",   desc:"投入200万和1点行动，提高支行季末存款增长加成，上限30%"},
   {id:"tilt",     name:"条线倾斜",   desc:"资源往一个部门偏，其他部门不高兴"},
@@ -13,6 +13,7 @@ const ACTIONS_L3 = [
 ];
 
 function canActL3(id){
+  const authority=managementCheck(3);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
   if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};
@@ -28,11 +29,13 @@ function canActL3(id){
 }
 
 function doOpenOutlet(aid){
-  const ck = canActL3("open"); if(!ck.ok) return null;
+  if(!canActL3("open").ok||!area(aid))return null;
+  return governanceSubmit("open",aid,area(aid).name+"新网点筹建",{aid});
+}
+function executeOpenOutlet(aid){
   const a = area(aid); if(!a) return null;
   const o = B3().outlet;
-  apUse(apCost("open"));
-  S.biz.budget -= o.build; S.month.spent += o.build;
+  // 筹建费用已在按批复启动时扣除，验收不重复扣费。
   // 爬坡速度看热度和竞争,封顶看人口
   const cold = !roll(ODDS[3].open(a));
   const ramp = Math.round((o.rampMin + (o.rampMax - o.rampMin) * clamp((a.heat - a.comp*0.5)/80, 0, 1)) * (cold ? BALANCE.odds.L3.open.coldRamp : 1));
@@ -48,10 +51,12 @@ function doOpenOutlet(aid){
 }
 
 function doCloseOutlet(bid){
-  const ck = canActL3("close"); if(!ck.ok) return null;
+  if(!canActL3("close").ok||!branch(bid)||branch(bid).outlets<=1)return null;
+  return governanceSubmit("close",bid,branch(bid).name+"网点撤并",{bid});
+}
+function executeCloseOutlet(bid){
   const x = branch(bid); if(!x || x.outlets <= 1) return null;
   const c = B3().closeOutlet;
-  apUse(1);
   const loss = Math.round(x.dep / x.outlets * c.lossShare);
   x.outlets--; x.dep -= loss;
   S.biz.expenseQ = Math.max(0, S.biz.expenseQ - c.saveY/4);
@@ -95,12 +100,9 @@ function doTilt(line){
   return true;
 }
 
-function appointCandsL3(bid){
-  const used = new Set(S.biz.branches.map(x=>x.mgr).concat(Object.values(S.biz.lineHeads)));
-  const pool = S.people.filter(p => p.alive && p.met && !used.has(p.id) && p.skill != null && (p.kind==="reserve" || ((p.lvMet<=2) && p.skill >= 60 && p.pos.indexOf("离职")<0 && p.pos.indexOf("被查")<0 && p.pos !== "南岸支行行长")));
-  return pool.filter(p => !["zhouqm","maben","weilc","lu","gu","huang"].includes(p.id)&&careerLevel(p)>=1&&careerLevel(p)<=2);
-}
-function doAppointL3(bid, pid){
+function appointCandsL3(bid){return S.lv===3?careerAvailable(bid):[];}
+function doAppointL3(bid,pid){return S.lv===3?careerAppoint(bid,pid):null;}
+function applyAppointBranch(bid, pid){
   const ck = canActL3("appoint"); if(!ck.ok) return null;
   const x = branch(bid), np = person(pid); if(!x || !np) return null;
   if(!careerLive(np)||careerLevel(np)<1||careerLevel(np)>2)return null;
@@ -108,7 +110,7 @@ function doAppointL3(bid, pid){
   apUse(1);
   const old = person(x.mgr);
   if(old){ fav(old.id, b.oldFavHit); old.pos = "万州分行调研员"; old.recent = `从${x.name}调下来`; old.kind = "npc"; }
-  x.mgr = pid; np.pos = x.name + "行长"; np.kind = "sub"; np.recent = np.lvMet < 3 ? "从主城调来万州，你点的名" : "你提上来的";
+  x.mgr = pid; np.pos = x.name + (x.id==="yyb"?"总经理":"行长"); np.kind = "sub"; np.recent = np.lvMet < 3 ? "从主城调来万州，你点的名" : "你提上来的";
   fav(pid, b.newFav);
   keyEvent(`提拔${np.name}任${x.name}行长`);
   log("", `${x.name}换了行长：${np.name}。${old ? old.name + "搬办公室那天，把墙上的锦旗一面面取下来，卷好带走了。" : ""}`);
@@ -116,6 +118,7 @@ function doAppointL3(bid, pid){
 }
 
 function doPlatform(){
+  if(S.biz.platformOffer)return null;
   const ck = canActL3("platform"); if(!ck.ok) return null;
   const pf = PLATFORMS_L3.find(p => !S.biz.platformDone.includes(p.id));
   if(!pf) return null;
@@ -126,10 +129,16 @@ function doPlatform(){
   return S.biz.platformOffer;
 }
 function decidePlatform(accept){
+  if(!managementCheck(3).ok)return null;
   const off = S.biz.platformOffer; if(!off) return null;
   const pf = PLATFORMS_L3.find(p=>p.id===off.id), b = B3().platform;
+  if(accept && accept!=='gray'){
+    const loan={id:'pf_'+off.id,name:pf.name,amt:off.size,tier:'mid'};
+    if(!governanceSubmit('loan',loan.id,pf.name+'平台授信报批',{loan},0))return null;
+    S.biz.platformDone.push(off.id);S.biz.platformOffer=null;return true;
+  }
   S.biz.platformDone.push(off.id); S.biz.platformOffer = null;
-  if(accept){
+  if(accept==='gray'){
     S.biz.loans.platform += off.size;
     dirt(b.clean);
     const def = R() < b.defP;
@@ -161,6 +170,7 @@ function doReportUpL3(){
 /* 不良处置(不占行动点,每季有上限) */
 function disposeCap(){ return B3().dispose.perQ + (S.biz.tilt==="risk" ? B3().dispose.riskBonus : 0); }
 function disposeNpa(id, how){
+  if(!managementCheck(3).ok)return null;
   const x = S.biz.npa.find(n=>n.id===id); if(!x || x.stage) return null;
   if(S.biz.disposedQ >= disposeCap()) return null;
   const d = B3().dispose;
@@ -189,6 +199,7 @@ function disposeNpa(id, how){
   return true;
 }
 function setMix(corp, micro, retail){
+  if(!managementCheck(3).ok)return null;
   const s = corp + micro + retail; if(s <= 0) return false;
   S.biz.mixTarget = {corp: corp/s, micro: micro/s, retail: retail/s};
   return true;

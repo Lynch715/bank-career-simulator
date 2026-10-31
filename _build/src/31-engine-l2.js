@@ -165,20 +165,15 @@ function bookLoan(name, amt, tier, src){
   S.biz.loans += amt;
 }
 function decideLoan(id, ok){
-  const i = S.biz.queue.findIndex(x=>x.id===id); if(i<0) return null;
-  const it = S.biz.queue[i];
-  S.biz.queue.splice(i,1);
-  if(ok){
-    bookLoan(it.name, it.amt, it.tier, "queue");
-    const fee = r1(it.amt * B2().loanFee);
-    S.biz.ytd.fee += fee; S.month.fee += fee;
-    if(it.rel) fav(it.rel, 3);
-    log("", `批了<b>${it.name}</b>的贷款。<span class="num">贷款+${fmtWan(it.amt)}</span>`);
-  } else {
-    if(it.rel){ fav(it.rel, -4); log("", `退了<b>${it.name}</b>的材料。${person(it.rel).name}那边没再提这事。`); }
-    else log("", `退了<b>${it.name}</b>的材料。`);
-  }
-  return it;
+  if(!managementCheck(2).ok)return null;
+  const i=S.biz.queue.findIndex(x=>x.id===id);if(i<0)return null;
+  const it=S.biz.queue[i];
+  if(ok&&loanAuthority(it)){
+    const row=governanceSubmit('loan',it.id,it.name+'授信报批',{loan:Object.assign({},it)},0);
+    if(!row)return null;
+  }else if(ok)governanceBookL2(it);
+  else{if(it.rel)fav(it.rel,-4);log('',`退了<b>${it.name}</b>的材料。`);}
+  S.biz.queue.splice(i,1);save();return it;
 }
 
 /* ---------- 回合开始 ---------- */

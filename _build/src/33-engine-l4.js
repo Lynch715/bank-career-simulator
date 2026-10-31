@@ -10,7 +10,7 @@ function rwaL4(){ return careerReserved() + loansL4() * B4().rwaK + S.biz.projec
 function capRoom(){ return S.biz.capital / B4().minCar - rwaL4(); }
 function deputy(line){ return S.biz.deputies.find(d=>d.line===line); }
 function lineK(line){ const d = deputy(line); const L = B4().lineK; const fit = d ? d.fit[line] : 50; return (L.base + fit/100*L.k) * (0.9 + S.biz.unity/100*0.2); }
-function subsL4(){ return S.biz.deputies.map(d=>person(d.id)).filter(Boolean); }
+function subsL4(){careerEnsure();return S.biz.deputies.map(d=>person(d.id)).concat(S.biz.inst.map(x=>person(x.headId))).filter((p,i,a)=>careerLive(p)&&a.findIndex(x=>x?.id===p.id)===i);}
 function ratingNow(){
   const r = B4().rating;
   const npl = nplL4()/loansL4()*100;

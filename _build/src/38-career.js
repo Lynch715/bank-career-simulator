@@ -46,6 +46,7 @@ function careerEnsure(){
     });
     g.seniorRoster=true;
   }
+  governanceEnsure(g);
   return g;
 }
 function careerExecs(){ const g=careerEnsure(); return S.lv===4?S.biz.deputies:S.lv===5?g.executives:[]; }
@@ -65,7 +66,7 @@ function careerLevel(p){
   if(!p)return -1;
   // 已任用的岗位是现任职务。旧档中的任命继续有效，不因规则收紧撤人或清空岗位。
   const g=S.biz.career;
-  if(S.lv===5){if(g?.executives?.some(d=>d.id===p.id))return 5;if(S.biz.regions.some(x=>x.headId===p.id))return 4;}
+  if(S.lv===5){if(g?.executives?.some(d=>d.id===p.id))return 5;if((S.biz.firstBranches||[]).some(x=>x.headId===p.id))return 4;}
   if(S.lv===4){if(S.biz.deputies.some(d=>d.id===p.id))return 4;const row=S.biz.inst.find(x=>x.headId===p.id);if(row)return row.name.includes('分行')?3:2;}
   if(S.lv===3&&(S.biz.branches.some(x=>x.mgr===p.id)||Object.values(S.biz.lineHeads).includes(p.id)))return 2;
   if(S.lv===2&&(S.biz.outlets.some(x=>x.mgr===p.id)||S.biz.corp.lead===p.id||Object.values(g?.teams||{}).includes(p.id)))return 1;
@@ -95,16 +96,16 @@ function careerPeople(){
 function careerPositions(){
   careerEnsure();
   if(S.lv===2) return S.biz.outlets.map(x=>({id:x.id,name:x.name+'负责人',pid:x.mgr,row:x,field:'mgr',line:'retail'})).concat(Object.keys(S.biz.career.teams).map(line=>({id:'team_'+line,name:CAREER_LINES.find(x=>x.id===line).name+'专业团队负责人',pid:S.biz.career.teams[line],row:S.biz.career.teams,field:line,line,team:true})));
-  if(S.lv===3) return S.biz.branches.map(x=>({id:x.id,name:x.name+'行长',pid:x.mgr,row:x,field:'mgr',line:'corp'}));
+  if(S.lv===3) return S.biz.branches.map(x=>({id:x.id,name:x.name+(x.id==='yyb'?'总经理':'行长'),pid:x.mgr,row:x,field:'mgr',line:'corp'})).concat(LINES_L3.map(x=>({id:'dept_'+x.id,name:x.name+'负责人',pid:S.biz.lineHeads[x.id],row:S.biz.lineHeads,field:x.id,line:x.id==='hr'?'ops':x.id,department:true})));
   if(S.lv===4) return S.biz.inst.map(x=>({id:x.id,name:x.name+'负责人',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:2})).concat(S.biz.deputies.map(x=>({id:'exec_'+x.line,name:'分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:3})));
-  if(S.lv===5) return S.biz.regions.map(x=>({id:x.id,name:CAREER_L5_BRANCHES[x.id]+'行长',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:4})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:4})));
+  if(S.lv===5) return S.biz.firstBranches.map(x=>({id:x.id,name:x.name+'行长',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:4})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:4})));
   return [];
 }
 function careerUnits(){
   if(S.lv===1) return [{id:'dzs',name:'弹子石网点'}];
   if(S.lv===2) return S.biz.outlets;
   if(S.lv===3) return S.biz.branches;
-  return S.lv===4?S.biz.inst:S.biz.regions;
+  return S.lv===4?S.biz.inst:S.biz.firstBranches;
 }
 function careerFit(p,line){
   const d=careerExecs().find(x=>x.id===p.id);
@@ -120,7 +121,7 @@ function careerAvailable(postId){
   return careerPeople().filter(p=>!used.has(p.id) && careerSkill(p)>=BC().minSkill[S.lv]&&careerLevel(p)>=(target?.minLevel??CAREER_MANAGEMENT[S.lv].min));
 }
 function careerCheck(cost,ap){
-  if(S.phase!=='play') return {ok:false,why:'当前不能办理'};
+  const authority=managementCheck();if(!authority.ok)return authority;
   if(S.ap<(ap==null?1:ap)) return {ok:false,why:'行动点不足'};
   if(cost && S.lv<=3 && S.biz.budget<cost) return {ok:false,why:'经营费用不足'};
   return {ok:true,why:''};
@@ -152,28 +153,34 @@ function careerAssess(id){
   return careerDone();
 }
 function careerAppoint(postId,id){
-  const slot=careerPositions().find(x=>x.id===postId),p=careerAvailable(postId).find(x=>x.id===id);
-  if(!slot || !p || careerRecord(id).assessedUntil<S.monthAbs || careerRecord(id).training || !careerCheck(0).ok) return null;
-  const old=person(slot.pid);
-  if(S.lv===2&&!slot.team){if(!doAppoint(postId,id)) return null;}
-  else if(S.lv===3){if(!doAppointL3(postId,id)) return null;}
+  const slot=careerPositions().find(x=>x.id===postId),p=person(id);
+  if(!careerCheck(0).ok || governanceAppointCheck(slot,p))return null;
+  if(S.lv>=4&&governanceActive().some(x=>x.kind==='appoint'&&x.data.pid===id))return null;
+  if(S.lv>=4)return governanceSubmit('appoint',postId,'任用'+p.name+'为'+slot.name,{postId,pid:id,oldId:slot.pid});
+  careerApplyAppointment(slot,p);return careerDone();
+}
+function careerApplyAppointment(slot,p){
+  const old=person(slot.pid),id=p.id,postId=slot.id;
+  if(S.lv===2&&!slot.team)applyAppointOutlet(postId,id);
+  else if(S.lv===3&&!slot.department)applyAppointBranch(postId,id);
   else{
     careerSpend(0);
     const fit=slot.exec?Object.fromEntries(CAREER_LINES.map(l=>[l.id,careerFit(p,l.id)])):null;
     slot.row[slot.field]=id;
     if(slot.exec){slot.row.name=p.name;slot.row.fit=fit;}
-    else if(!slot.team){slot.row.headName=p.name;slot.row.skill=careerSkill(p);}
-    p.pos=myUnitName()+'·'+slot.name;p.kind='sub';p.recent='经考察任用，正在履职观察';
-    fav(id,BC().appointFav);
-    if(old){old.pos=S.lv===5?'总行专项岗位':myUnitName()+'专项岗位';old.recent='调整工作分工';fav(old.id,BC().oldFav);}
-    keyEvent(`经考察任用${p.name}担任${slot.name}`);
-    log('', `${slot.name}由${p.name}担任。${old?old.name+'调整到专项岗位。':''}行动点-1，任用后进入履职观察。`);
+    else if(!slot.team&&!slot.department){slot.row.headName=p.name;slot.row.skill=careerSkill(p);}
+    p.pos=(S.lv===5?'':myUnitName()+'·')+slot.name;p.kind='sub';p.recent='经考察任用，正在履职观察';fav(id,BC().appointFav);
+    if(old){
+      const remaining=governanceRoles(old.id);
+      old.pos=remaining.length?remaining.join('（兼任）'):S.lv===5?'总行专项岗位':myUnitName()+'专项岗位';old.recent=remaining.length?'解除原兼任，保留现任岗位':'调整工作分工';fav(old.id,BC().oldFav);
+    }
+    keyEvent(`经考察任用${p.name}担任${slot.name}`);log('',`${slot.name}由${p.name}担任，进入履职观察。行动点-1。`);
   }
+  if(S.lv===3&&old){const roles=governanceRoles(old.id);if(roles.length){old.pos=roles.join('（兼任）');old.kind='sub';}}
   const g=careerEnsure();g.engaged=true;g.coord=c100(g.coord-BC().coordPenalty/2);
   careerRecord(id).probation={until:S.monthAbs+BC().probationMonths,lv:S.lv,post:slot.name};
   careerRecord(id).history.push({at:S.monthAbs,lv:S.lv,type:'appoint',post:slot.name});
-  if(old && !g.council)g.council={id:'people',at:S.turn,lead:old.id,partner:id};
-  return careerDone();
+  if(old&&!g.council)g.council={id:'people',at:S.turn,lead:old.id,partner:id};
 }
 function careerTalk(id,mode){
   const p=careerPeople().find(x=>x.id===id),r=p&&careerRecord(id),g=careerEnsure();
@@ -314,6 +321,7 @@ function careerDeputyChoice(id){
   keyEvent(`${CAREER_DEPUTY.titles[S.lv]}：${o.name}`);save();return true;
 }
 function careerMonthStart(){
+  governanceMonthStart();
   const g=careerEnsure(),prev=S.deputyTerms&&S.deputyTerms[S.lv-1];
   if(prev && !g.deputyApplied){g.coord=c100(g.coord+prev.coord);g.deputyApplied=true;}
   if(S.turn-g.lastCouncil>=BC().councilInterval[S.lv]){

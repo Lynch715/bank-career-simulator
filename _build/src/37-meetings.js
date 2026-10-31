@@ -73,9 +73,9 @@ const MEETINGS = {
   ],
   5: [
     {id:"m5_dongshi", title:"董事会",
-      body:"董事会审议半年经营情况和资本规划，你要列席汇报。陆明远是董事长。",
-      go:{s:"董事会那边稳一点", fn:()=>fav("lu",2), log:"董事会开了五个小时。独立董事问了三个问题，两个关于不良。"},
-      skip:{t:"「请分管副行长汇报。」", s:"陆明远不高兴", fn:()=>fav("lu",-6), log:"会后陆明远打来电话，问你那天在忙什么。"}},
+      body:"董事会审议半年经营情况和资本规划，你要列席汇报。由在任董事长主持。",
+      go:{s:"董事会那边稳一点", fn:()=>{fav(governanceChair().id,2);careerEnsure().board=c100(careerEnsure().board+2);}, log:"董事会开了五个小时。独立董事问了三个问题，两个关于不良。"},
+      skip:{t:"「请分管副行长汇报。」", s:"董事会支持下降", fn:()=>{fav(governanceChair().id,-6);careerEnsure().board=c100(careerEnsure().board-6);}, log:"会后董事长打来电话，问你那天在忙什么。"}},
     {id:"m5_jianguan", title:"监管通报会",
       body:"金融监管总局召开年度监管通报会，各家大行行长到场。顾清越坐在主席台第二排。",
       go:{s:"评级好说一点 · 顾清越知道", fn:()=>{ fav("gu",2); S.biz.regScore = Math.min(10,(S.biz.regScore||0)+0.5); }, log:"通报会两个小时，点了四家行的名，没有泰和。"},
@@ -108,7 +108,7 @@ function meetPick(){
 }
 function meetSpec(m){
   const can = S.ap >= 1;
-  const hosts={m2_jyfx:'zhouqm',m2_hanghang:'zhouqm',m3_jyfx:'lu',m4_zonghang:'songwy',m4_jianguanju:'gu',m5_dongshi:'lu',m5_jianguan:'gu'};
+  const hosts={m2_jyfx:'zhouqm',m2_hanghang:'zhouqm',m3_jyfx:'lu',m4_zonghang:'songwy',m4_jianguanju:'gu',m5_dongshi:S.lv===5?governanceChair().id:'lu',m5_jianguan:'gu'};
   return {kind:"event", id:m.id, portrait:hosts[m.id]||null, title:m.title, body:m.body + "<br><small class=\"muted\">推不掉的会：去要占 1 个行动点。</small>", opts:[
     {t:"「我去。」", s:"占1点 · " + m.go.s, disabled:!can, fn:()=>{ apUse(1); m.go.fn(); log("", m.go.log); S.track.meetGo = (S.track.meetGo||0)+1; }},
     {t:m.skip.t, s:m.skip.s, fn:()=>{ m.skip.fn(); log("warn", m.skip.log); S.track.meetSkip = (S.track.meetSkip||0)+1; }},

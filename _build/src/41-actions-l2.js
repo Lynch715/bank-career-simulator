@@ -11,6 +11,7 @@ const ACTIONS_L2 = [
 ];
 
 function canActL2(id){
+  const authority=managementCheck(2);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本月行动点用完了"};
   const b = B2();
@@ -82,12 +83,9 @@ function doVisit(pid, gift){
 }
 
 /* 任免候选:L1 的旧部 + 现任负责人之外的人 */
-function appointCands(oid){
-  const o = outlet(oid);
-  const used = new Set(S.biz.outlets.map(x=>x.mgr).concat([S.biz.corp.lead]));
-  return S.people.filter(p => p.alive && p.met && p.kind==="staff" && p.skill!=null && !used.has(p.id) && p.pos.indexOf("离职")<0);
-}
-function doAppoint(oid, pid){
+function appointCands(oid){return S.lv===2?careerAvailable(oid):[];}
+function doAppoint(oid,pid){return S.lv===2?careerAppoint(oid,pid):null;}
+function applyAppointOutlet(oid, pid){
   const ck = canActL2("appoint"); if(!ck.ok) return null;
   const o = outlet(oid), np = person(pid); if(!o || !np) return null;
   const b = B2().appoint;

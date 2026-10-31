@@ -11,6 +11,7 @@ const ACTIONS_L4 = [
   {id:"regulator",name:"监管沟通",   desc:"去监管局汇报，评级好说一点"},
 ];
 function canActL4(id){
+  const authority=managementCheck(4);if(!authority.ok)return authority;
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本季行动点用完了"};
   if(S.ap < apCost(id)) return {ok:false, why:`这件事要占${apCost(id)}个点，只剩${S.ap}点了`};

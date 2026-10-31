@@ -7,6 +7,7 @@ const choose={service:'visit',competition:'service',integration:'share',industry
 function enter(lv){
   store.thsz_save=JSON.stringify(legacy[lv-1]);G.load();G.setBot(null);G.S.phase='play';return G.S;
 }
+function approveAppointment(post,pid){const a=C.appoint(post,pid);if(!a)return null;I.advance(true);return G.governance.execute(a.id);}
 function advance(){I.advance(true);}
 function units(lv){return lv===1?['dzs']:lv===2?['dzs']:lv===3?['yyb']:lv===4?['yyb','yz']:['hd','hn'];}
 function leader(d){return C.people().slice().sort((a,b)=>b.skill-a.skill).find(p=>!C.record(p.id).training)||C.people()[0];}
@@ -38,9 +39,9 @@ C.assess(teamCandidate.id);T.ok('可组建专业团队，团队负责人实际�
 const teamAp=s.ap;T.ok('已任用团队负责人不可重复占网点岗位',C.appoint('dzs',teamCandidate.id)===null&&s.ap===teamAp);
 enter(4);s=G.S;let p=C.available('exec_corp')[0];
 T.ok('一级分行有机构和班子岗位可任用',C.positions().length===16&&!!p);
-C.assess(p.id);T.ok('可任用副行长，姓名、分工、专长一致更新',C.appoint('exec_corp',p.id)&&s.biz.deputies.find(d=>d.line==='corp').id===p.id&&s.biz.deputies.find(d=>d.id===p.id).name===p.name);
+C.assess(p.id);T.ok('可任用副行长，姓名、分工、专长一致更新',approveAppointment('exec_corp',p.id)&&s.biz.deputies.find(d=>d.line==='corp').id===p.id&&s.biz.deputies.find(d=>d.id===p.id).name===p.name);
 enter(5);s=G.S;p=C.available()[0];C.assess(p.id);
-T.ok('总行可任用片区负责人，不与班子重复',C.appoint('hd',p.id)&&s.biz.regions.find(x=>x.id==='hd').headId===p.id&&C.appoint('exec_risk',p.id)===null);
+T.ok('总行经报批任用独立一级分行负责人，不与班子重复',approveAppointment('hd',p.id)&&s.biz.firstBranches.find(x=>x.id==='hd').headId===p.id&&C.appoint('exec_risk',p.id)===null);
 p.pos='退休';T.ok('退休人员退出可任用和项目名单',!C.people().some(x=>x.id===p.id));
 enter(4);s=G.S;const chief=s.biz.inst.find(x=>x.headId&&I.person(x.headId));const chiefSkill=chief.skill;
 C.train(chief.headId,'retail');round();

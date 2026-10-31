@@ -6,6 +6,7 @@ const preScope=require('./fixtures/career-pre-scope-v4.json');
 const {G,store}=load(),C=G.career,I=G.internals,T=runner('23-cadre-scope');
 G.setHeadless(true);G.setBot(null);
 function enter(lv){store.thsz_save=JSON.stringify(legacy[lv-1]);G.load();G.setBot(null);return G.S;}
+function approveAppointment(post,pid){const a=C.appoint(post,pid);if(!a)return null;I.advance(true);return G.governance.execute(a.id);}
 let s=enter(5),junior=I.person('xulp');
 junior.skill=100;C.record(junior.id).assessedUntil=s.monthAbs+100;C.record(junior.id).specialty='corp';
 const peopleIds=new Set(C.people().map(p=>p.id));
@@ -14,7 +15,7 @@ T.ok('网点负责人能力100、已有考察也不能进入总行候选池',C.l
 let before=JSON.stringify(s);
 T.ok('总行任用入口拒绝基层候选且不扣资源',C.appoint('hd',junior.id)===null&&JSON.stringify(s)===before);
 T.ok('培养、考察、谈话与新项目同样不能越过本级范围',C.train(junior.id,'corp')===null&&C.assess(junior.id)===null&&C.talk(junior.id,'work')===null&&C.start('wealth5',junior.id,['hd','hn'])===null&&JSON.stringify(s)===before);
-T.ok('总行岗位只含总行班子与明确的一级分行负责人',C.positions().length===11&&C.positions().every(p=>/副行长|分行行长/.test(p.name))&&!C.positions().some(p=>/网点|片区统筹/.test(p.name)));
+T.ok('总行岗位只含总行班子与明确的一级分行负责人',C.positions().length===40&&C.positions().every(p=>/副行长|分行行长/.test(p.name))&&!C.positions().some(p=>/网点|片区统筹/.test(p.name)));
 T.ok('任用收紧不删除基层旧人、培养记录或人脉',!!I.person(junior.id)&&!!I.person('xiaoman')&&C.record(junior.id).specialty==='corp');
 junior.role='总行风险管理部总经理';
 T.ok('人物的旧头衔不能覆盖现任网点岗位',C.level(junior)===1&&!C.available().some(p=>p.id===junior.id));
@@ -23,7 +24,7 @@ junior.pos='四川分行行长秘书';T.ok('岗位名称含行长字样也不能
 
 s=enter(5);let alum=I.person('xiaoman');alum.skill=90;alum.pos='总行风险管理部总经理';
 T.ok('旧部实际成长到总行部门后可以进入本级候选',C.level(alum)===4&&C.available('hd').some(p=>p.id===alum.id));
-C.assess(alum.id);T.ok('合格干部经考察后可任一级分行行长',C.appoint('hd',alum.id)&&s.biz.regions.find(r=>r.id==='hd').headId===alum.id&&/上海分行行长/.test(alum.pos));
+C.assess(alum.id);T.ok('合格干部经考察后可任一级分行行长',approveAppointment('hd',alum.id)&&s.biz.firstBranches.find(r=>r.id==='hd').headId===alum.id&&/上海分行行长/.test(alum.pos));
 T.ok('已经担任一级分行行长者不能同时占用班子岗位',C.appoint('exec_corp',alum.id)===null);
 
 s=enter(5);C.available().forEach(p=>p.pos='退休');
@@ -36,7 +37,7 @@ T.ok('一级分行也不把网点负责人列入本级台账',C.level(junior)===
 const branchHead=I.person('chengxy');
 T.ok('一级分行任用副行长要求更高层级履历',C.level(branchHead)===2&&!C.available('exec_corp').some(p=>p.id===branchHead.id)&&C.available('wz').some(p=>p.id===branchHead.id));
 const senior=C.available('exec_corp')[0];C.assess(senior.id);
-T.ok('合格二级分行干部仍可进入一级分行班子',C.appoint('exec_corp',senior.id)&&s.biz.deputies.some(d=>d.id===senior.id));
+T.ok('合格二级分行干部仍可进入一级分行班子',approveAppointment('exec_corp',senior.id)&&s.biz.deputies.some(d=>d.id===senior.id));
 
 s=enter(3);junior=I.person('xiaoman');junior.skill=100;
 T.ok('二级分行不能仅凭能力把普通柜员直接任为支行行长',!C.people().some(p=>p.id===junior.id)&&!I.appointCandsL3('gst').some(p=>p.id===junior.id));
