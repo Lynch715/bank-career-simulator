@@ -69,6 +69,8 @@ const BALANCE = {
 
   audit: { line:40, k:0.004, maxP:0.12 },       // 年底审计:干净度低于 40,每年被查概率 (40-干净度)×0.4%,封顶 12%
 
+  discipline: { reviewP:0.15, probation:15, demote:40, dismiss:95, warningMonths:6, probationMonths:12, demoteMonths:12, returnRetryMonths:6, returnCleanMonths:6, returnComp:90, returnPerf:55, returnTrust:45, returnScore:60 },
+
   kpiCap: 1.2,
   rankStreakKeep: 12,
 

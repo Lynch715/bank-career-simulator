@@ -32,7 +32,7 @@ function finalL5(){
   const avg = S.biz.scoreLog.length ? S.biz.scoreLog.reduce((a,x)=>a+x,0)/S.biz.scoreLog.length : S.kpi.score;
   S.track.finalAvg = r1(avg);
   const bt = (S.track.btLv||[]);
-  if(S.core.clean < 45) return "caught";
+  if(pendingDiscipline().points > 55) return "caught";
   if(S.core.clean >= 90 && (S.track.minClean||100) >= 90 && avg >= e.mid) return "clean";
   if([1,2,3].every(l => bt.includes(l))) return "bt3";
   if(avg >= e.top && rankL5() <= 2) return "top";
@@ -82,7 +82,7 @@ function bioData(){
   const people = S.people.filter(p => (p.kind==="sub" || p.kind==="staff") && p.lvMet <= 3 && p.alive && p.pos.indexOf("离职")<0 && !["zhouqm","duheng","shenlan","jianggd"].includes(p.id))
     .sort((a,b) => rank(b)-rank(a) || (b.skill||0)-(a.skill||0)).slice(0,3).map(p => ({name:p.name, pos:p.pos}));
   const title = S.lv >= 5 ? "行长" : titleOf(S);
-  return {name:S.player.sur+S.player.given, title, rows, people, core:Object.assign({}, S.core), ending:S.over ? S.over.title : "", age:endAge, verdict: bioVerdict()};
+  return {name:S.player.sur+S.player.given, title, rows, people, discipline:(S.discipline?S.discipline.history:[]), core:Object.assign({}, S.core), ending:S.over ? S.over.title : "", age:endAge, verdict: bioVerdict()};
 }
 function bioVerdict(){
   const c = S.core;
@@ -95,7 +95,8 @@ function bioVerdict(){
 function drawBio(canvas){
   const d = bioData();
   const W = 750, pad = 48;
-  const H = 360 + d.rows.length*150 + 200 + 380 + 120;
+  const disciplineRows=d.discipline.slice(-8);
+  const H = 360 + d.rows.length*150 + 200 + 380 + 120 + (disciplineRows.length?60+disciplineRows.length*140:0);
   const dpr = 2;
   canvas.width = W*dpr; canvas.height = H*dpr;
   const g = canvas.getContext && canvas.getContext("2d");
@@ -120,6 +121,16 @@ function drawBio(canvas){
     y += 150;
   });
   y += 20;
+  if(disciplineRows.length){
+    g.fillStyle="#1d2522"; g.font=`bold 22px ${serif}`; g.fillText("处分与整改履历",pad,y); y+=40;
+    disciplineRows.forEach(h=>{
+      g.fillStyle="#16302b"; g.font=`20px ${serif}`;
+      g.fillText(`${h.age}岁 · ${{warning:"警告",probation:"考察期",demote:"降职",remove:"撤职整改",dismiss:"职业终结"}[h.kind]} · ${LV_TITLE[h.lv]}`,pad,y);
+      g.fillStyle="#6c716c"; g.font=`18px ${sans}`;
+      wrapText(g,h.reason.length>70?h.reason.slice(0,70)+"…":h.reason,pad,y+32,W-pad*2,27);
+      y+=140;
+    });
+  }
   g.fillStyle = "#1d2522"; g.font = `bold 22px ${serif}`; g.fillText("带出来的人", pad, y); y += 40;
   if(!d.people.length){ g.fillStyle = "#6c716c"; g.font = `18px ${sans}`; g.fillText("——", pad, y); y += 40; }
   d.people.forEach(p => { g.fillStyle = "#1d2522"; g.font = `20px ${serif}`; g.fillText(p.name, pad, y); g.fillStyle = "#6c716c"; g.font = `17px ${sans}`; g.fillText(p.pos, pad+110, y); y += 40; });

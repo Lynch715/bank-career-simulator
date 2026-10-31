@@ -8,11 +8,11 @@ function nplRatio(){ return S.biz.loans > 0 ? S.biz.npl / S.biz.loans * 100 : 0;
 function outlet(id){ return S.biz.outlets.find(o=>o.id===id); }
 function project(id){ return S.biz.projects.find(p=>p.id===id); }
 function subsL2(){
-  const ids = S.biz.outlets.map(o=>o.mgr).concat([S.biz.corp.lead]).filter(Boolean);
+  const ids = S.biz.outlets.map(o=>o.mgr).concat([S.biz.corp.lead],Object.values(S.biz.career?.teams||{})).filter(Boolean);
   return ids.map(person).filter(Boolean);
 }
 function skillOf(id){ const p = person(id); return p && p.skill != null ? p.skill : 45; }
-function delegK(id){ const d = B2().deleg; return d.base + skillOf(id)/100 * d.k; }
+function delegK(id){ const d = B2().deleg; return (d.base + skillOf(id)/100 * d.k) * careerTeamK('retail'); }
 function moraleK(o){ const m = B2().morale; return m.base + o.morale/100 * m.k; }
 
 /* L1 员工 → 人脉簿里的能力值 */
@@ -206,6 +206,7 @@ function monthStartL2(first){
 
 /* ---------- 月末结算 ---------- */
 function settleL2(){
+  careerSettle();
   const b = B2(), M = S.month;
   const kmh = S.m <= 3 ? (B1().kmhMult||1) : 1;
   // 1 网点(委托:负责人去做)
@@ -232,10 +233,10 @@ function settleL2(){
   });
   // 3 贷款
   S.biz.loans = Math.round(S.biz.loans * (1 - b.amort) + retail);
-  const baseNew = S.biz.loans * b.nplBase.rate / 12;
+  const baseNew = S.biz.loans * b.nplBase.rate / 12 / careerTeamK('risk');
   let newNpl = baseNew;
   S.loanBook.forEach(l => {
-    if(l.def && !l.done && S.monthAbs >= l.defAt){
+    if(l.lv<=2 && l.def && !l.done && S.monthAbs >= l.defAt){
       l.done = true; newNpl += l.amt; M.defaults.push(l);
       log("bad", `<b>${l.name}</b>逾期了，进了不良。${l.lv < S.lv ? "这笔是前任手上批的。" : ""}<span class="num">不良+${fmtWan(l.amt)}</span>`);
     }
@@ -247,7 +248,7 @@ function settleL2(){
   settleChalL2();
   // 5 利润
   const r = b.spread;
-  const profit = depTotal() * r.dep / 12 + S.biz.loans * r.loan / 12 + M.fee - b.expense - newNpl * b.provision - (M.spent||0);
+  const profit = depTotal() * r.dep / 12 + S.biz.loans * r.loan / 12 + M.fee - b.expense / careerTeamK('ops') - newNpl * b.provision - (M.spent||0);
   S.biz.ytd.profit += profit; M.profit = profit; S.biz.lastProfit = profit;
   // 6 回归
   S.biz.csat = c100(S.biz.csat + (b.csatHome - S.biz.csat) * b.csatRevert);

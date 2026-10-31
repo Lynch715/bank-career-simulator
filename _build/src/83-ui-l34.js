@@ -94,9 +94,13 @@ Object.assign(UI, {
       opts.push({t:"算了", s:""});
       UI.modal({kind:"pick", title:"资源往哪条线偏", body:"偏了一条，另外几条的老总心里有数。", opts}); return;
     }
-    const opts = S.biz.branches.filter(x => (id!=="close" || x.outlets>1) && (id!=="squat" || !x.squat)).map(x => { const m = person(x.mgr); return {t:`${x.name} · ${m?m.name:""}`, s:`${area(x.area).name} · ${x.outlets}个网点 · ${fmtYi1(x.dep)}`, odds: id==="squat" ? ODDS[3].squat(x) : undefined, fn:()=> id==="close" ? doCloseOutlet(x.id) : (id==="renovate" ? doRenovate(x.id) : (id==="squat" ? doSquatL3(x.id) : setTimeout(()=>UI.appointModalL3(x.id),0)))}; });
+    const opts = S.biz.branches.filter(x => (id!=="close" || x.outlets>1) && (id!=="squat" || !x.squat)).map(x => {
+      const m = person(x.mgr), maxed = x.renov>=0.3;
+      const renovation = id==="renovate" ? ` · 存款增长加成${Math.round(x.renov*100)}% · ${maxed?"已达改造上限":`${B3().renovate.cost}万 / 1点行动`}` : "";
+      return {t:`${x.name} · ${m?m.name:""}`, s:`${area(x.area).name} · ${x.outlets}个网点 · ${fmtYi1(x.dep)}${renovation}`, disabled:id==="renovate" && (maxed || !canActL3(id).ok), odds: id==="squat" ? ODDS[3].squat(x) : undefined, fn:()=> id==="close" ? doCloseOutlet(x.id) : (id==="renovate" ? doRenovate(x.id) : (id==="squat" ? doSquatL3(x.id) : setTimeout(()=>UI.appointModalL3(x.id),0)))};
+    });
     opts.push({t:"算了", s:""});
-    UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长",squat:"去哪个支行蹲点"}[id], body:"", opts});
+    UI.modal({kind:"pick", title:{close:"撤哪个支行的网点",renovate:"改造哪个支行",appoint:"换哪个支行的行长",squat:"去哪个支行蹲点"}[id], body:id==="renovate" ? `每次投入${B3().renovate.cost}万，占1点行动。改造加成在季末结算存款增长时生效，达到30%后不能继续改造。` : "", opts});
   },
   pickArea(){
     const opts = S.biz.areas.map(a => ({t:`${a.name}`, s:`人口${a.pop}万 · 热度${Math.round(a.heat)} · 竞争${a.comp} · ${a.note}`, odds:ODDS[3].open(a), fn:()=>doOpenOutlet(a.id)}));
@@ -110,9 +114,9 @@ Object.assign(UI, {
   },
   branchModal(bid){
     const x = branch(bid), m = person(x.mgr);
-    UI.modal({kind:"pick", title:x.name, portrait:m, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。`, opts:[
+    UI.modal({kind:"pick", title:x.name, portrait:m, body:`${m?`行长${m.name}，能力${m.skill}。${m.note||""}`:""}\n\n存款${fmtYi1(x.dep)}，${x.outlets}个网点。\n改造存款增长加成${Math.round(x.renov*100)}%，季末生效${x.renov>=0.3?"，已达改造上限":"，达到30%后不能继续改造"}。`, opts:[
       {t:"下去蹲点", s:"1点行动 · 这季存款长得快一点", odds:ODDS[3].squat(x), disabled:!canActL3("squat").ok || x.squat, fn:()=>doSquatL3(bid)},
-      {t:"网点改造", s:`${B3().renovate.cost}万 · 1点行动`, disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
+      {t:"网点改造", s:x.renov>=0.3 ? "已达改造上限" : (!canActL3("renovate").ok ? canActL3("renovate").why : `${B3().renovate.cost}万 · 1点行动 · 季末生效`), disabled:!canActL3("renovate").ok || x.renov>=0.3, fn:()=>doRenovate(bid)},
       {t:"撤一个网点", s:"1点行动 · 片区口碑掉", disabled:!canActL3("close").ok || x.outlets<=1, fn:()=>doCloseOutlet(bid)},
       {t:"换行长", s:"1点行动", disabled:!canActL3("appoint").ok, fn:()=>setTimeout(()=>UI.appointModalL3(bid),0)},
       {t:"关掉", s:""}]});

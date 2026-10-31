@@ -95,7 +95,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* 三栏 */
 #main{display:grid;grid-template-columns:300px 1fr 300px;grid-template-rows:minmax(0,1fr);gap:14px;padding:14px;flex:1;min-height:0}
-.col{overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
+.col{overflow-y:auto;min-height:0;min-width:0;-webkit-overflow-scrolling:touch}
 .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
 .box h3{margin:0 0 10px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:1px;display:flex;justify-content:space-between;align-items:baseline}
 .box h3 em{font-style:normal;color:var(--text);font-size:12px;font-weight:400}
@@ -294,7 +294,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .dcb{display:flex;align-items:center;gap:8px}
 .dcb b{min-width:64px;text-align:center}
 .dct{font-size:12px;text-align:right}
-@media (max-width:760px){ .kanban{grid-template-columns:repeat(2,minmax(0,1fr))} .lq{grid-template-columns:1fr} }
+@media (max-width:1100px){ .kanban{grid-template-columns:repeat(2,minmax(0,1fr))} .lq{grid-template-columns:1fr} }
 
 /* 人脉簿 */
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
@@ -330,7 +330,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* 窄屏 */
 #tabs{display:none}
-@media (max-width:760px){
+@media (max-width:1100px){
   #top{min-height:0;flex-wrap:wrap;gap:6px 10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px}
   #top .who{font-size:16px}
   #top .cores{margin-left:0;width:100%;justify-content:space-between}
@@ -352,16 +352,16 @@ button:disabled{cursor:not-allowed;opacity:.45}
   .modal{padding:18px 16px 14px}
   .stage{padding:calc(24px + env(safe-area-inset-top)) 14px calc(50px + env(safe-area-inset-bottom))}
 }
-@media (max-width:760px) and (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #tabs button.on{color:var(--gold)} }
+@media (max-width:1100px) and (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #tabs button.on{color:var(--gold)} }
 #installBar{position:fixed;left:0;right:0;bottom:0;z-index:90;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:none}
 #installBar.on{display:block}
 #installBar .ib-in{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.25);padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 #installBar img{width:44px;height:44px;border-radius:10px}
 #installBar .ib-t{flex:1;min-width:180px;font-size:14px;line-height:1.6}
 #installBar .ib-b{display:flex;gap:8px;margin-left:auto}
-@media (max-width:760px){ #installBar{bottom:calc(58px + env(safe-area-inset-bottom) - var(--apgap,0px))} }
+@media (max-width:1100px){ #installBar{bottom:calc(58px + env(safe-area-inset-bottom) - var(--apgap,0px))} }
 html.iosfix #installBar{margin-bottom:0}
-@media (min-width:761px){ html.iosfix #installBar{bottom:calc(0px - var(--apgap,0px))} }
+@media (min-width:1101px){ html.iosfix #installBar{bottom:calc(0px - var(--apgap,0px))} }
 /* 触控目标不小于 44 */
 .ln .lb .btn{min-height:44px;min-width:52px}
 input[type=range]{height:32px}
@@ -408,7 +408,7 @@ small{font-size:max(12px,.85em)}
 .appearance-choice{padding:8px 12px;background:var(--paper2);border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:12px;color:var(--muted)}
 .appearance-choice.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold);color:var(--goldt)}
 .vote .portrait-tiny{width:36px;height:42px;margin:0 auto 4px;display:block}
-@media(max-width:760px){
+@media(max-width:1100px){
   .portrait-card{height:146px}
   .pgrid:not(.dex){grid-template-columns:repeat(2,minmax(0,1fr))}
   .person-copy{padding:9px 10px}
@@ -422,6 +422,29 @@ small{font-size:max(12px,.85em)}
   .character-intro .portrait-large{width:90px;height:140px}
   .staffs,.pgrid:not(.dex){grid-template-columns:1fr}
 }
+/* 职务经营台账 */
+.career-ui{min-width:0}
+.career-ui h3{flex-wrap:wrap;gap:5px}
+.career-tabs{display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:10px}
+.career-tabs button{font:inherit;font-size:13px;background:transparent;color:var(--muted);border:1px solid transparent;border-radius:6px;padding:8px 10px;min-height:44px;cursor:pointer}
+.career-tabs button.on{color:var(--text);background:var(--paper2);border-color:var(--line);font-weight:600}
+.career-ui .btn{min-height:44px;font-size:13px;white-space:normal}
+.career-ui p{margin:7px 0;font-size:13px;overflow-wrap:anywhere}
+.career-ui .hint,.career-ui .muted{font-size:12px}
+.career-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.career-projects,.career-people{display:grid;gap:10px;min-width:0}
+.career-project,.career-person{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px;min-width:0}
+.career-title{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.career-person{display:flex;gap:10px;align-items:flex-start}
+.career-person>div{min-width:0;flex:1}
+.career-progress{height:6px;border-radius:4px;background:var(--paper2);overflow:hidden;margin:10px 0}
+.career-progress span{display:block;height:100%;background:var(--gold)}
+.career-empty{padding:14px 0;color:var(--muted)}
+.career-search{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:12px;max-width:100%}
+.career-search input{font:inherit;font-size:14px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:6px;min-height:44px;width:155px;max-width:100%;padding:8px}
+.career-toolbar [aria-pressed="true"]{background:var(--paper2);border-color:var(--gold)}
+.career-ui button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:359px){.career-tabs button{padding:7px;font-size:12px}.career-person{padding:9px}}
 </style>
 </head>
 <body>

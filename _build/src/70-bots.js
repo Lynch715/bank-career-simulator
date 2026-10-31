@@ -3,6 +3,8 @@
    ===================================================================== */
 function botChooseGeneric(mode){
   return function(spec){
+    // 校准机器人在过渡任期明确选协调方案，新增交接选择不消耗经营随机数。
+    if(spec.id==='careerDeputy') return 0;
     const opts = (spec.opts||[]).map((o,i)=>Object.assign({i}, o)).filter(o=>!o.disabled);
     if(!opts.length) return 0;
     const clean = opts.filter(o=>!o.gray), gray = opts.filter(o=>o.gray);
@@ -270,7 +272,7 @@ const BOTS = {};
     choose: botChooseGeneric(base),
     stmt: list => base==="random" ? list.map((x,i)=>i).sort(()=>R()-0.5).slice(0,3) : list.map((x,i)=>[x.v,i]).sort((a,b)=>b[0]-a[0]).slice(0,3).map(x=>x[1]),
     talk: q => base==="random" ? Math.floor(R()*q.opts.length) : q.opts.map((o,i)=>[typeof o.v==="number"?o.v:75,i]).sort((a,b)=>b[0]-a[0])[0][1],
-    play: ()=> botPlay(m),
+    play: ()=> { if(disciplineBlocked()){ const d=S.discipline; const task=Object.keys(d.tasks).find(k=>d.tasks[k]<1); if(task) doDisciplineTask(task); } botPlay(m); },
   };
 });
 
@@ -299,6 +301,7 @@ function simGame(mode, seed, maxTurns, opts){
   newGame({seed, sur:"李", given:"然"});
   BOT = BOTS[mode];
   const until = opts.until || "l5";
+  let maxLv=S.lv;
   let steps = 0; const guardMax = maxTurns || 400;
   const trace = {windowSeen:null, l1Turns:null, l2Start:null};
   while(S.phase === "play" && steps++ < guardMax){
@@ -306,22 +309,25 @@ function simGame(mode, seed, maxTurns, opts){
     if(S.lv===3 && until==="l3") break;
     if(S.lv===4 && until==="l4") break;
     if(S.lv===2 && trace.l2Start==null){ trace.l2Start = {age:S.age, dzs:outlet("dzs").dep, mgr:outlet("dzs").mgr, skill:skillOf(outlet("dzs").mgr)}; if(opts.mode2) BOT = BOTS[opts.mode2]; if(opts.onL2) opts.onL2(S); }
+    maxLv=Math.max(maxLv,S.lv);
     BOT.play();
     const before = S.turn, lvB = S.lv;
     endTurn();
     runJobs();
     if(trace.windowSeen==null && S.track.promoLog && S.track.promoLog.length) trace.windowSeen = S.track.promoLog[0].turn;
     if(lvB===1 && S.lv===2) trace.l1Turns = before;
+    maxLv=Math.max(maxLv,S.lv);
     if(opts.onTurn) opts.onTurn(S);
     if(S.phase==="play" && S.turn === before && S.lv === lvB) throw new Error("回合没有推进 turn="+S.turn);
   }
-  return {phase:S.phase, over:S.over && S.over.id, overLv:S.over && S.over.lv, turn:S.turn, age:S.age, clean:S.core.clean, lv:S.lv,
+  return {maxLv, phase:S.phase, over:S.over && S.over.id, overLv:S.over && S.over.lv, turn:S.turn, age:S.age, clean:S.core.clean, lv:S.lv,
     windowSeen:trace.windowSeen, l1Turns:trace.l1Turns, l2Start:trace.l2Start, tries:S.promo.tries, bt:S.promo.bt, rank:S.kpi.rank, score:S.kpi.score,
     core:Object.assign({}, S.core), ms:Object.keys(S.milestones), hist:S.kpi.history.map(h=>({s:h.score,r:h.rank}))};
 }
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
+  career:{link:careerLink,alm:careerALM,lineK:careerLineK,teamK:careerTeamK,ensure:careerEnsure,people:careerPeople,positions:careerPositions,available:careerAvailable,record:careerRecord,train:careerTrain,assess:careerAssess,appoint:careerAppoint,talk:careerTalk,style:careerStyle,plan:careerPlan,start:careerStart,choose:careerChoose,push:careerPush,council:careerCouncilChoice,startCheck:careerStartCheck,execution:careerExecution,reserved:careerReserved,monthStart:careerMonthStart,settle:careerSettle,deputySpec:careerDeputySpec,deputyChoice:careerDeputyChoice,projects:CAREER_PROJECTS},
   act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,
     swap:doSwap, talk:doTalk, startProj:doStartProj, pushProj:doPushProj, focus:doFocus, quota:doQuota, regulator:doRegulator,
@@ -331,7 +337,7 @@ const THSZ = {
   get S(){ return S; }, set S(v){ S = v; },
   setBot(m){ BOT = m ? BOTS[m] : null; },
   setHeadless(v){ FORCE_HL = !!v; },
-  internals:{ maintainQuote, meetChain, meetSpec, meetPick, MEETINGS, apCost, promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
+  internals:{ maintainQuote, reinstatementState, reinstatementAssessment, runReinstatement, applyReinstatement, trackReinstatementConduct, adaptReinstatementKpi, canResumeReinstatement, resumeReinstatement, canResumeLegacyDiscipline, resumeLegacyDiscipline, pendingDiscipline, resolveDiscipline, disciplineBlocked, doDisciplineTask, updateDiscipline, captureCareerPost, restoreCareerPost, publicityReason, publicityRisk, auditCheck, meetChain, meetSpec, meetPick, MEETINGS, apCost, promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
     EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, EVENT_ODDS, applyEventOdds, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };

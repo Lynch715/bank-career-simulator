@@ -19,6 +19,7 @@ const PRODUCTS = [
 function canAct(id){
   if(S.phase!=="play") return {ok:false, why:"现在不能操作"};
   if(S.ap < 1) return {ok:false, why:"本月行动点用完了"};
+  if(S.discipline && S.discipline.removed && !["maintain","hall"].includes(id)) return {ok:false, why:"撤职整改期间仅开放客户维护和厅堂服务"};
   const b = B1();
   if(id==="hall" && S.biz.budget < b.hall.cost) return {ok:false, why:`营销费用不够（要${b.hall.cost}万）`};
   if(id==="rally" && S.biz.rallied) return {ok:false, why:"这个月已经开过动员会了"};
@@ -193,6 +194,7 @@ function doBoss(){
 function setRole(staffId, role){
   const s = staff(staffId); if(!s || !ROLE_NAME[role]) return false;
   if(S.phase!=="play") return false;
+  if(S.discipline && S.discipline.removed) return false;
   s.role = role;
   const p = person(s.id); if(p){ p.role = ROLE_NAME[role]; p.pos = "弹子石网点"+ROLE_NAME[role]; }
   return true;

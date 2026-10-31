@@ -5,7 +5,7 @@ const ACTIONS_L3 = [
   {id:"open",     name:"开网点",     desc:"在一个片区开新网点，投入三百万"},
   {id:"close",    name:"撤并网点",   desc:"撤掉一个网点，省费用，片区口碑掉"},
   {id:"squat",    name:"下支行蹲点", desc:"去一个支行蹲几天，这个季度存款长得快一点"},
-  {id:"renovate", name:"网点改造",   desc:"给一个支行做智能化改造，效能上去"},
+  {id:"renovate", name:"网点改造",   desc:"投入200万和1点行动，提高支行季末存款增长加成，上限30%"},
   {id:"tilt",     name:"条线倾斜",   desc:"资源往一个部门偏，其他部门不高兴"},
   {id:"appoint",  name:"干部任免",   desc:"换一个支行行长"},
   {id:"platform", name:"对接地方政府", desc:"区县的平台项目，量大，风险也大"},
@@ -19,6 +19,7 @@ function canActL3(id){
   const b = B3();
   if(id==="open" && S.biz.budget < b.outlet.build) return {ok:false, why:`发展费用不够（要${b.outlet.build}万）`};
   if(id==="renovate" && S.biz.budget < b.renovate.cost) return {ok:false, why:`发展费用不够（要${b.renovate.cost}万）`};
+  if(id==="renovate" && !S.biz.branches.some(x=>x.renov<0.3)) return {ok:false, why:"所有支行都已达到改造上限（30%）"};
   if(id==="squat" && !S.biz.branches.some(x=>!x.squat)) return {ok:false, why:"这个季度每个支行都去过了"};
   if(id==="close" && !S.biz.branches.some(x=>x.outlets>1)) return {ok:false, why:"没有能撤的网点"};
   if(id==="platform" && S.biz.platformDone.length >= PLATFORMS_L3.length) return {ok:false, why:"区里的平台都谈过了"};
@@ -77,9 +78,9 @@ function doRenovate(bid){
   const r = B3().renovate;
   apUse(1);
   S.biz.budget -= r.cost; S.month.spent += r.cost;
-  if(!roll(ODDS[3].renovate())){ x.renov = r1(x.renov + r.eff/2); log("bad", `${x.name}做了智能化改造。机器装好了，老人不会用，大堂经理天天站在旁边教。<span class="num">效果打了折扣</span>`); return {fail:true}; }
+  if(!roll(ODDS[3].renovate())){ x.renov = r1(x.renov + r.eff/2); log("bad", `${x.name}做了智能化改造。机器装好了，老人不会用，大堂经理天天站在旁边教。<span class="num">效果打了折扣 · 发展费用-${r.cost}万 · 行动点-1 · 存款增长加成${Math.round(x.renov*100)}%（季末生效）</span>`); return {fail:true}; }
   x.renov = r1(x.renov + r.eff);
-  log("good", `${x.name}做了智能化改造。大堂里多了三台机器，柜台少了一个窗口。`);
+  log("good", `${x.name}做了智能化改造。大堂里多了三台机器，柜台少了一个窗口。<span class="num">发展费用-${r.cost}万 · 行动点-1 · 存款增长加成${Math.round(x.renov*100)}%（季末生效）</span>`);
   return true;
 }
 

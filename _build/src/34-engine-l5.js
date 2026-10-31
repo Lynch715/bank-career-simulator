@@ -40,12 +40,17 @@ const DIAL_DEF = [
 
 function loansL5(){ return S.biz.loans; }
 function depTotalL5(){ return S.biz.dep; }
-function rwaL5(){ return S.biz.loans * B5().rwaK; }
+function rwaL5(){ return S.biz.loans * B5().rwaK + careerReserved(); }
 function carL5(){ return S.biz.capital / rwaL5() * 100; }
 function ratingL5(){ const r = B5().rating; const npl = S.biz.npl/S.biz.loans*100;
   return clamp(r1(r.base + (npl-1.3)*r.nplK - (S.kpi.comp-90)*r.compK - (S.biz.regScore||0)*0.1 - ((person("gu")?person("gu").fav:50)-50)/100), 1, 5); }
 function rankL5(){ const me = S.biz.dep; return 1 + S.biz.peers.filter(p=>p.dep > me).length; }
-function subsL5(){ return ["zhouqm","duheng","shenlan","jianggd"].map(person).filter(Boolean).slice(0,3).concat(S.people.filter(p=>p.kind==="sub" && p.lvMet<=2).slice(0,3)); }
+function subsL5(){
+  const g=S.biz.career;
+  const cabinet=g?.engaged&&g.executives?g.executives.map(d=>person(d.id)).filter(Boolean):["zhouqm","duheng","shenlan","jianggd"].map(person).filter(Boolean).slice(0,3);
+  const regions=g?.engaged?S.biz.regions.map(r=>person(r.headId)).filter(Boolean):[];
+  return cabinet.concat(S.people.filter(p=>p.kind==="sub" && p.lvMet<=2).slice(0,3),regions).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
+}
 
 function initL5(){
   const b = B5();
@@ -93,10 +98,11 @@ function monthStartL5(first){
   S.month = {dep0: S.biz.dep, loan0: S.biz.loans, profit:0, spent:0, once:0};
 }
 function settleL5(){
+  careerSettle();
   const b = B5(), d = b.dial, D = S.biz.dials, M = S.month, st = b.strategy[S.biz.strategy] || {};
   // 降息:第 2 回合起每半年压一次
   if(S.turn >= b.cut.from) S.biz.cutLevel++;
-  const lSpread = Math.max(0.004, b.spreadLoan - S.biz.cutLevel*b.cut.loan) * (st.spread||1);
+  const lSpread = Math.max(0.004, b.spreadLoan - S.biz.cutLevel*b.cut.loan + careerALMSpread()) * (st.spread||1);
   const dSpread = Math.max(0.012, b.spreadDep - S.biz.cutLevel*b.cut.dep - (D.price-3)*d.price.spread);
   // 数字化:投入进队列,两回合后见效
   const dSpend = D.digital * d.digital.costPer;
@@ -108,17 +114,17 @@ function settleL5(){
   S.biz.outlets = Math.max(15000, S.biz.outlets + (D.branch-3)*d.branch.outletsPer);
   S.biz.csat = c100(S.biz.csat + (D.branch-3)*Math.abs(d.branch.rep) + (60 - S.biz.csat)*0.1);
   // 存款
-  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * (r.boost>0 ? b.survey.g : 1), 0);
+  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * careerRegionK(r) * (r.boost>0 ? b.survey.g : 1), 0) * careerLineK('retail');
   const depG = (b.baseDepG + (S.biz.csat-60)*0.0003 + (D.price-3)*d.price.depG + (digiK-0.1)*d.digital.depG*10 + (D.branch-3)*d.branch.depG) * reg * (st.g||1);
   S.biz.dep = Math.round(S.biz.dep * (1 + depG + gauss()*0.002));
   S.biz.regions.forEach(r => { if(r.boost>0) r.boost--; });
   // 贷款(资本够才放)
   const carOk = carL5() > 10.5;
-  const loanG = carOk ? (b.baseLoanG + (D.credit-3)*d.credit.loanG) * (st.g||1) : 0.005;
+  const loanG = carOk ? (b.baseLoanG + (D.credit-3)*d.credit.loanG) * (st.g||1) * careerLineK('corp') : 0.005;
   S.biz.loans = Math.round(S.biz.loans * (1 + loanG));
   S.biz.creditQ.push((D.credit-3)*d.credit.npl);
   const lagNpl = S.biz.creditQ.length > d.credit.lag ? S.biz.creditQ.shift() : 0;
-  let newNpl = S.biz.loans * (b.nplRate/2 + lagNpl/2) * (st.npl||1);
+  let newNpl = S.biz.loans * (b.nplRate/2 + lagNpl/2) * (st.npl||1) / careerLineK('risk');
   M.defaults = [];
   (S.loanBook||[]).forEach(l => {
     if(!l.def || l.done || S.monthAbs < l.defAt) return;
@@ -127,7 +133,7 @@ function settleL5(){
   });
   S.biz.npl = Math.round(S.biz.npl * (1 - b.nplResolveH) + newNpl);
   // 利润
-  const expense = S.biz.dep * b.expenseRate / 2 * S.biz.expenseK * (1 - digiK) * (1 + (S.biz.outlets - b.outlets)/b.outlets * 0.8);
+  const expense = S.biz.dep * b.expenseRate / 2 * S.biz.expenseK * (1 - digiK) * (1 + (S.biz.outlets - b.outlets)/b.outlets * 0.8) / careerLineK('ops');
   const pre = S.biz.dep*dSpread/2 + S.biz.loans*lSpread/2 + S.biz.dep*b.feeRate/2 - expense - newNpl*b.provision - dSpend - (M.spent||0) + (M.once||0);
   const profit = pre * (1 - b.tax);
   S.biz.ytd.profit += profit; M.profit = profit;

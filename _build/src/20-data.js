@@ -142,6 +142,7 @@ const LINES = {
 /* 称呼 */
 function titleOf(S){
   const sur = S.player.sur;
+  if(S.discipline && S.discipline.removed) return `${sur} · 整改岗位`;
   if(S.lv===1) return S.turn>12 ? `${sur}主任` : `小${sur}`;
   if(S.lv===2) return `${sur}行`;
   if(S.lv===5) return "行长";

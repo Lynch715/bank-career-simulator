@@ -48,8 +48,10 @@ Object.assign(UI, {
     const lvName = o.lv === 5 ? "泰和银行行长" : ("止步于" + ["","弹子石网点负责人","南岸支行行长","万州分行行长","重庆分行行长"][o.lv]);
     st.innerHTML = `<div class="inner"><h1>${esc(o.title)}</h1><div class="lead">${paras(o.text)}</div>
       <p class="cap">${S.player.sur}${S.player.given} · ${o.age}岁 · ${lvName}</p>
-      <div class="next"><button class="btn gold" id="eB">看履历</button><button class="btn ghost" id="eP">人脉簿</button><button class="btn ghost" id="eD">图鉴</button><button class="btn" id="eR">再开一局</button></div></div>`;
+      <div class="next">${canResumeLegacyDiscipline()?'<button class="btn gold" id="eContinue">按新规则继续</button>':""}${canResumeReinstatement()?'<button class="btn gold" id="eReview">继续复任考察</button>':""}<button class="btn gold" id="eB">看履历</button><button class="btn ghost" id="eP">人脉簿</button><button class="btn ghost" id="eD">图鉴</button><button class="btn" id="eR">再开一局</button></div></div>`;
     st.classList.remove("hidden"); st.scrollTop = 0;
+    if($("eReview")) $("eReview").onclick=()=>{if(resumeReinstatement()){st.classList.add("hidden");UI.refresh();}};
+    if($("eContinue")) $("eContinue").onclick=()=>{ if(resumeLegacyDiscipline()){ st.classList.add("hidden"); UI.refresh(); showDisciplineNotice(); } };
     $("eB").onclick = UI.showBio;
     $("eP").onclick = UI.showPeople;
     $("eD").onclick = UI.showDex;

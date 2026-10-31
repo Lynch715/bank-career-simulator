@@ -61,7 +61,7 @@ const UI = {
   },
   renderPanel(id, render){
     const panel = $(id);
-    try { render(); PORTRAITS.bind(panel); delete panel.dataset.renderError; }
+    try { render(); if(id==="colM"){ UI.renderDiscipline(); UI.renderCareer(); } PORTRAITS.bind(panel); delete panel.dataset.renderError; }
     catch(error){
       console.error(`面板渲染失败 ${id}`, error);
       panel.dataset.renderError = String(error.message || error);
@@ -96,7 +96,7 @@ const UI = {
       <div class="player-chip">${PORTRAITS.markup(S.player.portrait||'player_m','tiny')}</div><div class="who">${esc(titleOf(S))}</div>
       <div class="meta">${S.age}岁 · 入行第${S.careerYear}年 · ${turnTxt}</div>
       ${S.phase==="play" ? `<div class="ap" title="行动点">${apDots}</div>` : ""}
-      ${S.promo.rumored && S.phase==="play" ? `<div class="win-badge" title="升职窗口">窗口 · ${Math.max(0,S.promo.windowAt - S.turn)}月后考察</div>` : ""}
+      ${S.promo.rumored && S.phase==="play" && !reinstatementState() ? `<div class="win-badge" title="升职窗口">窗口 · ${Math.max(0,S.promo.windowAt - S.turn)}月后考察</div>` : ""}
       <div class="cores">
         <div class="core"><b class="num" data-roll="perf">${c.perf}</b><span>业绩</span></div>
         <div class="core"><b class="num" data-roll="rep">${c.rep}</b><span>口碑</span></div>
@@ -166,7 +166,7 @@ const UI = {
       <div class="box"><h3>本月行动 <em>剩 ${S.ap} 点</em></h3><div class="acts">${acts}</div>
         <div class="endbar"><span class="muted" style="font-size:12px">${S.ap?"行动点没用完也可以结束":""}</span><button class="btn" id="btnEnd">结束本月</button></div></div>
       <div class="box" id="custBox">${UI.custHtml()}</div>
-      <div class="box"><h3>员工 <em>岗位可以随时调</em></h3><div class="staffs">${UI.staffHtml()}</div></div>`;
+      <div class="box"><h3>员工 <em>${S.discipline && S.discipline.removed?"整改期间暂停人员安排":"岗位可以随时调"}</em></h3><div class="staffs">${UI.staffHtml()}</div></div>`;
     $("colM").querySelectorAll("[data-act]").forEach(el => el.onclick = () => UI.onAct(el.dataset.act));
     $("btnEnd").onclick = () => { endTurn(); UI.refresh(); };
     UI.bindCust(); UI.bindStaff();
@@ -206,7 +206,7 @@ const UI = {
       const roles = Object.keys(ROLE_NAME).map(r=>`<option value="${r}" ${s.role===r?"selected":""}>${ROLE_NAME[r]}</option>`).join("");
       return `<div class="sc character-card ${s.off===S.turn?"off":""}" title="${esc(s.note)}">
         <button class="portrait-open" data-view-portrait="${s.id}" aria-label="查看${s.name}立绘">${PORTRAITS.markup(s,'card')}</button><div class="character-copy">
-        <div class="top"><b>${s.name}</b><select data-staff="${s.id}" ${S.phase!=="play"?"disabled":""}>${roles}</select></div>
+        <div class="top"><b>${s.name}</b><select data-staff="${s.id}" ${S.phase!=="play" || (S.discipline && S.discipline.removed)?"disabled":""}>${roles}</select></div>
         <div class="attrs">营销 <b>${s.mk}</b> 业务 <b>${s.op}</b> 合规 <b>${s.cp}</b></div>
         <div class="mini">倦怠<div class="bar"><i class="${s.fatigue>70?"lo":""}" style="width:${s.fatigue}%"></i></div></div>
         <div class="mini">好感 ${r1(relationshipValue(s.id))}/100<div class="bar"><i class="ok" style="width:${s.fav}%"></i></div></div>
@@ -423,8 +423,15 @@ const UI = {
     UI.rolls = {}; UI.relationshipSnapshot = null;
     $("stage").classList.add("hidden"); $("modal").classList.add("hidden");
     UI.showTab("colM"); $("colM").scrollTop = 0;
-    if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play") advance(); d(); }); runJobs(); return; }
+    if(S.phase === "trans"){
+      JOBS=[];jobBusy=false;UI.refresh();
+      const enter=()=>{applyTransition();S.justEntered=false;levelStartJobs();runJobs();UI.refresh();};
+      if(S.deputyTerms&&S.deputyTerms[S.lv])enter();else ask(careerDeputySpec(),enter);
+      return;
+    }
+    if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play"){if(S.justEntered){S.justEntered=false;levelStartJobs();}else advance();} d(); }); runJobs(); return; }
     UI.refresh();
+    showDisciplineNotice();
   },
 };
 

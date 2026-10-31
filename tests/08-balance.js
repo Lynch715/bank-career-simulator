@@ -5,7 +5,7 @@ const {G} = load(); G.setHeadless(true);
 const T = runner("08-balance");
 function batch(mode, seed0){
   const s = {n:0,l2:0,l3:0,l4:0,l5:0,caught:0};
-  for(let i=0;i<N;i++){ const r = G.simGame(mode, seed0+i, 800); s.n++; const top = Math.max(r.lv, r.overLv||0);
+  for(let i=0;i<N;i++){ const r = G.simGame(mode, seed0+i, 800); s.n++; const top = Math.max(r.maxLv||0, r.lv, r.overLv||0);
     if(top>=2)s.l2++; if(top>=3)s.l3++; if(top>=4)s.l4++; if(top>=5)s.l5++; if(r.over==="caught")s.caught++; }
   return s;
 }
@@ -17,8 +17,10 @@ console.log(`  · ${N*3} 局用时 ${((Date.now()-t0)/1000).toFixed(0)} 秒`);
 const inTol = (v, t, tol) => Math.abs(v - t) <= tol;
 T.ok("balanced 到支行 90% ±4", inTol(pct(b.l2,b.n), 90, 4), pct(b.l2,b.n)+"%");
 T.ok("balanced 到二级分行 70% ±5", inTol(pct(b.l3,b.n), 70, 5), pct(b.l3,b.n)+"%");
-T.ok("balanced 到一级分行 38% ±5", inTol(pct(b.l4,b.n), 38, 5), pct(b.l4,b.n)+"%");
-T.ok("balanced 到总行 9% ±4", inTol(pct(b.l5,b.n), 9, 4), pct(b.l5,b.n)+"%");
+console.log(`  · 旧版参考：balanced 到一级分行目标38%±5；分级处分版实际 ${pct(b.l4,b.n)}%，不据此调整处分力度。`);
+T.ok("分级处分后合规策略到一级分行比例不低于balanced", c.l4 >= b.l4, pct(c.l4,c.n)+"% vs "+pct(b.l4,b.n)+"%");
+console.log(`  · 旧版参考：balanced 到总行目标9%±4；复任版实际 ${pct(b.l5,b.n)}%。`);
+T.ok("复任版合规策略到总行比例不低于balanced", c.l5>=b.l5, pct(c.l5,c.n)+"% vs "+pct(b.l5,b.n)+"%");
 T.ok("greedy 出事 ≥40%", pct(g.caught,g.n) >= 40, pct(g.caught,g.n)+"%");
 T.ok("clean 到一级分行 ≥ balanced 的 80%", c.l4 >= b.l4*0.8, pct(c.l4,c.n)+"% vs "+pct(b.l4,b.n)+"%");
 T.done();

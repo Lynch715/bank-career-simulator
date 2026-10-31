@@ -8,7 +8,7 @@ UI.promoFlow = function(done){
   const st = $("stage");
   const show = (html) => { st.innerHTML = `<div class="inner">${html}</div>`; st.classList.remove("hidden"); st.scrollTop = 0; };
   const btn = (id, txt, cls) => `<button class="btn ${cls||""}" id="${id}">${txt}</button>`;
-  const finish = () => { st.classList.add("hidden"); st.innerHTML = ""; S.promo.stage = null; UI.showTab("colM"); $("colM").scrollTop = 0; save(); UI.refresh(); done(); };
+  const finish = () => { st.classList.add("hidden"); st.innerHTML = ""; S.promo.stage = null; UI.showTab("colM"); $("colM").scrollTop = 0; save(); UI.refresh(); showDisciplineNotice(done); };
 
   const votes = promoVotes();
   const stmts = promoStatements();
@@ -101,12 +101,10 @@ UI.promoFlow = function(done){
       if(d >= stopAt){
         if(pub.reported){
           $("d4").classList.add("alarm");
-          $("pubtxt").innerHTML = paras(T.reportBody(S, pub.reason)) + `<p class="hint">公示核查基于累计廉政风险 ${100-S.core.clean}/100，本次举报概率 ${Math.round(pub.prob*100)}%。正常贷款审批与贷款经营损失本身不增加廉政风险。</p>`;
+          $("pubtxt").innerHTML = paras(T.reportBody(S, pub.reason)) + `<p class="hint">累计廉政风险 ${100-S.core.clean}/100，尚未处理风险 ${r1(pendingDiscipline().points)}，本次举报概率 ${Math.round(pub.prob*100)}%。正常贷款审批与贷款经营损失本身不增加廉政风险。</p>`;
           $("pbtn").innerHTML = btn("n6","然后");
           $("n6").onclick = () => {
-            if(pub.result === "shield"){ $("pubtxt").innerHTML += paras(T.shield); $("pbtn").innerHTML = btn("n7","任命","gold"); $("n7").onclick = stepAppoint; }
-            else if(pub.result === "defer"){ $("pubtxt").innerHTML += paras(T.defer); $("pbtn").innerHTML = btn("n7", [null,"回到网点","回到南岸","回到万州","回到重庆分行"][S.lv]); $("n7").onclick = () => { S.phase = "play"; promoLose("defer"); finish(); }; }
-            else { endGame("caught"); finish(); }
+            resolveDiscipline("publicity"); finish();
           };
         } else {
           $("pubtxt").innerHTML = "<p>七天，公告栏前面没人停下来。</p>";
@@ -145,7 +143,12 @@ UI.promoFlow = function(done){
   }
   function stepFarewell(){
     show(`<h1>送行</h1><div class="lead">${paras(farewellLine())}</div><div class="next">${btn("n11","两年")}</div>`);
-    $("n11").onclick = stepTrans;
+    $("n11").onclick = stepDeputy;
+  }
+  function stepDeputy(){
+    const spec=careerDeputySpec();
+    show(`<h1>${esc(spec.title)}</h1><div class="lead">${paras(spec.body)}</div><div class="opts">${spec.opts.map((o,i)=>`<button class="opt" data-deputy="${i}"><b>${esc(o.t)}</b><small>${esc(o.s)}</small></button>`).join('')}</div>`);
+    st.querySelectorAll('[data-deputy]').forEach(el=>el.onclick=()=>{const o=spec.opts[+el.dataset.deputy];o.fn();stepTrans();});
   }
   function stepTrans(){
     const a0 = S.age, lv0 = S.lv;

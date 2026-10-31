@@ -105,6 +105,7 @@ function monthStartL3(first){
 
 /* ---------- 季末结算 ---------- */
 function settleL3(){
+  careerSettle();
   const b = B3(), M = S.month, tilt = S.biz.tilt, t = b.tilt;
   // 1 片区热度
   S.biz.areas.forEach(a => { const d = b.area.heatDrift[a.id]; if(d) a.heat = c100(a.heat + d/4); a.rep = c100(a.rep + (55 - a.rep)*0.05); });
@@ -141,7 +142,7 @@ function settleL3(){
   const parts = rint(b.npaSplit[0], b.npaSplit[1]);
   for(let i=0;i<parts;i++) addNpa(newNpl/parts, pick(LOAN_TYPES), "本季新增");
   (S.loanBook||[]).forEach(l => {
-    if(!l.def || l.done || S.monthAbs < l.defAt) return;
+    if(l.lv>3 || !l.def || l.done || S.monthAbs < l.defAt) return;
     l.done = true;
     if(l.lv === 3){ addNpa(l.amt, l.src==="platform"?"platform":"corp", "你批的", l.name); newNpl += l.amt; M.defaults.push(l);
       log("bad", `<b>${l.name}</b>逾期，进了不良。这笔是你在万州批的。<span class="num">不良+${fmtWan(l.amt)}</span>`); }
@@ -171,7 +172,7 @@ function settleL3(){
   const dep = depTotal();
   let income = dep * b.spread.dep / 4;
   LOAN_TYPES.concat(["platform"]).forEach(k => income += L[k] * b.spread[k] / 4);
-  const fee = dep * b.feeRate / 4;
+  const fee = dep * b.feeRate / 4 + (M.careerFee||0);
   const outletCost = S.biz.newOutlets.length * b.outlet.costY / 4;
   const expense = S.biz.expenseQ * (tilt==="ops" ? t.opsExpense : 1) + outletCost;
   const profit = income + fee - expense - newNpl * b.provision + recovered * b.provision - (M.spent||0);

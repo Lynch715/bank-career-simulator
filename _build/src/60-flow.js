@@ -98,16 +98,16 @@ function endTurn(){
   job(d => ask(reportSpec(), d));
   job(d => { if(S.m === 12){ yearEnd(); ask(yearSpec(), d); } else d(); });
   job(d => { checkBreakthrough(); d(); });
-  job(d => { if(S.m === 12) auditCheck(); d(); });
-  job(d => { if(S.lv===5 && S.turn >= BALANCE.tenure[5]){ endGame(finalL5()); } d(); });
-  job(d => { if(S.phase==="play" && S.turn >= S.promo.windowAt) runPromo(d); else d(); });
+  job(d => { if(S.m === 12) auditCheck(); if(!S.disciplineNotice) routineDisciplineCheck(); showDisciplineNotice(d); });
+  job(d => { if(S.lv===5 && S.turn >= BALANCE.tenure[5]){ endGame(finalL5()); } showDisciplineNotice(d); });
+  job(d => { if(S.phase==="play" && reinstatementState()) runReinstatement(d); else if(S.phase==="play" && S.turn >= S.promo.windowAt) runPromo(d); else d(); });
   job(d => offerSidestep(d));
   job(d => { if(S.phase === "play"){ if(S.justEntered){ S.justEntered = false; levelStartJobs(); } else advance(); } d(); });
   runJobs();
 }
 function offerSidestep(d){
   const key = "sideOffered" + S.lv;
-  if(S.phase !== "play" || S.justEntered || S.promo.tries < 2 || S.flags[key]) return d();
+  if(S.phase !== "play" || S.justEntered || reinstatementState() || S.promo.tries < 2 || S.flags[key]) return d();
   S.flags[key] = true;
   const T = SIDESTEP[S.lv];
   ask({kind:"event", title:T.title, body:T.body(S), opts:[
@@ -122,20 +122,23 @@ function levelStartJobs(){
   job(d => { computeCore(); save(); d(); });
 }
 
-function advance(){
+function advance(quiet){
   if(S.biz.timepoint){
     S.biz.timepoint = 0;
     log("warn", "十月一号早上九点，那三千万转走了。存款日报上，弹子石的数掉回原处。");
   }
+  trackReinstatementConduct();
   const step = BALANCE.turnMonths[S.lv] || 1;
   S.turn++; S.monthAbs += step;
   S.m += step;
   let newYear = false;
   if(S.m > 12){ S.m -= 12; S.year++; newYear = true; }
   syncAge();
+  updateDiscipline();
   monthStart(false);
   if(newYear){ issueKpi(); stepRivals(true); }
   computeCore();
+  if(quiet){ save(); return; }
   if(S.lv < 5 && Math.random() < 0.6) log("group", pickLine([null,"group","groupL2","groupL3","groupL4"][S.lv]));
   if(S.lv===5 && S.turn+1 >= BALANCE.L5.cut.from && S.turn < BALANCE.tenure[5]) log("group", "【同业消息】央行下调贷款市场报价利率，各行息差再压一截。");
   if(newYear) job(d => ask(kpiSpec(), d));
@@ -157,7 +160,18 @@ function syncAge(){ const y = Math.floor(S.monthAbs/12); S.age = BALANCE.start.a
 function pickLine(kind){ const a = LINES[kind]; return a[Math.floor(Math.random()*a.length)]; }
 
 /* ---------- 弹窗内容 ---------- */
-function reportSpec(){ return [null,reportSpecL1,reportSpecL2,reportSpecL3,reportSpecL4,reportSpecL5][S.lv](); }
+function reportSpec(){
+  const spec=[null,reportSpecL1,reportSpecL2,reportSpecL3,reportSpecL4,reportSpecL5][S.lv]();
+  const projects=careerEnsure().projects.filter(p=>p.status==='active'||p.status==='done');
+  if(projects.length){
+    spec.notes=spec.notes.concat(projects.map(p=>{
+      const d=careerProjectDef(p.id);
+      return `${d.name}：${p.status==='done'?'已落地，持续经营':p.dispute?'协办争议待协调':p.stage===1&&!p.choice?'待确定实施方案':CAREER_STAGES[S.lv][p.stage]}。`;
+    }));
+    spec.quiet='';
+  }
+  return spec;
+}
 function reportSpecL1(){
   const r = S.report;
   const arrow = r.rank < r.prevRank ? "↑" : (r.rank > r.prevRank ? "↓" : "→");
@@ -185,8 +199,8 @@ function kpiSpec(){
 /* 年底审计:干净度太低,每年有一定概率被查出来(不必等公示) */
 function auditCheck(){
   const a = BALANCE.audit;
-  if(S.phase !== "play" || S.lv >= 5 || S.core.clean >= a.line) return false;
-  const p = Math.min(a.maxP, (a.line - S.core.clean) * a.k);
+  if(S.phase !== "play" || S.lv >= 5 || pendingDiscipline().points <= 100-a.line) return false;
+  const p = Math.min(a.maxP, (pendingDiscipline().points - (100-a.line)) * a.k);
   if(R() >= p) return false;
   S.flags.audit = true;
   endGame("caught");
@@ -227,7 +241,7 @@ function rumorLead(){
   return p.rumorLead[S.lv] + (S.core.trust >= p.trustEarly ? 1 : 0);
 }
 function rumorCheck(d){
-  if(S.lv >= 5 || S.promo.rumored || S.phase!=="play") return d();
+  if(S.lv >= 5 || S.promo.rumored || S.phase!=="play" || disciplineBlocked() || reinstatementState()) return d();
   if(S.turn < S.promo.windowAt - rumorLead() + 1) return d();
   S.promo.rumored = true;
   const T = PROMO_TEXT[S.lv];
@@ -245,7 +259,7 @@ function rumorCheck(d){
 }
 function checkBreakthrough(){
   const p = BALANCE.promo, bt = p.bt;
-  if(S.promo.bt || S.lv > 4) return;
+  if(S.promo.bt || S.lv > 4 || disciplineBlocked() || reinstatementState()) return;
   const ok = (S.biz.rankStreak||0) >= bt.streak && ["perf","rep","trust","clean"].every(k=>S.core[k] >= bt.coreMin);
   if(!ok) return;
   const earliest = BALANCE.tenure[S.lv] - bt.cut[S.lv];
@@ -349,8 +363,9 @@ function promoFinal(votes, stmtIdx, answers){
   return res;
 }
 function publicityReason(){
-  const entries = S.flags.riskLedger || [];
-  if(entries.length) return entries.slice(-3).map(e=>e.reason).join("；");
+  const entries = pendingDiscipline().entries;
+  if(entries.length) return groupedRiskReasons(entries);
+  if(S.discipline && pendingDiscipline().points<=0) return "此前事项已处理，无新增待核查问题";
   // 旧档只根据明确的违规标记陈述，不凭正常贷款的存在推断违规。
   if(S.flags.mabenHelped) return "给渝北大户关联公司违规放贷的事项";
   if(S.flags.signedHuang) return "渝顺商贸那份贷后报告上的签名";
@@ -362,7 +377,7 @@ function publicityReason(){
 }
 function publicityRisk(){
   const p = BALANCE.promo.report;
-  return clamp((p.from - S.core.clean) * p.k, 0, 1);
+  return clamp((pendingDiscipline().points - (100-p.from)) * p.k, 0, 1);
 }
 function promoPublicity(){
   const p = BALANCE.promo.report;
@@ -378,6 +393,7 @@ function promoPublicity(){
   return out;
 }
 function promoLose(kind){
+  if(reinstatementState()){ S.phase="play"; S.discipline.reinstatement.nextAt=S.monthAbs+BALANCE.discipline.returnRetryMonths; save(); return; }
   const p = BALANCE.promo;
   S.promo.tries++;
   S.promo.rumored = false;
@@ -392,14 +408,15 @@ function promoLose(kind){
   if(kind !== "defer" && S.promo.backed && S.promo.last && !S.promo.last.win) log("", `后来听人说，${S.promo.backed}那边，上面有人打过招呼。`);
   S.phase = "play";
 }
-function endGame(id){
+function endGame(id, terminal, endingOverride){
+  if(id==="caught" && !terminal) return resolveDiscipline(S.flags.audit ? "audit" : "publicity");
   id = refineEnding(id);
   S.phase = "over";
   const E = ENDINGS[S.lv][id];
   let text = E.text(S);
   if(id === "caught" && S.flags.audit && AUDIT_OPEN[S.lv]) text = AUDIT_OPEN[S.lv] + "\n\n" + text.split(/\n\n/).slice(1).join("\n\n");
-  S.over = {id, title:E.title, text, lv:S.lv, age:S.age};
-  keyEvent(`结局：${E.title}`);
+  S.over = {id, title:endingOverride?endingOverride.title:E.title, text:endingOverride?endingOverride.text:text, lv:S.lv, age:S.age};
+  keyEvent(`结局：${S.over.title}`);
   recordMeta();
   save();
 }
@@ -419,6 +436,7 @@ function farewellLine(){
   return T[top.id] || T.cold;
 }
 function applyAppoint(){
+  captureCareerPost();
   keyEvent(`${S.age}岁，任${PROMO_TEXT[S.lv].target}`);
   const end = {dep: depTotal(), rank:S.kpi.rank, age:S.age, turn:S.turn, core:Object.assign({},S.core)};
   if(S.lv===1){ S.track.l1End = end; S.track.l1Csat = S.biz.csat; }
@@ -437,13 +455,17 @@ function applyTransitionL1(){
   if(succ){ const p = person(succ.id); if(p){ p.pos = "弹子石网点负责人"; p.recent = "接了你的位子"; } }
   S.staff.forEach(s => { if(succ && s.id===succ.id) return; const p = person(s.id); if(p && p.pos.indexOf("离职")<0){ const up = s.op + s.mk >= 13; p.recent = up ? "业务骨干，年年评优" : "还在弹子石"; } });
   const hp = person("huang"); hp.pos = "（被查）"; hp.recent = S.flags.exposedHuang ? "案卷里第一页是你写的" : "被分行纪委带走";
-  if(S.flags.signedHuang){ S.core.clean = c100(S.core.clean - 5); }
+  if(S.flags.signedHuang){
+    const before=S.core.clean; S.core.clean=c100(before-5);
+    // 原报告的后续影响仍记风险；若该事项已处分，不再当作一件新违规。
+    if(S.discipline && S.discipline.signedHuangHandled) S.discipline.resolvedRisk+=before-S.core.clean;
+  }
   const lu = person("lu"); if(lu.met) lu.recent = "还在重庆分行";
   S.monthAbs += 1 + years*12; syncAge();
   S.carry = {succ: succ ? succ.id : null, dep: depTotal(), trans: txt};
   S.flags.grayAtL2 = S.flags.grayCount || 0;
   S.lv = 2; S.phase = "play"; S.justEntered = true;
-  initL2(succ ? succ.id : null);
+  if(!restoreCareerPost(2)) initL2(succ ? succ.id : null);
   txt.forEach(x => log("", x));
   log("gold", `${S.age}岁，任南岸支行行长。`);
   keyEvent(`${S.age}岁，任南岸支行行长`);
@@ -453,6 +475,8 @@ function applyTransitionL1(){
 
 /* ---------- 无头升职(测试/校准用) ---------- */
 function runPromo(done){
+  if(reinstatementState()) return runReinstatement(done);
+  if(disciplineBlocked()) return done();
   S.phase = "promo";
   S.promo.stage = "assess";
   save();
@@ -466,9 +490,9 @@ function runPromo(done){
   if(!res.win){ S.phase = "play"; promoLose("lose"); return done(); }
   const pub = promoPublicity();
   S.promo.pub = pub;
-  if(pub.result === "caught"){ endGame("caught"); return done(); }
-  if(pub.result === "defer"){ S.phase = "play"; promoLose("defer"); return done(); }
+  if(pub.reported){ resolveDiscipline("publicity"); return showDisciplineNotice(done); }
   applyAppoint();
+  ask(careerDeputySpec());
   applyTransition();
   done();
 }
@@ -488,7 +512,7 @@ function applyTransitionL2(){
     l2: {dep: depTotal(), loans: S.biz.loans, npl: S.biz.npl, mgrName: succ ? succ.name : "——", mgrSkill: succ ? succ.skill : 60}});
   S.monthAbs += 3 + years*12; syncAge();
   S.lv = 3; S.phase = "play"; S.justEntered = true;
-  initL3();
+  if(!restoreCareerPost(3)) initL3();
   txt.forEach(x => log("", x));
   log("gold", `${S.age}岁，任万州分行行长。`);
   keyEvent(`${S.age}岁，任万州分行行长`);
@@ -505,7 +529,7 @@ function applyTransitionL3(){
   S.carry = Object.assign(S.carry||{}, {l3: {dep: depTotal(), loans: loansTotalL3(), npl: nplL3(), mgrName: succ ? succ.name : "——", mgrSkill: succ ? succ.skill : 60}, trans3: txt});
   S.monthAbs += years*12; syncAge();
   S.lv = 4; S.phase = "play"; S.justEntered = true;
-  initL4();
+  if(!restoreCareerPost(4)) initL4();
   txt.forEach(x => log("", x));
   log("gold", `${S.age}岁，任重庆分行行长。`);
   keyEvent(`${S.age}岁，任重庆分行行长`);
@@ -519,7 +543,7 @@ function applyTransitionL4(){
   const lu = person("lu"); if(lu) lu.recent = "后年到龄";
   S.monthAbs += years*12; syncAge();
   S.lv = 5; S.phase = "play"; S.justEntered = true;
-  initL5();
+  if(!restoreCareerPost(5)) initL5();
   txt.forEach(x => log("", x));
   log("gold", `${S.age}岁，任泰和银行行长。`);
   keyEvent(`${S.age}岁，任泰和银行行长`);
@@ -545,6 +569,7 @@ function load(){
     if(!o || o.ver !== BALANCE.ver) return null;
     S = o;
     restoreL2ProjectDefinitions();
+    careerEnsure();
     syncRelationships();
     seedRng((S.seed + S.turn*7919) >>> 0);
     return S;

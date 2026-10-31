@@ -95,7 +95,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* 三栏 */
 #main{display:grid;grid-template-columns:300px 1fr 300px;grid-template-rows:minmax(0,1fr);gap:14px;padding:14px;flex:1;min-height:0}
-.col{overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
+.col{overflow-y:auto;min-height:0;min-width:0;-webkit-overflow-scrolling:touch}
 .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
 .box h3{margin:0 0 10px;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:1px;display:flex;justify-content:space-between;align-items:baseline}
 .box h3 em{font-style:normal;color:var(--text);font-size:12px;font-weight:400}
@@ -294,7 +294,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 .dcb{display:flex;align-items:center;gap:8px}
 .dcb b{min-width:64px;text-align:center}
 .dct{font-size:12px;text-align:right}
-@media (max-width:760px){ .kanban{grid-template-columns:repeat(2,minmax(0,1fr))} .lq{grid-template-columns:1fr} }
+@media (max-width:1100px){ .kanban{grid-template-columns:repeat(2,minmax(0,1fr))} .lq{grid-template-columns:1fr} }
 
 /* 人脉簿 */
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
@@ -330,7 +330,7 @@ button:disabled{cursor:not-allowed;opacity:.45}
 
 /* 窄屏 */
 #tabs{display:none}
-@media (max-width:760px){
+@media (max-width:1100px){
   #top{min-height:0;flex-wrap:wrap;gap:6px 10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px}
   #top .who{font-size:16px}
   #top .cores{margin-left:0;width:100%;justify-content:space-between}
@@ -352,16 +352,16 @@ button:disabled{cursor:not-allowed;opacity:.45}
   .modal{padding:18px 16px 14px}
   .stage{padding:calc(24px + env(safe-area-inset-top)) 14px calc(50px + env(safe-area-inset-bottom))}
 }
-@media (max-width:760px) and (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #tabs button.on{color:var(--gold)} }
+@media (max-width:1100px) and (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #tabs button.on{color:var(--gold)} }
 #installBar{position:fixed;left:0;right:0;bottom:0;z-index:90;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:none}
 #installBar.on{display:block}
 #installBar .ib-in{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.25);padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 #installBar img{width:44px;height:44px;border-radius:10px}
 #installBar .ib-t{flex:1;min-width:180px;font-size:14px;line-height:1.6}
 #installBar .ib-b{display:flex;gap:8px;margin-left:auto}
-@media (max-width:760px){ #installBar{bottom:calc(58px + env(safe-area-inset-bottom) - var(--apgap,0px))} }
+@media (max-width:1100px){ #installBar{bottom:calc(58px + env(safe-area-inset-bottom) - var(--apgap,0px))} }
 html.iosfix #installBar{margin-bottom:0}
-@media (min-width:761px){ html.iosfix #installBar{bottom:calc(0px - var(--apgap,0px))} }
+@media (min-width:1101px){ html.iosfix #installBar{bottom:calc(0px - var(--apgap,0px))} }
 /* 触控目标不小于 44 */
 .ln .lb .btn{min-height:44px;min-width:52px}
 input[type=range]{height:32px}
@@ -408,7 +408,7 @@ small{font-size:max(12px,.85em)}
 .appearance-choice{padding:8px 12px;background:var(--paper2);border:1px solid var(--line);border-radius:10px;cursor:pointer;font-size:12px;color:var(--muted)}
 .appearance-choice.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold);color:var(--goldt)}
 .vote .portrait-tiny{width:36px;height:42px;margin:0 auto 4px;display:block}
-@media(max-width:760px){
+@media(max-width:1100px){
   .portrait-card{height:146px}
   .pgrid:not(.dex){grid-template-columns:repeat(2,minmax(0,1fr))}
   .person-copy{padding:9px 10px}
@@ -422,6 +422,29 @@ small{font-size:max(12px,.85em)}
   .character-intro .portrait-large{width:90px;height:140px}
   .staffs,.pgrid:not(.dex){grid-template-columns:1fr}
 }
+/* 职务经营台账 */
+.career-ui{min-width:0}
+.career-ui h3{flex-wrap:wrap;gap:5px}
+.career-tabs{display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:10px}
+.career-tabs button{font:inherit;font-size:13px;background:transparent;color:var(--muted);border:1px solid transparent;border-radius:6px;padding:8px 10px;min-height:44px;cursor:pointer}
+.career-tabs button.on{color:var(--text);background:var(--paper2);border-color:var(--line);font-weight:600}
+.career-ui .btn{min-height:44px;font-size:13px;white-space:normal}
+.career-ui p{margin:7px 0;font-size:13px;overflow-wrap:anywhere}
+.career-ui .hint,.career-ui .muted{font-size:12px}
+.career-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.career-projects,.career-people{display:grid;gap:10px;min-width:0}
+.career-project,.career-person{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px;min-width:0}
+.career-title{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.career-person{display:flex;gap:10px;align-items:flex-start}
+.career-person>div{min-width:0;flex:1}
+.career-progress{height:6px;border-radius:4px;background:var(--paper2);overflow:hidden;margin:10px 0}
+.career-progress span{display:block;height:100%;background:var(--gold)}
+.career-empty{padding:14px 0;color:var(--muted)}
+.career-search{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:12px;max-width:100%}
+.career-search input{font:inherit;font-size:14px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:6px;min-height:44px;width:155px;max-width:100%;padding:8px}
+.career-toolbar [aria-pressed="true"]{background:var(--paper2);border-color:var(--gold)}
+.career-ui button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:359px){.career-tabs button{padding:7px;font-size:12px}.career-person{padding:9px}}
 </style>
 </head>
 <body>
@@ -1135,7 +1158,7 @@ function computeAll(){ computeKpi(Math.max(1, S.m)); stepRivals(false); computeR
 function supId(){ return [null,"huang","zhouqm","lu","lu","songwy"][S.lv]; }
 function myUnitName(){ return [null,"弹子石网点","南岸支行","万州分行","重庆分行","泰和银行"][S.lv] || ""; }
 function subordinates(){ return [null,()=>S.staff,subsL2,subsL3,subsL4,subsL5][S.lv](); }
-function monthStart(first){ return [null,monthStartL1,monthStartL2,monthStartL3,monthStartL4,monthStartL5][S.lv](first); }
+function monthStart(first){ const result=[null,monthStartL1,monthStartL2,monthStartL3,monthStartL4,monthStartL5][S.lv](first); careerMonthStart(); return result; }
 function monthStartL1(first){
   const b = B1();
   S.ap = S.apMax = BALANCE.ap[S.lv];
@@ -1152,6 +1175,7 @@ function monthStartL1(first){
 /* ---------- 月末结算 ---------- */
 function settleMonth(){ settleDisplacedLoans(); return [null,settleL1,settleL2,settleL3,settleL4,settleL5][S.lv](); }
 function settleL1(){
+  careerSettle();
   const b = B1(), rl = b.role;
   const M = S.month;
   const kmh = (S.m <= 3) ? (b.kmhMult||1) : 1;
@@ -1767,6 +1791,140 @@ LINES.quietL4 = [
   "两江交汇的地方，江水一半清一半黄，今天分得特别清楚。",
   "办公室的绿萝是陆明远留下的，已经长到了窗台。",
 ];
+/* 职务扩展：项目、人才与组织经营。费用单位均为万元。 */
+BALANCE.career = {
+  maxActive:{1:2,2:2,3:2,4:3,5:3},
+  trainCost:{1:0.5,2:3,3:40,4:300,5:10000},
+  trainTurns:{1:2,2:2,3:1,4:1,5:1}, trainGain:4, attrGain:1,
+  assessMonths:{1:12,2:12,3:12,4:18,5:24},
+  assessCost:{1:0,2:1,3:10,4:100,5:3000},
+  specialtyMonths:12, specialtyFee:0.00003, specialtyDep:0.0003,
+  planMonths:12, planGrowth:0.002, planOverload:3,
+  executeMin:55, skillWeight:0.65, relationWeight:0.2, trustWeight:0.15,
+  coordBase:65, coordPenalty:12, coordNeed:50, coordDrift:0.04,
+  talkGain:10, talkFav:4, talkMonths:3, creditFav:4,
+  trainingPenalty:12, overloadPenalty:15, loadLimit:1,
+  probationMonths:12, probationFav:3, appointFav:6, oldFav:-5,
+  fitBase:42, fitSkill:0.35, fitSpecialty:18,
+  projectFav:3, meritGain:8, failureFav:-2, evalEveryMonths:12,
+  councilInterval:{1:4,2:4,3:2,4:2,5:1}, councilExpiry:2,
+  councilFee:{1:0.3,2:3,3:30,4:500,5:20000},
+  boardStart:65, boardMin:45, boardGain:6, boardLoss:5,
+  concentrationLimit:1, industryNpl:0.0002,
+  reserveCar:0.105, costMargin:0.05, withdrawLoss:0.1,
+  executiveK:0.002, regionalK:0.002, reviewFit:60, reviewHelp:-3,
+  minSkill:{1:0,2:30,3:45,4:50,5:55},
+  teamK:0.001, competitionBase:75, competitionService:14, competitionRetain:0.6,
+  relationStart:60, relationK:0.2, relationGain:10, relationLoss:12,
+  liquidityStart:70, liquidityFloor:40, liquidityPressure:4, liquidityGrowthK:2, liquidityLoss:0.00005,
+  alm:[
+    {id:'balanced',name:'期限均衡',desc:'兼顾稳定资金与信贷期限，逐步修复流动性',liquidity:5,spread:0,fee:0},
+    {id:'reserve',name:'增加流动性储备',desc:'减少期限错配；收益略降，承压能力提高',liquidity:12,spread:-0.0003,fee:0.0001},
+    {id:'long',name:'增加长期资产',desc:'提高资产收益；消耗流动性，需稳定负债支持',liquidity:-8,spread:0.0004,fee:0},
+  ],
+  styles:[
+    {id:'elder',name:'养老服务',desc:'服务退休客户，续存与满意度更稳',type:'retire',csat:1},
+    {id:'merchant',name:'商户经营',desc:'维护个体户和小老板，拓展结算资金',type:'self',csat:0},
+    {id:'wealth',name:'财富服务',desc:'维护有潜力的客户，积累中间业务收入',type:'boss',csat:0},
+    {id:'community',name:'社区便民',desc:'覆盖社区与上班族，积累口碑',type:'worker',csat:1},
+  ],
+  plans:[
+    {id:'corp',name:'产业拓展',desc:'资源投向企业与产业链；承担集中风险'},
+    {id:'retail',name:'客户经营',desc:'资源投向零售服务与稳定结算资金'},
+    {id:'risk',name:'风险整顿',desc:'放缓扩张，优先修复资产质量'},
+    {id:'ops',name:'运营改革',desc:'先投入，逐步提高协同与服务能力'},
+  ],
+  allocation:{1:[],2:[50,30,20],3:[50,30,20],4:[50,30,20],5:[50,30,20]},
+};
+const CAREER_LINES = [{id:'corp',name:'公司'}, {id:'retail',name:'零售'}, {id:'risk',name:'风险'}, {id:'ops',name:'运营'}];
+const CAREER_NAMES = ['', '网点特色与人才', '市场攻坚与团队', '城市经营与干部', '全省协同与班子', '全行战略与干部'];
+const CAREER_STAGES = {
+  1:['摸排需求','服务试点','持续经营'], 2:['客户竞标','系统对接','集中迁移','客户经营'],
+  3:['片区调研','核心客户','链上拓展','经营复盘'], 4:['项目论证','机构试点','联合推广','全市运营'],
+  5:['战略论证','区域试点','全国推广','成效复评'],
+};
+const CAREER_PROJECTS = [
+  {id:'street',lv:1,name:'老街商户收款',line:'corp',type:'service',cost:1.5,dep:180,fee:0.15,what:'逐户摸排、收款指导、交易维护；落地后持续积累结算资金。'},
+  {id:'pension',lv:1,name:'社区养老服务',line:'retail',type:'service',cost:1,dep:220,fee:0.08,what:'预约服务与上门指导，重点是留住客户和改善服务。'},
+  {id:'office',lv:1,name:'写字楼白领拓客',line:'retail',type:'competition',cost:2,dep:260,fee:0.2,what:'争取物业协作，选择价格或服务方案，再维护活跃客户。'},
+  {id:'school',lv:2,name:'学校综合服务',line:'retail',type:'competition',cost:12,dep:2500,fee:4,what:'与同业竞标，完成对接、开户和切换；低价方案压缩后续收益。'},
+  {id:'hotpot',lv:2,name:'冉记连锁资金归集',line:'corp',type:'integration',cost:15,dep:3000,fee:5,who:'ranguoq',what:'从老店走向连锁总部；组织网点协作，落地后持续归集资金。'},
+  {id:'salary',lv:2,name:'园区企业代发迁移',line:'ops',type:'integration',cost:10,dep:2000,fee:3,what:'对接企业系统、安排开户和切换演练；对接质量影响留存。'},
+  {id:'citrus',lv:3,name:'柑橘加工与冷链',line:'corp',type:'industry',cost:160,dep:15000,fee:60,area:'changling',what:'连接种植、加工、冷链与经销商；同类产业叠加会增加集中风险。'},
+  {id:'food',lv:3,name:'工业园食品产业链',line:'corp',type:'industry',cost:200,dep:18000,fee:75,area:'gongye',what:'从核心加工厂拓展包装与物流；片区景气影响经营回报。'},
+  {id:'branchfix',lv:3,name:'薄弱支行整顿',line:'risk',type:'turnaround',cost:120,dep:8000,fee:30,what:'核查问题、调整团队、修复客户；可提升承办支行的管理能力。'},
+  {id:'auto',lv:4,name:'汽车配套企业联合服务',line:'corp',type:'integration',cost:3500,rwa:90000,dep:180000,fee:1800,what:'牵头行与协办行共享客户；需要明确分工与收益分配。'},
+  {id:'health',lv:4,name:'全市医疗机构综合服务',line:'retail',type:'competition',cost:2500,rwa:30000,dep:130000,fee:1200,what:'统筹多地医疗机构，竞标后完成区域试点与全市推广。'},
+  {id:'utility',lv:4,name:'公共事业缴费平台',line:'ops',type:'integration',cost:3000,rwa:20000,dep:100000,fee:1400,what:'协调业务与运营部门，处理接口、试点和使用推广。'},
+  {id:'center',lv:4,name:'集中运营中心',line:'ops',type:'reform',cost:4000,rwa:15000,dep:70000,fee:1700,what:'安排试点、转岗与集中处理；人员安置影响推进与后续收益。'},
+  {id:'wealth5',lv:5,name:'全行财富管理转型',line:'retail',type:'strategy',cost:80000,rwa:700000,dep:1800000,fee:35000,what:'确定客群、区域试点、推广服务；前期投入后形成持续中收。'},
+  {id:'trade5',lv:5,name:'全国交易银行平台',line:'corp',type:'integration',cost:100000,rwa:900000,dep:2200000,fee:40000,who:'ranguoq',what:'以连锁客户为试点，推动全国资金管理与跨区域协作。'},
+  {id:'inclusive5',lv:5,name:'普惠专业经营体系',line:'risk',type:'strategy',cost:70000,rwa:1100000,dep:1600000,fee:30000,what:'建设专业团队、区域试点与质量复评，平衡覆盖面和风险。'},
+  {id:'digital5',lv:5,name:'数字化运营改革',line:'ops',type:'reform',cost:120000,rwa:500000,dep:1200000,fee:45000,what:'整合流程与系统，分期迁移；需要协调员工转岗和机构利益。'},
+];
+const CAREER_CHOICES = {
+  competition:[
+    {id:'price',name:'价格优先',desc:'降低客户使用成本；更易推进，持续收益降低',quality:15,yield:0.65,coord:0},
+    {id:'service',name:'服务优先',desc:'投入对接与维护；费用增加，保留完整收益',quality:8,yield:1,coord:5,extra:0.25},
+    {id:'select',name:'精选客户',desc:'控制覆盖范围；规模较小，实施更稳',quality:18,yield:0.8,coord:3},
+  ],
+  integration:[
+    {id:'share',name:'按贡献共享收益',desc:'牵头与协办共同受益；协同提高',quality:10,yield:1,coord:15},
+    {id:'lead',name:'收益向牵头倾斜',desc:'集中力量推进；协办方积极性下降',quality:18,yield:1.1,coord:-18},
+    {id:'pilot',name:'先做小范围试点',desc:'压缩首期范围；更容易协调',quality:16,yield:0.75,coord:8},
+  ],
+  service:[
+    {id:'visit',name:'定点服务与回访',desc:'稳定维护；均衡积累资金与口碑',quality:12,yield:1,coord:5},
+    {id:'wide',name:'扩大活动覆盖',desc:'增加维护费用；经营规模提高',quality:5,yield:1.15,coord:0,extra:0.2},
+    {id:'steady',name:'先服务现有客户',desc:'缩小范围；更快建立稳定使用习惯',quality:20,yield:0.7,coord:5},
+  ],
+  industry:[
+    {id:'core',name:'围绕核心企业拓展',desc:'规模较大；同一行业暴露增加',quality:12,yield:1.2,coord:0,exposure:1},
+    {id:'diverse',name:'分散上下游客群',desc:'投入更多调查；降低集中风险',quality:8,yield:1,coord:8,extra:0.2},
+    {id:'cash',name:'以结算服务切入',desc:'首期规模较小；控制行业暴露',quality:18,yield:0.75,coord:5},
+  ],
+  turnaround:[
+    {id:'team',name:'增援与带教',desc:'保留原团队，投入骨干帮扶',quality:12,yield:1,coord:12,extra:0.15},
+    {id:'audit',name:'先核查再整改',desc:'查清问题，优先修复资产质量',quality:18,yield:0.85,coord:5},
+    {id:'shrink',name:'收缩低效业务',desc:'减少经营范围；短期规模较小',quality:20,yield:0.65,coord:-5},
+  ],
+  reform:[
+    {id:'retrain',name:'培训转岗后推广',desc:'追加安置费用；协调与执行更稳',quality:12,yield:1,coord:15,extra:0.25},
+    {id:'fast',name:'集中切换',desc:'抢先推进；部门分歧加大',quality:20,yield:1.1,coord:-20},
+    {id:'phase',name:'分批试点迁移',desc:'缩小第一期收益，保留调整空间',quality:15,yield:0.8,coord:10},
+  ],
+  strategy:[
+    {id:'growth',name:'优先扩大覆盖',desc:'推广规模更大；执行要求提高',quality:3,yield:1.2,coord:-5},
+    {id:'quality',name:'质量达标后推广',desc:'明确质量门槛，稳步兑现收益',quality:15,yield:1,coord:8},
+    {id:'focus',name:'聚焦优势区域',desc:'先做适合的区域；范围较小',quality:22,yield:0.75,coord:5},
+  ],
+};
+const CAREER_COUNCIL = [
+  {id:'allocation',title:'资源怎么分',body:'业务团队希望把资源继续投向增长较快的机构。运营团队提醒，薄弱机构的人已经不够用了。',opts:[
+    {id:'support',name:'给薄弱机构增援',desc:'追加帮扶费用，改善协作与服务',coord:10,fav:2,cost:1,board:1},
+    {id:'merit',name:'按经营贡献分配',desc:'优先支持产出，提高项目准备度；部分同事有意见',coord:-5,quality:8,board:3},
+    {id:'review',name:'公开依据，协商调整',desc:'用一次行动协调分歧',coord:7,fav:1,board:2,ap:1},
+  ]},
+  {id:'credit',title:'谁来领这份成绩',body:'项目组报来了阶段成果。牵头人希望独立汇报，协办团队补交了一份自己的工作清单。',opts:[
+    {id:'joint',name:'共同汇报，分别记功',desc:'认可协办贡献，改善团队协同',coord:10,fav:3,board:1},
+    {id:'single',name:'由牵头人代表汇报',desc:'牵头人获得认可；协作意愿下降',coord:-9,quality:6,board:2},
+    {id:'evidence',name:'按过程记录确定贡献',desc:'花一次行动复盘，公开评价依据',coord:8,fav:2,board:3,ap:1},
+  ]},
+  {id:'people',title:'后备干部推荐',body:'两份推荐意见放在一起。一份强调业务能力，一份强调熟悉本地情况。人力部门请你确定培养和任用的依据。',opts:[
+    {id:'open',name:'公开标准，考察后任用',desc:'追加考察费用，改善协作；候选人仍需单独考察',coord:8,fav:1,cost:1,board:3},
+    {id:'old',name:'先让熟悉的人负责',desc:'推进当前工作；其他人认为机会不均',coord:-10,quality:8,board:-2},
+    {id:'trial',name:'先给专项任务，再评价',desc:'用一次行动明确试岗目标',coord:6,quality:5,board:2,ap:1},
+  ]},
+];
+const CAREER_DEPUTY = {
+  titles:['','支行副行长任期','二级分行副行长任期','一级分行副行长任期','总行副行长任期'],
+  body:'分管条线报来一份推进方案，另一条线认为会挤占自己的人手。一把手让你先拿出可以执行的安排。',
+  opts:[
+    {id:'coordinate',name:'先与平级明确分工',desc:'协调经验提高，下一级初始协同更好',coord:8,trust:0},
+    {id:'sponsor',name:'向一把手争取专项支持',desc:'上级认可提高，协调经验少一些',coord:3,trust:5},
+    {id:'talent',name:'安排骨干试点，自己承担协调',desc:'骨干获得成长，积累干部培养经历',coord:5,trust:2,merit:5},
+  ],
+};
 /* =====================================================================
    L2 南岸支行:引擎
    ===================================================================== */
@@ -1777,11 +1935,11 @@ function nplRatio(){ return S.biz.loans > 0 ? S.biz.npl / S.biz.loans * 100 : 0;
 function outlet(id){ return S.biz.outlets.find(o=>o.id===id); }
 function project(id){ return S.biz.projects.find(p=>p.id===id); }
 function subsL2(){
-  const ids = S.biz.outlets.map(o=>o.mgr).concat([S.biz.corp.lead]).filter(Boolean);
+  const ids = S.biz.outlets.map(o=>o.mgr).concat([S.biz.corp.lead],Object.values(S.biz.career?.teams||{})).filter(Boolean);
   return ids.map(person).filter(Boolean);
 }
 function skillOf(id){ const p = person(id); return p && p.skill != null ? p.skill : 45; }
-function delegK(id){ const d = B2().deleg; return d.base + skillOf(id)/100 * d.k; }
+function delegK(id){ const d = B2().deleg; return (d.base + skillOf(id)/100 * d.k) * careerTeamK('retail'); }
 function moraleK(o){ const m = B2().morale; return m.base + o.morale/100 * m.k; }
 
 /* L1 员工 → 人脉簿里的能力值 */
@@ -1975,6 +2133,7 @@ function monthStartL2(first){
 
 /* ---------- 月末结算 ---------- */
 function settleL2(){
+  careerSettle();
   const b = B2(), M = S.month;
   const kmh = S.m <= 3 ? (B1().kmhMult||1) : 1;
   // 1 网点(委托:负责人去做)
@@ -2001,7 +2160,7 @@ function settleL2(){
   });
   // 3 贷款
   S.biz.loans = Math.round(S.biz.loans * (1 - b.amort) + retail);
-  const baseNew = S.biz.loans * b.nplBase.rate / 12;
+  const baseNew = S.biz.loans * b.nplBase.rate / 12 / careerTeamK('risk');
   let newNpl = baseNew;
   S.loanBook.forEach(l => {
     if(l.lv<=2 && l.def && !l.done && S.monthAbs >= l.defAt){
@@ -2016,7 +2175,7 @@ function settleL2(){
   settleChalL2();
   // 5 利润
   const r = b.spread;
-  const profit = depTotal() * r.dep / 12 + S.biz.loans * r.loan / 12 + M.fee - b.expense - newNpl * b.provision - (M.spent||0);
+  const profit = depTotal() * r.dep / 12 + S.biz.loans * r.loan / 12 + M.fee - b.expense / careerTeamK('ops') - newNpl * b.provision - (M.spent||0);
   S.biz.ytd.profit += profit; M.profit = profit; S.biz.lastProfit = profit;
   // 6 回归
   S.biz.csat = c100(S.biz.csat + (b.csatHome - S.biz.csat) * b.csatRevert);
@@ -2214,6 +2373,7 @@ function monthStartL3(first){
 
 /* ---------- 季末结算 ---------- */
 function settleL3(){
+  careerSettle();
   const b = B3(), M = S.month, tilt = S.biz.tilt, t = b.tilt;
   // 1 片区热度
   S.biz.areas.forEach(a => { const d = b.area.heatDrift[a.id]; if(d) a.heat = c100(a.heat + d/4); a.rep = c100(a.rep + (55 - a.rep)*0.05); });
@@ -2280,7 +2440,7 @@ function settleL3(){
   const dep = depTotal();
   let income = dep * b.spread.dep / 4;
   LOAN_TYPES.concat(["platform"]).forEach(k => income += L[k] * b.spread[k] / 4);
-  const fee = dep * b.feeRate / 4;
+  const fee = dep * b.feeRate / 4 + (M.careerFee||0);
   const outletCost = S.biz.newOutlets.length * b.outlet.costY / 4;
   const expense = S.biz.expenseQ * (tilt==="ops" ? t.opsExpense : 1) + outletCost;
   const profit = income + fee - expense - newNpl * b.provision + recovered * b.provision - (M.spent||0);
@@ -2319,7 +2479,7 @@ function inst(id){ return S.biz.inst.find(x=>x.id===id); }
 function depTotalL4(){ return S.biz.inst.reduce((a,x)=>a+x.dep,0); }
 function loansL4(){ return S.biz.inst.reduce((a,x)=>a+x.loans,0); }
 function nplL4(){ return S.biz.inst.reduce((a,x)=>a+x.npl,0); }
-function rwaL4(){ return loansL4() * B4().rwaK + S.biz.projects.filter(p=>!p.done).reduce((a,p)=>a+STRAT_L4.find(s=>s.id===p.id).rwa,0); }
+function rwaL4(){ return careerReserved() + loansL4() * B4().rwaK + S.biz.projects.filter(p=>!p.done).reduce((a,p)=>a+STRAT_L4.find(s=>s.id===p.id).rwa,0); }
 function capRoom(){ return S.biz.capital / B4().minCar - rwaL4(); }
 function deputy(line){ return S.biz.deputies.find(d=>d.line===line); }
 function lineK(line){ const d = deputy(line); const L = B4().lineK; const fit = d ? d.fit[line] : 50; return (L.base + fit/100*L.k) * (0.9 + S.biz.unity/100*0.2); }
@@ -2416,6 +2576,7 @@ function monthStartL4(first){
 }
 
 function settleL4(){
+  careerSettle();
   const b = B4(), M = S.month;
   const kR = lineK("retail"), kC = lineK("corp"), kRisk = lineK("risk"), kOps = lineK("ops");
   const room = capRoom();
@@ -2524,12 +2685,17 @@ const DIAL_DEF = [
 
 function loansL5(){ return S.biz.loans; }
 function depTotalL5(){ return S.biz.dep; }
-function rwaL5(){ return S.biz.loans * B5().rwaK; }
+function rwaL5(){ return S.biz.loans * B5().rwaK + careerReserved(); }
 function carL5(){ return S.biz.capital / rwaL5() * 100; }
 function ratingL5(){ const r = B5().rating; const npl = S.biz.npl/S.biz.loans*100;
   return clamp(r1(r.base + (npl-1.3)*r.nplK - (S.kpi.comp-90)*r.compK - (S.biz.regScore||0)*0.1 - ((person("gu")?person("gu").fav:50)-50)/100), 1, 5); }
 function rankL5(){ const me = S.biz.dep; return 1 + S.biz.peers.filter(p=>p.dep > me).length; }
-function subsL5(){ return ["zhouqm","duheng","shenlan","jianggd"].map(person).filter(Boolean).slice(0,3).concat(S.people.filter(p=>p.kind==="sub" && p.lvMet<=2).slice(0,3)); }
+function subsL5(){
+  const g=S.biz.career;
+  const cabinet=g?.engaged&&g.executives?g.executives.map(d=>person(d.id)).filter(Boolean):["zhouqm","duheng","shenlan","jianggd"].map(person).filter(Boolean).slice(0,3);
+  const regions=g?.engaged?S.biz.regions.map(r=>person(r.headId)).filter(Boolean):[];
+  return cabinet.concat(S.people.filter(p=>p.kind==="sub" && p.lvMet<=2).slice(0,3),regions).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
+}
 
 function initL5(){
   const b = B5();
@@ -2577,10 +2743,11 @@ function monthStartL5(first){
   S.month = {dep0: S.biz.dep, loan0: S.biz.loans, profit:0, spent:0, once:0};
 }
 function settleL5(){
+  careerSettle();
   const b = B5(), d = b.dial, D = S.biz.dials, M = S.month, st = b.strategy[S.biz.strategy] || {};
   // 降息:第 2 回合起每半年压一次
   if(S.turn >= b.cut.from) S.biz.cutLevel++;
-  const lSpread = Math.max(0.004, b.spreadLoan - S.biz.cutLevel*b.cut.loan) * (st.spread||1);
+  const lSpread = Math.max(0.004, b.spreadLoan - S.biz.cutLevel*b.cut.loan + careerALMSpread()) * (st.spread||1);
   const dSpread = Math.max(0.012, b.spreadDep - S.biz.cutLevel*b.cut.dep - (D.price-3)*d.price.spread);
   // 数字化:投入进队列,两回合后见效
   const dSpend = D.digital * d.digital.costPer;
@@ -2592,17 +2759,17 @@ function settleL5(){
   S.biz.outlets = Math.max(15000, S.biz.outlets + (D.branch-3)*d.branch.outletsPer);
   S.biz.csat = c100(S.biz.csat + (D.branch-3)*Math.abs(d.branch.rep) + (60 - S.biz.csat)*0.1);
   // 存款
-  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * (r.boost>0 ? b.survey.g : 1), 0);
+  const reg = S.biz.regions.reduce((a,r)=>a + r.share * r.g * careerRegionK(r) * (r.boost>0 ? b.survey.g : 1), 0) * careerLineK('retail');
   const depG = (b.baseDepG + (S.biz.csat-60)*0.0003 + (D.price-3)*d.price.depG + (digiK-0.1)*d.digital.depG*10 + (D.branch-3)*d.branch.depG) * reg * (st.g||1);
   S.biz.dep = Math.round(S.biz.dep * (1 + depG + gauss()*0.002));
   S.biz.regions.forEach(r => { if(r.boost>0) r.boost--; });
   // 贷款(资本够才放)
   const carOk = carL5() > 10.5;
-  const loanG = carOk ? (b.baseLoanG + (D.credit-3)*d.credit.loanG) * (st.g||1) : 0.005;
+  const loanG = carOk ? (b.baseLoanG + (D.credit-3)*d.credit.loanG) * (st.g||1) * careerLineK('corp') : 0.005;
   S.biz.loans = Math.round(S.biz.loans * (1 + loanG));
   S.biz.creditQ.push((D.credit-3)*d.credit.npl);
   const lagNpl = S.biz.creditQ.length > d.credit.lag ? S.biz.creditQ.shift() : 0;
-  let newNpl = S.biz.loans * (b.nplRate/2 + lagNpl/2) * (st.npl||1);
+  let newNpl = S.biz.loans * (b.nplRate/2 + lagNpl/2) * (st.npl||1) / careerLineK('risk');
   M.defaults = [];
   (S.loanBook||[]).forEach(l => {
     if(!l.def || l.done || S.monthAbs < l.defAt) return;
@@ -2611,7 +2778,7 @@ function settleL5(){
   });
   S.biz.npl = Math.round(S.biz.npl * (1 - b.nplResolveH) + newNpl);
   // 利润
-  const expense = S.biz.dep * b.expenseRate / 2 * S.biz.expenseK * (1 - digiK) * (1 + (S.biz.outlets - b.outlets)/b.outlets * 0.8);
+  const expense = S.biz.dep * b.expenseRate / 2 * S.biz.expenseK * (1 - digiK) * (1 + (S.biz.outlets - b.outlets)/b.outlets * 0.8) / careerLineK('ops');
   const pre = S.biz.dep*dSpread/2 + S.biz.loans*lSpread/2 + S.biz.dep*b.feeRate/2 - expense - newNpl*b.provision - dSpend - (M.spent||0) + (M.once||0);
   const profit = pre * (1 - b.tax);
   S.biz.ytd.profit += profit; M.profit = profit;
@@ -2949,6 +3116,431 @@ function meetChain(d){
 /* 大事占几个点 */
 function apCost(id){ const c = BALANCE.apCost[S.lv]; return (c && c[id]) || 1; }
 function apCostTag(id){ const n = apCost(id); return n > 1 ? `<i class="apc">占${n}点</i>` : ""; }
+/* 职务扩展引擎。个人履历跨关保留，任内项目随 biz 一起存档、离任与复任。 */
+const BC = () => BALANCE.career;
+function careerLive(p){ return !!p && p.alive!==false && p.met && !/离职|退休|被查|停职|撤职/.test(p.pos||''); }
+function careerSkill(p){ return S.lv===1 && staff(p.id) ? staffSkill(staff(p.id)) : (p.skill==null ? 50 : p.skill); }
+function careerRecord(id){
+  if(!S.cadres) S.cadres={};
+  if(!S.cadres[id]) S.cadres[id]={specialty:null,merit:0,assessedUntil:-1,training:null,history:[],lastTalk:-999,lastTrain:-999};
+  return S.cadres[id];
+}
+function careerEnsure(){
+  if(!S || !S.biz) return null;
+  if(!S.cadres) S.cadres={};
+  if(!S.biz.career) S.biz.career={lv:S.lv,projects:[],coord:BC().coordBase,board:BC().boardStart,style:null,styleAt:-999,plan:null,planAt:-999,alloc:[],engaged:false,council:null,councilSeq:0,lastCouncil:S.turn,lastSettled:null,lastEvaluation:S.monthAbs,marketStep:0};
+  const g=S.biz.career;
+  if(S.lv===2&&!g.teams)g.teams={retail:null,risk:null,ops:null};
+  if(S.lv===5&&!g.alm)g.alm={policy:'balanced',liquidity:BC().liquidityStart,changedAt:-999,stage:0};
+  if(S.lv===4){
+    S.biz.inst.forEach(x=>{
+      if(!x.headId){
+        const p=S.people.find(p=>p.name===x.headName);
+        x.headId=p?p.id:'chief_'+x.id;
+      }
+      if(!person(x.headId) && x.headName && !/^—+$/.test(x.headName)) S.people.push({id:x.headId,name:x.headName,skill:x.skill,kind:'sub',group:'部下',met:true,alive:true,lvMet:4,pos:x.name+'负责人',role:x.name+'负责人',fav:50,trait:'稳健',recent:'现任机构负责人'});
+    });
+  }
+  if(S.lv===5 && !g.executives){
+    g.executives=DEPUTIES_L4.map((d,i)=>{
+      let p=person(d.id);
+      if(!p){p={id:d.id,name:d.name,skill:Math.round(Object.values(d.fit).reduce((a,v)=>a+v,0)/4),fav:50,kind:'sub',group:'班子',met:true,alive:true,lvMet:5,pos:'总行副行长',role:'总行副行长',trait:d.trait};S.people.push(p);}
+      // 已退休或受处分的人保留原履历，由可用的后备干部接替。
+      if(!careerLive(p)){
+        const id='exec5_'+i;
+        p=person(id);
+        if(!p){p={id,name:['林远舟','陈嘉宁','许正衡','方静宜'][i],skill:60,fav:50,kind:'sub',met:true,alive:true,lvMet:5,pos:'总行副行长',role:'总行副行长',group:'班子',trait:'稳健'};S.people.push(p);}
+      }
+      p.pos='总行副行长';
+      return {id:p.id,name:p.name,line:CAREER_LINES[i].id,fit:Object.assign({},d.fit)};
+    });
+  }
+  return g;
+}
+function careerExecs(){ const g=careerEnsure(); return S.lv===4?S.biz.deputies:S.lv===5?g.executives:[]; }
+function careerLink(a,b,delta){
+  if(!a||!b||a===b)return BC().relationStart;
+  if(!S.cadreRelations)S.cadreRelations={};
+  const key=[a,b].sort().join('|'),value=S.cadreRelations[key]??BC().relationStart;
+  if(delta!=null)S.cadreRelations[key]=c100(value+delta);
+  return delta==null?value:S.cadreRelations[key];
+}
+function careerPartner(lead,units){
+  const rows=careerUnits();
+  const ids=units.map(id=>{const x=rows.find(x=>x.id===id);return x&&(x.mgr||x.headId);});
+  return ids.filter(id=>id!==lead&&careerLive(person(id)))[0]||careerExecs().find(x=>x.id!==lead)?.id||null;
+}
+function careerPeople(){
+  careerEnsure();
+  const ids=new Set(subordinates().map(p=>p.id));
+  if(S.lv===4) S.biz.inst.forEach(x=>ids.add(x.headId));
+  if(S.lv===5) careerExecs().forEach(x=>ids.add(x.id));
+  S.people.filter(p=>p.skill!=null && ['staff','sub','reserve'].includes(p.kind)).forEach(p=>ids.add(p.id));
+  return [...ids].map(person).filter(p=>careerLive(p) && !['lu','gu','huang','songwy','weilc'].includes(p.id));
+}
+function careerPositions(){
+  careerEnsure();
+  if(S.lv===2) return S.biz.outlets.map(x=>({id:x.id,name:x.name+'负责人',pid:x.mgr,row:x,field:'mgr',line:'retail'})).concat(Object.keys(S.biz.career.teams).map(line=>({id:'team_'+line,name:CAREER_LINES.find(x=>x.id===line).name+'专业团队负责人',pid:S.biz.career.teams[line],row:S.biz.career.teams,field:line,line,team:true})));
+  if(S.lv===3) return S.biz.branches.map(x=>({id:x.id,name:x.name+'行长',pid:x.mgr,row:x,field:'mgr',line:'corp'}));
+  if(S.lv===4) return S.biz.inst.map(x=>({id:x.id,name:x.name+'负责人',pid:x.headId,row:x,field:'headId',line:'corp'})).concat(S.biz.deputies.map(x=>({id:'exec_'+x.line,name:'分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true})));
+  if(S.lv===5) return S.biz.regions.map(x=>({id:x.id,name:x.name+'片区统筹负责人',pid:x.headId,row:x,field:'headId',line:'corp'})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true})));
+  return [];
+}
+function careerUnits(){
+  if(S.lv===1) return [{id:'dzs',name:'弹子石网点'}];
+  if(S.lv===2) return S.biz.outlets;
+  if(S.lv===3) return S.biz.branches;
+  return S.lv===4?S.biz.inst:S.biz.regions;
+}
+function careerFit(p,line){
+  const d=careerExecs().find(x=>x.id===p.id);
+  if(d) return d.fit[line];
+  return c100(BC().fitBase+careerSkill(p)*BC().fitSkill+(careerRecord(p.id).specialty===line?BC().fitSpecialty:0));
+}
+function careerAvailable(){
+  const used=new Set(careerPositions().map(x=>x.pid).filter(Boolean));
+  if(S.lv===2) used.add(S.biz.corp.lead);
+  if(S.lv===3) Object.values(S.biz.lineHeads).forEach(id=>used.add(id));
+  return careerPeople().filter(p=>!used.has(p.id) && careerSkill(p)>=BC().minSkill[S.lv]);
+}
+function careerCheck(cost,ap){
+  if(S.phase!=='play') return {ok:false,why:'当前不能办理'};
+  if(S.ap<(ap==null?1:ap)) return {ok:false,why:'行动点不足'};
+  if(cost && S.lv<=3 && S.biz.budget<cost) return {ok:false,why:'经营费用不足'};
+  return {ok:true,why:''};
+}
+function careerSpend(cost,ap){
+  const points=ap==null?1:ap;
+  if(points>0)apUse(points);
+  if(cost){
+    if(S.lv<=3) S.biz.budget-=cost;
+    S.month.spent=(S.month.spent||0)+cost;
+  }
+  careerEnsure().engaged=true;
+}
+function careerDone(){ computeCore(); save(); return true; }
+function careerTrain(id,line){
+  careerEnsure();
+  const p=careerPeople().find(x=>x.id===id), r=p&&careerRecord(id), cost=BC().trainCost[S.lv];
+  if(!p || !CAREER_LINES.some(x=>x.id===line) || r.training || r.lastTrain===S.monthAbs || !careerCheck(cost).ok) return null;
+  careerSpend(cost);r.training={line,left:BC().trainTurns[S.lv],lv:S.lv};r.lastTrain=S.monthAbs;
+  log('', `${p.name}参加${CAREER_LINES.find(x=>x.id===line).name}专项培养，需${r.training.left}个回合。费用-${fmtWan(cost)} · 行动点-1。培养期间承担项目会影响执行。`);
+  return careerDone();
+}
+function careerAssess(id){
+  const p=careerPeople().find(x=>x.id===id),r=p&&careerRecord(id),cost=BC().assessCost[S.lv];
+  if(!p || r.assessedUntil>=S.monthAbs || !careerCheck(cost).ok) return null;
+  careerSpend(cost);r.assessedUntil=S.monthAbs+BC().assessMonths[S.lv];
+  r.history.push({at:S.monthAbs,lv:S.lv,type:'assess',skill:careerSkill(p)});
+  log('', `完成对${p.name}的履职考察：经营能力${Math.round(careerSkill(p))}，培养方向${r.specialty?CAREER_LINES.find(x=>x.id===r.specialty).name:'待确定'}。考察有效${BC().assessMonths[S.lv]}个月 · 费用-${fmtWan(cost)} · 行动点-1。`);
+  return careerDone();
+}
+function careerAppoint(postId,id){
+  const slot=careerPositions().find(x=>x.id===postId),p=careerAvailable().find(x=>x.id===id);
+  if(!slot || !p || careerRecord(id).assessedUntil<S.monthAbs || careerRecord(id).training || !careerCheck(0).ok) return null;
+  const old=person(slot.pid);
+  if(S.lv===2&&!slot.team){if(!doAppoint(postId,id)) return null;}
+  else if(S.lv===3){if(!doAppointL3(postId,id)) return null;}
+  else{
+    careerSpend(0);
+    const fit=slot.exec?Object.fromEntries(CAREER_LINES.map(l=>[l.id,careerFit(p,l.id)])):null;
+    slot.row[slot.field]=id;
+    if(slot.exec){slot.row.name=p.name;slot.row.fit=fit;}
+    else if(!slot.team){slot.row.headName=p.name;slot.row.skill=careerSkill(p);}
+    p.pos=myUnitName()+'·'+slot.name;p.kind='sub';p.recent='经考察任用，正在履职观察';
+    fav(id,BC().appointFav);
+    if(old){old.pos=S.lv===4?'重庆分行专项岗位':'总行专项岗位';old.recent='调整工作分工';fav(old.id,BC().oldFav);}
+    keyEvent(`经考察任用${p.name}担任${slot.name}`);
+    log('', `${slot.name}由${p.name}担任。${old?old.name+'调整到专项岗位。':''}行动点-1，任用后进入履职观察。`);
+  }
+  const g=careerEnsure();g.engaged=true;g.coord=c100(g.coord-BC().coordPenalty/2);
+  careerRecord(id).probation={until:S.monthAbs+BC().probationMonths,lv:S.lv,post:slot.name};
+  careerRecord(id).history.push({at:S.monthAbs,lv:S.lv,type:'appoint',post:slot.name});
+  if(old && !g.council)g.council={id:'people',at:S.turn,lead:old.id,partner:id};
+  return careerDone();
+}
+function careerTalk(id,mode){
+  const p=careerPeople().find(x=>x.id===id),r=p&&careerRecord(id),g=careerEnsure();
+  if(!p || !['work','credit','coach'].includes(mode) || S.monthAbs-r.lastTalk<BC().talkMonths || !careerCheck(0).ok) return null;
+  careerSpend(0);r.lastTalk=S.monthAbs;
+  if(mode==='work') {g.coord=c100(g.coord+BC().talkGain);fav(id,BC().talkFav);}
+  if(mode==='credit') {g.coord=c100(g.coord+BC().talkGain/2);fav(id,BC().creditFav);r.merit=c100(r.merit+BC().creditFav);}
+  if(mode==='coach') {r.merit=c100(r.merit+BC().creditFav);fav(id,BC().talkFav/2);r.assessedUntil=Math.max(r.assessedUntil,S.monthAbs+BC().assessMonths[S.lv]/2);}
+  log('', `${p.name}的工作谈话已完成：${{work:'明确分工，协调度提高',credit:'按贡献记功，履职记录增加',coach:'复盘短板，补充培养与考察记录'}[mode]}。行动点-1。`);
+  return careerDone();
+}
+function careerStyle(id){
+  const g=careerEnsure(),style=BC().styles.find(x=>x.id===id);
+  if(S.lv!==1 || !style || g.style===id || S.monthAbs-g.styleAt<BC().specialtyMonths || !careerCheck(0).ok) return null;
+  careerSpend(0);g.style=id;g.styleAt=S.monthAbs;
+  log('', `网点确定经营特色：${style.name}。按现有客群持续积累收益，一年后可调整。行动点-1。`);
+  return careerDone();
+}
+function careerPlan(line,ids){
+  const g=careerEnsure(),units=careerUnits();
+  if(S.lv<2 || !BC().plans.some(x=>x.id===line) || !Array.isArray(ids) || ids.length!==3 || new Set(ids).size!==3 || !ids.every(id=>units.some(x=>x.id===id)) || S.monthAbs-g.planAt<BC().planMonths || !careerCheck(0).ok) return null;
+  careerSpend(0);g.plan=line;g.planAt=S.monthAbs;g.alloc=ids;
+  log('', `年度经营安排：${BC().plans.find(x=>x.id===line).name}；${ids.map((id,i)=>units.find(x=>x.id===id).name+' '+BC().allocation[S.lv][i]+'%').join('、')}。同一年度内按此执行 · 行动点-1。`);
+  return careerDone();
+}
+function careerProjectDef(id){return CAREER_PROJECTS.find(x=>x.id===id && x.lv===S.lv);}
+function careerActive(){return careerEnsure().projects.filter(p=>p.status==='active');}
+function careerReserved(){return !S || !S.biz || !S.biz.career?0:S.biz.career.projects.filter(p=>p.status==='active').reduce((a,p)=>a+(careerProjectDef(p.id)?.rwa||0),0);}
+function careerLineK(line){
+  const g=careerEnsure();if(S.lv!==5||!g.engaged)return 1;
+  const d=careerExecs().find(x=>x.line===line);
+  return 1+((d?d.fit[line]:BC().reviewFit)-BC().reviewFit)*BC().executiveK+(g.coord-BC().coordBase)*BC().executiveK;
+}
+function careerRegionK(row){
+  const p=person(row.headId);return p&&careerLive(p)?1+(careerSkill(p)-BC().reviewFit)*BC().regionalK:1;
+}
+function careerTeamK(line){
+  if(S.lv!==2)return 1;
+  const g=careerEnsure(),p=person(g.teams[line]);
+  return p&&careerLive(p)?1+careerSkill(p)*BC().teamK:1;
+}
+function careerALM(id){
+  const g=careerEnsure(),o=BC().alm.find(x=>x.id===id);
+  if(S.lv!==5||!o||g.alm.changedAt===S.monthAbs||g.alm.policy===id||!careerCheck(0).ok)return null;
+  careerSpend(0);g.alm.policy=id;g.alm.changedAt=S.monthAbs;
+  log('', `资产负债安排：${o.name}。${o.desc}。本半年执行，行动点-1。`);
+  return careerDone();
+}
+function careerALMSpread(){const g=careerEnsure();return S.lv===5&&g.engaged?BC().alm.find(x=>x.id===g.alm.policy).spread:0;}
+function careerLoad(id){return careerActive().filter(p=>p.lead===id).length;}
+function careerStartCheck(id){
+  const d=careerProjectDef(id),g=careerEnsure();
+  if(!d) return {ok:false,why:'当前职务不能启动此项目'};
+  if(g.projects.some(p=>p.id===id)) return {ok:false,why:'本任期已启动过该项目'};
+  if(careerActive().length>=BC().maxActive[S.lv]) return {ok:false,why:'在建项目已达上限'};
+  if(S.lv===5 && g.board<BC().boardMin) return {ok:false,why:'董事会支持不足，先完成经营协调'};
+  if(S.lv===4 && capRoom()<(d.rwa||0)) return {ok:false,why:'资本空间不足'};
+  if(S.lv===5 && S.biz.capital/BC().reserveCar-rwaL5()<(d.rwa||0)) return {ok:false,why:'资本空间不足'};
+  return careerCheck(d.cost);
+}
+function careerStart(id,lead,units){
+  const d=careerProjectDef(id),g=careerEnsure(),p=careerPeople().find(x=>x.id===lead);
+  if(!d || !p || careerRecord(lead).training || !careerStartCheck(id).ok || !Array.isArray(units) || units.length!==(S.lv>=4?2:1) || new Set(units).size!==units.length || !units.every(id=>careerUnits().some(x=>x.id===id))) return null;
+  careerSpend(d.cost);
+  const rival=d.type==='competition'?{name:S.lv===1?'同业社区团队':S.lv===2?'同业支行':'同业联合团队',score:BC().competitionBase+(g.projects.length%3)*BC().creditFav,need:['price','service','select'][g.projects.length%3],resolved:false}:null;
+  g.projects.push({id,lead,partner:careerPartner(lead,units),units:units.slice(),status:'active',stage:0,quality:0,yield:1,choice:null,workedAt:-1,dispute:false,exposure:0,earned:0,stalled:0,born:S.monthAbs,rival});
+  log('', `启动${d.name}，由${p.name}牵头。${units.map(id=>careerUnits().find(x=>x.id===id).name).join('与')}承办。费用-${fmtWan(d.cost)} · 行动点-1${d.rwa?' · 占用风险加权额度'+fmtWan(d.rwa):''}。`);
+  if(d.who){const who=person(d.who);if(who){meet(d.who);who.recent=d.lv===2?'冉记开出连锁门店，开始归集各店资金':'连锁经营扩展到异地，成为跨区域服务试点';fav(d.who,BC().projectFav);}}
+  return careerDone();
+}
+function careerChoose(id,choice){
+  const d=careerProjectDef(id),p=careerEnsure().projects.find(x=>x.id===id),o=d&&(CAREER_CHOICES[d.type]||[]).find(x=>x.id===choice);
+  const extra=d&&o?d.cost*(o.extra||0):0;
+  if(!p || p.status!=='active' || p.stage!==1 || p.choice || !o || !careerCheck(extra).ok) return null;
+  careerSpend(extra);p.choice=choice;p.quality+=o.quality;p.yield=o.yield;p.exposure=o.exposure||0;
+  careerEnsure().coord=c100(careerEnsure().coord+o.coord);
+  careerLink(p.lead,p.partner,o.coord<0?-BC().relationLoss:BC().relationGain);
+  log('', `${d.name}确定方案：${o.name}。预期收益系数${Math.round(o.yield*100)}% · 协调度${sgn(o.coord)} · 追加费用-${fmtWan(extra)} · 行动点-1。`);
+  return careerDone();
+}
+function careerExecution(p){
+  const leader=careerPeople().find(x=>x.id===p.lead);
+  if(!leader) return {score:0,why:'牵头人已离岗，需要重新委任'};
+  const g=careerEnsure(),d=careerProjectDef(p.id),r=careerRecord(leader.id);
+  let score=careerFit(leader,d.line)*BC().skillWeight+leader.fav*BC().relationWeight+g.coord*BC().trustWeight+p.quality+(careerLink(p.lead,p.partner)-BC().relationStart)*BC().relationK;
+  if(r.training) score-=BC().trainingPenalty;
+  if(careerLoad(leader.id)>BC().loadLimit) score-=BC().overloadPenalty*(careerLoad(leader.id)-BC().loadLimit);
+  return {score:Math.round(score),why:score<BC().executeMin?'执行不足：培养对口干部、调整牵头人或亲自督办':'执行条件具备'};
+}
+function careerPush(id,mode,newLead){
+  const g=careerEnsure(),p=g.projects.find(x=>x.id===id);
+  if(!p || p.status!=='active' || !careerCheck(0).ok) return null;
+  if(mode==='lead'){
+    const candidate=careerPeople().find(x=>x.id===newLead);
+    if(!candidate || newLead===p.lead || careerRecord(newLead).training) return null;
+    careerSpend(0);p.lead=newLead;if(p.partner===newLead)p.partner=careerPartner(newLead,p.units);g.coord=c100(g.coord-BC().coordPenalty/2);
+    log('', `${careerProjectDef(id).name}调整牵头人：${candidate.name}。行动点-1。`);
+  }else if(mode==='resolve'){
+    if(!p.dispute)return null;
+    careerSpend(0);p.dispute=false;g.coord=c100(g.coord+BC().talkGain);p.quality+=BC().creditFav;careerLink(p.lead,p.partner,BC().relationGain);
+    log('', `${careerProjectDef(id).name}明确了协办分工与收益，争议已解决。行动点-1。`);
+  }else if(mode==='push'){
+    if(p.workedAt===S.monthAbs)return null;
+    careerSpend(0);p.workedAt=S.monthAbs;p.quality+=BC().talkGain;
+    log('', `亲自督办${careerProjectDef(id).name}，项目准备度+${BC().talkGain}。本回合只能督办一次 · 行动点-1。`);
+  }else if(mode==='withdraw'){
+    careerSpend(0);p.status='withdrawn';fav(p.lead,BC().failureFav);
+    log('warn', `${careerProjectDef(id).name}终止，停止后续投入并释放占用额度；前期费用不退。行动点-1。`);
+  }else return null;
+  return careerDone();
+}
+function careerCouncilChoice(id){
+  const g=careerEnsure(),issue=g.council,def=issue&&CAREER_COUNCIL.find(x=>x.id===issue.id),o=def&&def.opts.find(x=>x.id===id);
+  const cost=o&&o.cost?BC().councilFee[S.lv]:0;
+  if(!o || !careerCheck(cost,o.ap||0).ok) return null;
+  careerSpend(cost,o.ap||0);g.coord=c100(g.coord+o.coord);g.board=c100(g.board+(o.board||0));
+  careerPeople().filter(p=>subordinates().some(s=>s.id===p.id)).forEach(p=>fav(p.id,o.fav||0));
+  careerLink(issue.lead,issue.partner,o.coord<0?-BC().relationLoss:BC().relationGain);
+  if(issue.lead)fav(issue.lead,o.coord<0?BC().creditFav:(o.fav||0));
+  if(issue.partner)fav(issue.partner,o.coord<0?-BC().creditFav:(o.fav||0));
+  careerActive().forEach(p=>p.quality+=(o.quality||0));
+  log('', `${def.title}：${o.name}。协调度${sgn(o.coord)}${S.lv===5?' · 董事会支持'+sgn(o.board||0):''} · 费用-${fmtWan(cost)} · 行动点-${o.ap||0}。`);
+  g.council=null;
+  return careerDone();
+}
+function careerDeputySpec(){
+  const lv=S.lv;
+  return {kind:'pick',id:'careerDeputy',title:CAREER_DEPUTY.titles[lv],body:CAREER_DEPUTY.body,opts:CAREER_DEPUTY.opts.map(o=>({t:o.name,s:o.desc,fn:()=>careerDeputyChoice(o.id)}))};
+}
+function careerDeputyChoice(id){
+  if(S.phase!=='trans' || S.lv>4 || !CAREER_DEPUTY.opts.some(x=>x.id===id))return null;
+  if(!S.deputyTerms)S.deputyTerms={};
+  if(S.deputyTerms[S.lv])return null;
+  const o=CAREER_DEPUTY.opts.find(x=>x.id===id);
+  S.deputyTerms[S.lv]={choice:id,coord:o.coord};fav(supId(),o.trust);
+  if(o.merit){subordinates().filter(p=>careerLive(person(p.id))).forEach(p=>{careerRecord(p.id).merit=c100(careerRecord(p.id).merit+o.merit);});}
+  keyEvent(`${CAREER_DEPUTY.titles[S.lv]}：${o.name}`);save();return true;
+}
+function careerMonthStart(){
+  const g=careerEnsure(),prev=S.deputyTerms&&S.deputyTerms[S.lv-1];
+  if(prev && !g.deputyApplied){g.coord=c100(g.coord+prev.coord);g.deputyApplied=true;}
+  if(S.turn-g.lastCouncil>=BC().councilInterval[S.lv]){
+    if(g.council && g.engaged && S.turn-g.council.at>=BC().councilExpiry){g.coord=c100(g.coord-BC().coordPenalty/2);log('warn','待协调事项搁置过久，团队协作下降。');}
+    if(!g.council || S.turn-g.council.at>=BC().councilExpiry){
+      const project=g.projects.filter(p=>p.status!=='withdrawn').slice(-1)[0],team=careerPeople();
+      const lead=project?.lead||team[0]?.id,partner=project?.partner||team.find(p=>p.id!==lead)?.id;
+      g.council={id:CAREER_COUNCIL[g.councilSeq++%CAREER_COUNCIL.length].id,at:S.turn,lead,partner,project:project?.id};g.lastCouncil=S.turn;
+    }
+  }
+}
+// 经营流量在原关卡结算之前入账，统一参与当期利润、考核和报告。
+function careerAddDeposit(amount,unitId){
+  const n=Math.round(amount);if(!n)return;
+  if(S.lv===1)S.biz.base+=n;
+  else if(S.lv===2){const x=outlet(unitId)||S.biz.outlets[0];x.dep+=n;}
+  else if(S.lv===3){const x=branch(unitId)||S.biz.branches[0];x.dep+=n;}
+  else if(S.lv===4){const x=inst(unitId)||S.biz.inst[0];x.dep+=n;}
+  else S.biz.dep+=n;
+}
+function careerFee(n){
+  if(S.lv===1)feeAdd(n);
+  else if(S.lv===2){S.month.fee+=n;S.biz.ytd.fee+=n;}
+  else if(S.lv===3)S.month.careerFee=(S.month.careerFee||0)+n;
+  else S.month.once=(S.month.once||0)+n;
+}
+function careerSettle(){
+  const g=careerEnsure(),stamp=S.lv+':'+S.turn+':'+S.monthAbs;
+  if(g.lastSettled===stamp)return;
+  g.lastSettled=stamp;
+  if(S.lv===1 && g.style){
+    const style=BC().styles.find(x=>x.id===g.style),cards=S.biz.cards.filter(c=>c.type===style.type||(g.style==='merchant'&&c.type==='boss'));
+    const assets=cards.reduce((n,c)=>n+c.own,0);
+    careerAddDeposit(assets*BC().specialtyDep);careerFee(assets*BC().specialtyFee);
+    S.biz.csat=c100(S.biz.csat+style.csat);
+  }
+  if(g.plan){
+    const units=careerUnits();
+    g.alloc.forEach((id,i)=>{
+      const x=units.find(x=>x.id===id);if(!x)return;
+      const share=BC().allocation[S.lv][i]/100;
+      const base=S.lv===5?S.biz.dep*x.share:x.dep;
+      if(g.plan==='corp'||g.plan==='retail')careerAddDeposit(base*BC().planGrowth*share,id);
+      if(g.plan==='risk'){
+        if(S.lv===2||S.lv===5)S.biz.npl=Math.max(0,S.biz.npl*(1-BC().planGrowth*share));
+        else if(S.lv===4)x.npl=Math.max(0,x.npl*(1-BC().planGrowth*share));
+        else S.biz.npa.forEach(n=>{n.amt=Math.max(0,n.amt*(1-BC().planGrowth*share));});
+      }
+      if(g.plan==='ops')g.coord=c100(g.coord+share*BC().creditFav);
+      if(S.lv===2)x.morale=c100(x.morale+(share<0.3?-BC().planOverload:BC().planOverload));
+    });
+    if(g.plan==='corp' && S.lv>=3){
+      const exposure=g.projects.filter(p=>p.status!=='withdrawn'&&careerProjectDef(p.id)?.type==='industry'&&p.exposure).length;
+      if(exposure>BC().concentrationLimit){
+        const n=depTotal()*BC().industryNpl;
+        if(S.lv===3)addNpa(n,'corp','产业集中风险');else if(S.lv===4)S.biz.inst[0].npl+=n;else S.biz.npl+=n;
+        S.month.spent=(S.month.spent||0)+n*BALANCE['L'+S.lv].provision;
+        log('warn', `产业投放集中，本期新增风险${fmtWan(n)}，已计入资产质量与拨备费用。`);
+      }
+    }
+  }
+  if(S.lv===5&&g.engaged){
+    const a=g.alm,o=BC().alm.find(x=>x.id===a.policy),pressure=BC().liquidityPressure+Math.max(0,S.biz.dials.credit-S.biz.dials.price)*BC().liquidityGrowthK;
+    a.liquidity=c100(a.liquidity+o.liquidity-pressure);
+    S.month.spent=(S.month.spent||0)+S.biz.dep*(o.fee||0);
+    if(a.liquidity<BC().liquidityFloor){
+      const loss=S.biz.dep*BC().liquidityLoss*(BC().liquidityFloor-a.liquidity);
+      S.month.spent+=loss;g.board=c100(g.board-BC().boardLoss);a.stage++;
+      log('warn', `流动性压力第${a.stage}期：指数${Math.round(a.liquidity)}，本期应急资金成本${fmtWan(loss)}。可增加储备、收紧信贷或争取稳定资金。`);
+    }else if(a.stage){a.stage=0;log('good','流动性压力缓解，应急资金安排已退出。');}
+  }
+  g.projects.forEach(p=>{
+    const d=careerProjectDef(p.id);if(!d)return;
+    if(p.status==='done'){
+      const dep=d.dep*p.yield/CAREER_STAGES[S.lv].length,fee=d.fee*p.yield;
+      p.units.forEach(id=>careerAddDeposit(dep/p.units.length,id));careerFee(fee);p.earned+=fee;
+      return;
+    }
+    if(p.status!=='active')return;
+    let why='';
+    if(p.stage===1&&!p.choice)why='等待确定实施方案';
+    else if(p.dispute)why='协办争议待协调';
+    else if(careerExecution(p).score<BC().executeMin)why=careerExecution(p).why;
+    else if(p.stage>=2 && p.units.length>1 && g.coord<BC().coordNeed){p.dispute=true;why='机构协作不足，项目出现分工争议';}
+    if(why){p.stalled++;log('warn', `${d.name}本期停在${CAREER_STAGES[S.lv][p.stage]}：${why}。`);return;}
+    if(p.stage===1&&p.rival&&!p.rival.resolved){
+      const leader=person(p.lead),base=careerFit(leader,d.line)+p.quality;
+      const advantage=p.choice===p.rival.need?BC().competitionService:0;
+      const mine=base+advantage;p.rival.resolved=true;p.rival.mine=Math.round(mine);
+      if(mine<p.rival.score){p.yield*=BC().competitionRetain;log('warn', `${d.name}竞标未获主办资格，保留部分客户服务：方案${Math.round(mine)}分 / 同业${p.rival.score}分，经营回报缩至${Math.round(p.yield*100)}%。`);}
+      else log('good', `${d.name}取得主办资格：方案${Math.round(mine)}分 / 同业${p.rival.score}分。`);
+    }
+    p.stage++;p.stalled=0;
+    if(p.stage>=CAREER_STAGES[S.lv].length){
+      p.status='done';p.finishedAt=S.monthAbs;
+      let yieldK=p.yield;
+      if(S.lv===3&&d.area){const a=area(d.area);yieldK*=clamp(a.heat/100+0.5,0.65,1.3);}
+      p.units.forEach(id=>careerAddDeposit(d.dep*yieldK/p.units.length,id));careerFee(d.fee*yieldK);
+      careerRecord(p.lead).merit=c100(careerRecord(p.lead).merit+BC().meritGain);fav(p.lead,BC().projectFav);
+      if(d.type==='turnaround'){
+        const b=branch(p.units[0]);if(b){const chief=person(b.mgr);if(chief)chief.skill=c100((chief.skill||50)+BC().trainGain);}
+      }
+      if(S.lv===5)g.board=c100(g.board+BC().boardGain);
+      keyEvent(`${d.name}完成，由${person(p.lead)?.name||'项目组'}牵头`);
+      log('gold', `${d.name}完成：存款+${fmtWan(d.dep*yieldK)} · 本期收入+${fmtWan(d.fee*yieldK)}。后续每期持续经营，收益系数${Math.round(p.yield*100)}%。`);
+    }else log('good', `${d.name}进入${CAREER_STAGES[S.lv][p.stage]}。牵头人：${person(p.lead)?.name||'待委任'}。`);
+  });
+  // 人员的培养计时跟随真实月份；跨关时不凭空重新开始，也不会自动免除成本。
+  Object.entries(S.cadres).forEach(([id,r])=>{
+    const p=person(id);if(!p||!careerLive(p))return;
+    if(r.training){
+      r.training.left--;
+      if(r.training.left<=0){
+        const line=r.training.line;r.specialty=line;r.training=null;
+        if(S.lv===1&&staff(id)){const s=staff(id),attr=line==='corp'||line==='retail'?'mk':line==='risk'?'cp':'op';s[attr]=Math.min(10,s[attr]+BC().attrGain);s.trained=(s.trained||0)+1;}
+        else p.skill=c100(careerSkill(p)+BC().trainGain);
+        if(S.lv===4)S.biz.inst.filter(x=>x.headId===id).forEach(x=>x.skill=p.skill);
+        careerExecs().filter(d=>d.id===id).forEach(d=>d.fit[line]=c100(d.fit[line]+BC().trainGain));
+        fav(id,BC().projectFav);r.history.push({at:S.monthAbs,lv:S.lv,type:'training',line});
+        log('good', `${p.name}完成${CAREER_LINES.find(x=>x.id===line).name}专项培养，能力提高。`);
+      }
+    }
+    if(r.probation && r.probation.lv===S.lv && S.monthAbs>=r.probation.until){
+      const slot=careerPositions().find(x=>x.pid===id);
+      if(slot){
+        const fit=careerFit(p,slot.line),help=fit<BC().reviewFit;
+        fav(id,help?BC().reviewHelp:BC().probationFav);
+        r.history.push({at:S.monthAbs,lv:S.lv,type:'review',post:slot.name,outcome:help?'需要帮扶':'对岗履职',fit:Math.round(fit)});
+        log(help?'warn':'', `${p.name}完成${slot.name}履职观察：岗位匹配${Math.round(fit)}，${help?'需要安排对口培养或调整岗位':'已形成稳定履职能力'}。评价已归档。`);
+      }
+      r.probation=null;
+    }
+  });
+  if(g.engaged)g.coord=c100(g.coord+(BC().coordBase-g.coord)*BC().coordDrift);
+  if(S.lv===4 && g.engaged)S.biz.unity=c100(S.biz.unity+(g.coord-BC().coordBase)*BC().coordDrift);
+  if(S.lv===5 && g.engaged && careerActive().some(p=>p.stalled>0))g.board=c100(g.board-BC().boardLoss);
+  if(S.lv===3 && g.engaged && g.plan){
+    g.marketStep++;
+    if(g.marketStep%BC().councilInterval[3]===0){
+      const rows=S.biz.areas,a=rows[g.marketStep%rows.length];a.heat=c100(a.heat+(a.id==='laocheng'?-BC().creditFav:BC().creditFav));
+      log('', `${a.name}经营调查更新：片区热度${Math.round(a.heat)}，已影响网点增长与产业项目收益。`);
+    }
+  }
+}
 /* =====================================================================
    L2 行动(每个 1 AP)。贷款审批不占行动点。
    ===================================================================== */
@@ -5334,7 +5926,18 @@ function syncAge(){ const y = Math.floor(S.monthAbs/12); S.age = BALANCE.start.a
 function pickLine(kind){ const a = LINES[kind]; return a[Math.floor(Math.random()*a.length)]; }
 
 /* ---------- 弹窗内容 ---------- */
-function reportSpec(){ return [null,reportSpecL1,reportSpecL2,reportSpecL3,reportSpecL4,reportSpecL5][S.lv](); }
+function reportSpec(){
+  const spec=[null,reportSpecL1,reportSpecL2,reportSpecL3,reportSpecL4,reportSpecL5][S.lv]();
+  const projects=careerEnsure().projects.filter(p=>p.status==='active'||p.status==='done');
+  if(projects.length){
+    spec.notes=spec.notes.concat(projects.map(p=>{
+      const d=careerProjectDef(p.id);
+      return `${d.name}：${p.status==='done'?'已落地，持续经营':p.dispute?'协办争议待协调':p.stage===1&&!p.choice?'待确定实施方案':CAREER_STAGES[S.lv][p.stage]}。`;
+    }));
+    spec.quiet='';
+  }
+  return spec;
+}
 function reportSpecL1(){
   const r = S.report;
   const arrow = r.rank < r.prevRank ? "↑" : (r.rank > r.prevRank ? "↓" : "→");
@@ -5655,6 +6258,7 @@ function runPromo(done){
   S.promo.pub = pub;
   if(pub.reported){ resolveDiscipline("publicity"); return showDisciplineNotice(done); }
   applyAppoint();
+  ask(careerDeputySpec());
   applyTransition();
   done();
 }
@@ -5731,6 +6335,7 @@ function load(){
     if(!o || o.ver !== BALANCE.ver) return null;
     S = o;
     restoreL2ProjectDefinitions();
+    careerEnsure();
     syncRelationships();
     seedRng((S.seed + S.turn*7919) >>> 0);
     return S;
@@ -6116,6 +6721,8 @@ function resumeLegacyDiscipline(){
    ===================================================================== */
 function botChooseGeneric(mode){
   return function(spec){
+    // 校准机器人在过渡任期明确选协调方案，新增交接选择不消耗经营随机数。
+    if(spec.id==='careerDeputy') return 0;
     const opts = (spec.opts||[]).map((o,i)=>Object.assign({i}, o)).filter(o=>!o.disabled);
     if(!opts.length) return 0;
     const clean = opts.filter(o=>!o.gray), gray = opts.filter(o=>o.gray);
@@ -6438,6 +7045,7 @@ function simGame(mode, seed, maxTurns, opts){
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
+  career:{link:careerLink,alm:careerALM,lineK:careerLineK,teamK:careerTeamK,ensure:careerEnsure,people:careerPeople,positions:careerPositions,available:careerAvailable,record:careerRecord,train:careerTrain,assess:careerAssess,appoint:careerAppoint,talk:careerTalk,style:careerStyle,plan:careerPlan,start:careerStart,choose:careerChoose,push:careerPush,council:careerCouncilChoice,startCheck:careerStartCheck,execution:careerExecution,reserved:careerReserved,monthStart:careerMonthStart,settle:careerSettle,deputySpec:careerDeputySpec,deputyChoice:careerDeputyChoice,projects:CAREER_PROJECTS},
   act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,
     swap:doSwap, talk:doTalk, startProj:doStartProj, pushProj:doPushProj, focus:doFocus, quota:doQuota, regulator:doRegulator,
@@ -6575,7 +7183,7 @@ const UI = {
   },
   renderPanel(id, render){
     const panel = $(id);
-    try { render(); if(id==="colM") UI.renderDiscipline(); PORTRAITS.bind(panel); delete panel.dataset.renderError; }
+    try { render(); if(id==="colM"){ UI.renderDiscipline(); UI.renderCareer(); } PORTRAITS.bind(panel); delete panel.dataset.renderError; }
     catch(error){
       console.error(`面板渲染失败 ${id}`, error);
       panel.dataset.renderError = String(error.message || error);
@@ -6937,6 +7545,12 @@ const UI = {
     UI.rolls = {}; UI.relationshipSnapshot = null;
     $("stage").classList.add("hidden"); $("modal").classList.add("hidden");
     UI.showTab("colM"); $("colM").scrollTop = 0;
+    if(S.phase === "trans"){
+      JOBS=[];jobBusy=false;UI.refresh();
+      const enter=()=>{applyTransition();S.justEntered=false;levelStartJobs();runJobs();UI.refresh();};
+      if(S.deputyTerms&&S.deputyTerms[S.lv])enter();else ask(careerDeputySpec(),enter);
+      return;
+    }
     if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play"){if(S.justEntered){S.justEntered=false;levelStartJobs();}else advance();} d(); }); runJobs(); return; }
     UI.refresh();
     showDisciplineNotice();
@@ -7577,7 +8191,12 @@ UI.promoFlow = function(done){
   }
   function stepFarewell(){
     show(`<h1>送行</h1><div class="lead">${paras(farewellLine())}</div><div class="next">${btn("n11","两年")}</div>`);
-    $("n11").onclick = stepTrans;
+    $("n11").onclick = stepDeputy;
+  }
+  function stepDeputy(){
+    const spec=careerDeputySpec();
+    show(`<h1>${esc(spec.title)}</h1><div class="lead">${paras(spec.body)}</div><div class="opts">${spec.opts.map((o,i)=>`<button class="opt" data-deputy="${i}"><b>${esc(o.t)}</b><small>${esc(o.s)}</small></button>`).join('')}</div>`);
+    st.querySelectorAll('[data-deputy]').forEach(el=>el.onclick=()=>{const o=spec.opts[+el.dataset.deputy];o.fn();stepTrans();});
   }
   function stepTrans(){
     const a0 = S.age, lv0 = S.lv;
@@ -7703,6 +8322,162 @@ const INSTALL = (() => {
   }
   return {available: () => !standalone && (!!deferred || isSafari), show};
 })();
+/* 职务经营台账：沿用纸墨配色、原生弹窗与移动导航。 */
+Object.assign(UI, {
+  careerTab:'projects',
+  careerPeopleScope:'current',careerPeopleQuery:'',
+  careerRun(fn){
+    const result=fn();
+    if(!result)UI.toast('条件已变化，请查看行动点、费用与人员状态');
+    UI.refresh();
+  },
+  careerOption(t,s,fn,why){return {t,s:why||s,disabled:!!why,fn:()=>UI.careerRun(fn)};},
+  careerPick(title,body,opts){
+    UI.modal({kind:'pick',title,body,opts:opts.concat([{t:'返回',s:'保留当前安排'}]),compact:opts.length>7});
+  },
+  renderCareer(){
+    if(!S || S.phase!=='play')return;
+    const g=careerEnsure();
+    const panel=document.createElement('section');panel.className='box career-ui';panel.id='careerPanel';
+    const tabs=[['projects','经营项目'],['people','干部人才'],['council',S.lv>=4?'班子议事':'团队议事']];
+    const period=S.lv<=2?'本月':S.lv<=4?'本季':'这半年';
+    panel.innerHTML=`<h3>${CAREER_NAMES[S.lv]}<em>${period} · 协调度 ${Math.round(g.coord)}${S.lv===5?' · 董事会支持 '+Math.round(g.board):''}</em></h3>
+      <div class="career-tabs" role="tablist" aria-label="职务经营">${tabs.map(([id,name])=>`<button type="button" role="tab" aria-selected="${UI.careerTab===id}" data-ctab="${id}" class="${UI.careerTab===id?'on':''}">${name}${id==='council'&&g.council?' · 待议':''}</button>`).join('')}</div>
+      <div id="careerContent"></div>`;
+    const col=$('colM'),anchor=col.querySelector('.box');
+    if(anchor)anchor.after(panel);else col.append(panel);
+    const content=panel.querySelector('#careerContent');
+    if(UI.careerTab==='people')UI.careerPeoplePanel(content);
+    else if(UI.careerTab==='council')UI.careerCouncilPanel(content);
+    else UI.careerProjectsPanel(content);
+    panel.querySelectorAll('[data-ctab]').forEach(el=>{
+      el.onclick=()=>{UI.careerTab=el.dataset.ctab;UI.refresh();};
+      el.onkeydown=event=>{
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+        event.preventDefault();const at=tabs.findIndex(x=>x[0]===UI.careerTab);
+        const i=event.key==='Home'?0:event.key==='End'?tabs.length-1:(at+(event.key==='ArrowRight'?1:tabs.length-1))%tabs.length;
+        UI.careerTab=tabs[i][0];UI.refresh();document.querySelector(`[data-ctab="${UI.careerTab}"]`).focus();
+      };
+    });
+  },
+  careerProjectsPanel(node){
+    const g=careerEnsure(),active=careerActive(),plan=BC().plans.find(x=>x.id===g.plan),style=BC().styles.find(x=>x.id===g.style);
+    const used=g.projects.map(p=>p.id),available=CAREER_PROJECTS.filter(d=>d.lv===S.lv&&!used.includes(d.id));
+    node.innerHTML=`<p class="hint">${S.lv===1?(style?'经营特色：'+style.name:'先确定网点特色，再安排员工与项目。'):(plan?'年度方向：'+plan.name:'制定年度方向，给三个经营单位分配专项资源。')}项目需明确方案，回合结束后按执行条件推进。</p>
+      <div class="career-toolbar"><button class="btn ghost" id="careerPlan">${S.lv===1?'网点特色':'年度经营安排'}</button><button class="btn" id="careerNew" ${!available.length||!careerCheck(0).ok||active.length>=BC().maxActive[S.lv]?'disabled':''}>启动新项目 · 1点</button>${S.lv===5?'<button class="btn ghost" id="careerALM">资产负债安排</button>':''}<span class="muted">在建 ${active.length}/${BC().maxActive[S.lv]}</span></div>
+      ${S.lv===5?`<p class="hint">期限策略：${BC().alm.find(x=>x.id===g.alm.policy).name} · 流动性指数 ${Math.round(g.alm.liquidity)}/100 · 低于${BC().liquidityFloor}会产生应急资金成本</p>`:''}
+      ${g.alloc.length?`<p class="hint">专项资源：${g.alloc.map((id,i)=>esc(careerUnits().find(x=>x.id===id)?.name||id)+' '+BC().allocation[S.lv][i]+'%').join(' · ')}</p>`:''}
+      <div class="career-projects">${g.projects.map(p=>{
+        const d=careerProjectDef(p.id);if(!d)return '';
+        const leader=person(p.lead),e=careerExecution(p),stage=CAREER_STAGES[S.lv];
+        return `<article class="career-project"><div class="career-title"><b>${esc(d.name)}</b><span class="tagx">${p.status==='done'?'持续经营':p.status==='withdrawn'?'已终止':esc(stage[p.stage])}</span></div>
+          <p>${esc(d.what)}</p><p class="hint">牵头：${esc(leader?.name||'待委任')} · ${p.units.map(id=>esc(careerUnits().find(x=>x.id===id)?.name||id)).join(' / ')}</p>
+          <div class="career-progress" aria-label="项目进度"><span style="width:${Math.min(100,p.stage/stage.length*100)}%"></span></div>
+          <p class="hint">${p.status==='active'?`执行 ${e.score}/${BC().executeMin} · ${esc(p.dispute?'协办争议待协调':p.stage===1&&!p.choice?'等待选择实施方案':e.why)}`:p.status==='done'?`每期预计收入 ${fmtWan(d.fee*p.yield)} · 累计后续收入 ${fmtWan(p.earned)}`:'已释放额度，前期费用不退'}</p>
+          ${p.partner?`<p class="hint">协办协调：${esc(person(p.partner)?.name||'待安排')} · 双方合作 ${Math.round(careerLink(p.lead,p.partner))}/100</p>`:''}
+          ${p.rival?`<p class="hint">${esc(p.rival.name)} · 方案${p.rival.score}分 · 客户偏重${{price:'报价',service:'服务',select:'适合的覆盖范围'}[p.rival.need]}${p.rival.resolved?' · 竞标已结束':''}</p>`:''}
+          ${p.status==='active'?`<div class="career-toolbar"><button class="btn ghost" data-cproject="${p.id}">管理项目</button>${p.stage===1&&!p.choice?`<button class="btn gold" data-cchoice="${p.id}">确定实施方案</button>`:''}${p.dispute?`<button class="btn gold" data-cresolve="${p.id}" ${careerCheck(0).ok?'':'disabled'}>协调争议 · 1点</button>`:''}</div>`:''}</article>`;
+      }).join('')||'<p class="career-empty">本任期还没有新项目。选择牵头人和承办单位后即可启动；以前的经营操作仍在下方。</p>'}</div>
+      ${!available.length?'<p class="hint">本任期项目已全部启动，落地项目会继续经营。</p>':''}
+      ${!careerCheck(0).ok?'<p class="hint">行动点用完了，可以结束回合，查看项目进展。</p>':''}`;
+    node.querySelector('#careerPlan').onclick=()=>UI.careerPlanModal();
+    node.querySelector('#careerNew').onclick=()=>UI.careerNewModal();
+    if(node.querySelector('#careerALM'))node.querySelector('#careerALM').onclick=()=>UI.careerALMModal();
+    node.querySelectorAll('[data-cproject]').forEach(el=>el.onclick=()=>UI.careerProjectModal(el.dataset.cproject));
+    node.querySelectorAll('[data-cchoice]').forEach(el=>el.onclick=()=>UI.careerChoiceModal(el.dataset.cchoice));
+    node.querySelectorAll('[data-cresolve]').forEach(el=>el.onclick=()=>UI.careerRun(()=>careerPush(el.dataset.cresolve,'resolve')));
+  },
+  careerPeoplePanel(node){
+    const all=careerPeople(),slots=careerPositions(),current=new Set(subordinates().map(p=>p.id).concat(slots.map(p=>p.pid)));
+    const query=UI.careerPeopleQuery.trim();
+    const people=all.filter(p=>(UI.careerPeopleScope==='all'||(UI.careerPeopleScope==='current'?current.has(p.id):!current.has(p.id)))&&(!query||(p.name+' '+p.pos).includes(query)));
+    node.innerHTML=`<p class="hint">培养影响经营能力与专业方向；新任干部须先考察。任用后有一年履职观察。旧部的培养记录与贡献会跨职务保留。</p>
+      ${slots.length?'<div class="career-toolbar"><button class="btn" id="careerAppoint">干部任用 · 1点</button></div>':''}
+      <div class="career-toolbar">${[['current','当前管理'],['reserve','旧部后备'],['all','全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
+      <div class="career-people">${people.map(p=>{
+        const r=careerRecord(p.id),line=CAREER_LINES.find(x=>x.id===r.specialty),load=careerLoad(p.id);
+        return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
+      }).join('')||'<p class="career-empty">没有符合条件的干部，可以切换范围或修改搜索。</p>'}</div>`;
+    if(node.querySelector('#careerAppoint'))node.querySelector('#careerAppoint').onclick=()=>UI.careerAppointModal();
+    node.querySelectorAll('[data-cscope]').forEach(el=>el.onclick=()=>{UI.careerPeopleScope=el.dataset.cscope;UI.careerPeoplePanel(node);PORTRAITS.bind(node);});
+    const search=node.querySelector('#careerSearch');search.value=UI.careerPeopleQuery;
+    search.oninput=()=>{const pos=search.selectionStart;UI.careerPeopleQuery=search.value;UI.careerPeoplePanel(node);const input=node.querySelector('#careerSearch');input.focus();input.setSelectionRange(pos,pos);PORTRAITS.bind(node);};
+    node.querySelectorAll('[data-cperson]').forEach(el=>el.onclick=()=>UI.careerPersonModal(el.dataset.cperson));
+  },
+  careerCouncilPanel(node){
+    const g=careerEnsure(),issue=g.council,def=issue&&CAREER_COUNCIL.find(x=>x.id===issue.id);
+    node.innerHTML=`<p class="hint">协调度影响项目执行${S.lv===4?'与班子团结':''}。${S.lv===5?'董事会支持不足时，新战略工程暂缓立项。':''}资源分配、工作分工和贡献认定会定期提交议事。</p>
+      ${def?`<article class="career-project"><b>${esc(def.title)}</b>${issue.lead?`<p class="hint">涉及：${esc(person(issue.lead)?.name||'牵头团队')}${issue.partner?'、'+esc(person(issue.partner)?.name||'协办团队'):''}${issue.project?' · '+esc(careerProjectDef(issue.project)?.name||'任内项目'):''}</p>`:''}<p>${esc(def.body)}</p><button class="btn gold" id="careerCouncil">处理待议事项</button></article>`:'<p class="career-empty">当前没有待议事项。可以找干部谈工作、认可贡献或复盘短板。</p>'}
+      <div class="career-toolbar"><button class="btn ghost" id="careerTeam">找人谈工作</button></div>`;
+    if(def)node.querySelector('#careerCouncil').onclick=()=>UI.careerCouncilModal();
+    node.querySelector('#careerTeam').onclick=()=>UI.careerPick('找谁谈工作','同一人谈话后需要间隔一段时间。',careerPeople().map(p=>({t:p.name,s:p.pos,fn:()=>UI.careerPersonModal(p.id)})));
+  },
+  careerPersonModal(id){
+    const p=person(id),r=careerRecord(id),cost=BC().trainCost[S.lv],ck=careerCheck(0);
+    const links=Object.entries(S.cadreRelations||{}).filter(([key])=>key.split('|').includes(id)).map(([key,value])=>{const other=person(key.split('|').find(x=>x!==id));return other?other.name+' '+Math.round(value)+'/100':'';}).filter(Boolean);
+    UI.careerPick(p.name+' · 培养与谈话',`能力${Math.round(careerSkill(p))}，与你的关系${Math.round(p.fav)}。${r.training?'正在参加专项培养。':'专项培养费用 '+fmtWan(cost)+'，需'+BC().trainTurns[S.lv]+'回合。'}${links.length?'\n\n同事合作：'+links.join('；'):''}`, [
+      {t:'安排专项培养',s:'选择公司、零售、风险或运营方向',disabled:!!r.training||!careerCheck(cost).ok,fn:()=>UI.careerPick('培养方向','培养结束后提高能力，对口专业有利于执行项目。',CAREER_LINES.map(l=>UI.careerOption(l.name,`费用${fmtWan(cost)} · 1点行动`,()=>careerTrain(id,l.id))))},
+      UI.careerOption('履职考察',`费用${fmtWan(BC().assessCost[S.lv])} · 1点行动 · 有效${BC().assessMonths[S.lv]}个月`,()=>careerAssess(id),r.assessedUntil>=S.monthAbs?'已有有效考察记录':!careerCheck(BC().assessCost[S.lv]).ok?careerCheck(BC().assessCost[S.lv]).why:''),
+      ...[['work','明确工作分工','协调度提高，关系改善'],['credit','按贡献记功','认可工作，增加履职贡献'],['coach','复盘与指导','补充考察，积累培养记录']].map(([mode,name,desc])=>UI.careerOption(name,desc+' · 1点行动',()=>careerTalk(id,mode),!ck.ok?ck.why:S.monthAbs-r.lastTalk<BC().talkMonths?'近期已谈过，需间隔'+BC().talkMonths+'个月':'')),
+      {t:'查看培养与任用记录',s:`已记录${r.history.length}项`,fn:()=>UI.careerPick(p.name+' · 履职记录',r.history.length?r.history.slice(-12).map(h=>`第${h.lv}级任内 · ${h.type==='training'?'完成'+CAREER_LINES.find(l=>l.id===h.line).name+'培养':h.type==='assess'?'完成考察，能力'+h.skill:h.type==='appoint'?'任用为'+h.post:h.post+'观察评价：'+(h.outcome||'已归档')}`).join('\n\n'):'尚无记录。',[])},
+    ]);
+  },
+  careerALMModal(){
+    const a=careerEnsure().alm;
+    UI.careerPick('资产负债安排',`流动性指数${Math.round(a.liquidity)}，低于${BC().liquidityFloor}会增加应急资金成本。每半年最多调整一次。`,BC().alm.map(o=>UI.careerOption(o.name,o.desc+' · 1点行动',()=>careerALM(o.id),a.policy===o.id?'当前策略':a.changedAt===S.monthAbs?'本半年已调整':!careerCheck(0).ok?careerCheck(0).why:'')));
+  },
+  careerAppointModal(){
+    UI.careerPick('调整哪个岗位','新任人选须有有效考察记录。现任其他岗位的干部需先完成交接，不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
+      const candidates=careerAvailable();
+      UI.careerPick('任用 · '+slot.name,candidates.length?'能力与专业应符合岗位需要，任用后进入履职观察。':'暂无可调配人选。可以先培养后备干部，或将现任干部调整到专项岗位。',candidates.map(p=>{
+        const r=careerRecord(p.id),why=!careerCheck(0).ok?careerCheck(0).why:r.training?'正在专项培养':r.assessedUntil<S.monthAbs?'请先到干部人才中完成履职考察':'';
+        return UI.careerOption(p.name,`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`,()=>careerAppoint(slot.id,p.id),why);
+      }));
+    }})));
+  },
+  careerPlanModal(){
+    const g=careerEnsure(),wait=BC().planMonths-(S.monthAbs-g.planAt);
+    if(S.lv===1){
+      UI.careerPick('网点经营特色','选择后执行一年，现有客群决定经营收益。',BC().styles.map(x=>UI.careerOption(x.name,x.desc+' · 1点行动',()=>careerStyle(x.id),g.style===x.id?'当前经营特色':S.monthAbs-g.styleAt<BC().specialtyMonths?'本年度经营特色已确定':!careerCheck(0).ok?careerCheck(0).why:'')));return;
+    }
+    UI.careerPick('年度经营方向','选择三个单位，按50%、30%、20%分配专项资源。方向与分配执行一年。',BC().plans.map(x=>({t:x.name,s:wait>0?'本年度已确定，'+Math.ceil(wait)+'个月后可调整':x.desc,disabled:wait>0||!careerCheck(0).ok,fn:()=>UI.careerUnitsPick('专项资源分配',3,[],ids=>UI.careerRun(()=>careerPlan(x.id,ids)))})));
+  },
+  careerUnitsPick(title,count,ids,done){
+    if(ids.length===count){done(ids);return;}
+    UI.careerPick(title,`选择第${ids.length+1}个单位${count===3?'，占'+BC().allocation[S.lv][ids.length]+'%':'；'+(ids.length===0?'负责牵头承办':'负责协办')}。`,careerUnits().filter(x=>!ids.includes(x.id)).map(x=>({t:x.name,s:S.lv===5?'全国片区':x.dep!=null?'存款 '+fmtWan(x.dep):'承办单位',fn:()=>UI.careerUnitsPick(title,count,ids.concat(x.id),done)})));
+  },
+  careerNewModal(){
+    const defs=CAREER_PROJECTS.filter(d=>d.lv===S.lv&&!careerEnsure().projects.some(p=>p.id===d.id));
+    UI.careerPick('启动职务项目','选择项目后，安排牵头人和承办单位；确认前不扣费。',defs.map(d=>{
+      const ck=careerStartCheck(d.id);
+      return {t:d.name,s:ck.ok?`${d.what} 费用${fmtWan(d.cost)}${d.rwa?' · 占用风险加权额度'+fmtWan(d.rwa):''}`:ck.why,disabled:!ck.ok,fn:()=>UI.careerPick('牵头人 · '+d.name,'工作负荷、专业和关系影响执行。培养期间暂不安排新项目。',careerPeople().map(p=>({t:p.name,s:careerRecord(p.id).training?'正在专项培养':`对口${Math.round(careerFit(p,d.line))} · 牵头${careerLoad(p.id)}项`,disabled:!!careerRecord(p.id).training,fn:()=>UI.careerUnitsPick('承办单位 · '+d.name,S.lv>=4?2:1,[],ids=>UI.careerPick('确认启动',`${d.name}，由${p.name}牵头。费用${fmtWan(d.cost)}，行动点1${d.rwa?'，占用风险加权额度'+fmtWan(d.rwa):''}。前期投入不退。`,[UI.careerOption('确认启动','结束回合后开始执行',()=>careerStart(d.id,p.id,ids))]))})))};
+    }));
+  },
+  careerChoiceModal(id){
+    const d=careerProjectDef(id);
+    UI.careerPick(d.name+' · 实施方案','方案会改变推进难度、持续收益和团队协作。选择后本项目按此执行。',CAREER_CHOICES[d.type].map(o=>{
+      const extra=d.cost*(o.extra||0),ck=careerCheck(extra);
+      return UI.careerOption(o.name,o.desc+` · 追加费用${fmtWan(extra)} · 1点行动`,()=>careerChoose(id,o.id),ck.ok?'':ck.why);
+    }));
+  },
+  careerProjectModal(id){
+    const g=careerEnsure(),p=g.projects.find(x=>x.id===id),d=careerProjectDef(id),ck=careerCheck(0);
+    UI.careerPick(d.name,`牵头人${person(p.lead)?.name||'待委任'}；执行分${careerExecution(p).score}，达到${BC().executeMin}才自动推进。准备度${p.quality}。${p.dispute?'协办争议尚未解决。':''}`, [
+      UI.careerOption('亲自督办','准备度提高；每回合最多一次 · 1点行动',()=>careerPush(id,'push'),!ck.ok?ck.why:p.workedAt===S.monthAbs?'本回合已督办':''),
+      ...(p.stage===1&&!p.choice?[{t:'确定实施方案',s:'方案确定后才能继续推进',fn:()=>UI.careerChoiceModal(id)}]:[]),
+      ...(p.dispute?[UI.careerOption('协调协办争议','明确分工和收益，恢复执行 · 1点行动',()=>careerPush(id,'resolve'),ck.ok?'':ck.why)]:[]),
+      {t:'调整牵头人',s:'任用适合的干部 · 1点行动',disabled:!ck.ok,fn:()=>UI.careerPick('新牵头人','同一人承担多个项目，执行能力会下降。',careerPeople().filter(x=>x.id!==p.lead).map(x=>UI.careerOption(x.name,`对口${Math.round(careerFit(x,d.line))} · 牵头${careerLoad(x.id)}项`,()=>careerPush(id,'lead',x.id),careerRecord(x.id).training?'正在专项培养':'')))},
+      {t:'终止项目',s:'释放额度，前期费用不退 · 1点行动',disabled:!ck.ok,fn:()=>UI.careerPick('终止 '+d.name,'项目停止后本任期不再启动。前期费用不退，负责人评价下降。',[UI.careerOption('确认终止','行动点-1',()=>careerPush(id,'withdraw'))])},
+    ]);
+  },
+  careerCouncilModal(){
+    const issue=careerEnsure().council,d=issue&&CAREER_COUNCIL.find(x=>x.id===issue.id);if(!d)return;
+    UI.careerPick(d.title,d.body,d.opts.map(o=>{
+      const cost=o.cost?BC().councilFee[S.lv]:0,ck=careerCheck(cost,o.ap||0);
+      return UI.careerOption(o.name,o.desc+` · 费用${fmtWan(cost)} · 行动点${o.ap||0}`,()=>careerCouncilChoice(o.id),ck.ok?'':ck.why);
+    }));
+  },
+});
 
 /* =====================================================================
    启动

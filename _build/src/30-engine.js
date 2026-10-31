@@ -156,8 +156,8 @@ function dirt(n, reason){
   const before = S.core.clean;
   S.core.clean = c100(before - n); S.flags.grayCount = (S.flags.grayCount||0)+1;
   const added = before - S.core.clean;
-  if(added > 0){
-    const entry = {lv:S.lv, turn:S.turn, monthAbs:S.monthAbs, added, reason:reason || riskContext || "此前需核查的合规事项（具体事项待核实）"};
+  if(n > 0){
+    const entry = {lv:S.lv, turn:S.turn, monthAbs:S.monthAbs, added, points:n, reason:reason || riskContext || "此前需核查的合规事项（具体事项待核实）"};
     (S.flags.riskLedger || (S.flags.riskLedger=[])).push(entry);
     log("warn", `廉政风险+${r1(added)}：${entry.reason}。`);
   }
@@ -205,6 +205,7 @@ function kpiActual(k){
   return 0;
 }
 function computeKpi(elapsed){
+  adaptReinstatementKpi();
   const cap = BALANCE.kpiCap;
   let score = 0;
   S.kpi.card.forEach(it => {
@@ -265,7 +266,7 @@ function computeAll(){ computeKpi(Math.max(1, S.m)); stepRivals(false); computeR
 function supId(){ return [null,"huang","zhouqm","lu","lu","songwy"][S.lv]; }
 function myUnitName(){ return [null,"弹子石网点","南岸支行","万州分行","重庆分行","泰和银行"][S.lv] || ""; }
 function subordinates(){ return [null,()=>S.staff,subsL2,subsL3,subsL4,subsL5][S.lv](); }
-function monthStart(first){ return [null,monthStartL1,monthStartL2,monthStartL3,monthStartL4,monthStartL5][S.lv](first); }
+function monthStart(first){ const result=[null,monthStartL1,monthStartL2,monthStartL3,monthStartL4,monthStartL5][S.lv](first); careerMonthStart(); return result; }
 function monthStartL1(first){
   const b = B1();
   S.ap = S.apMax = BALANCE.ap[S.lv];
@@ -275,13 +276,14 @@ function monthStartL1(first){
   S.biz.cards.forEach(c => c.maint = false);
   if(!first) budgetAdd(b.budgetMonthly);
   // 临时任务
-  S.biz.task = (R() < b.task.chance) ? pick(TASKS_L1) : null;
+  S.biz.task = S.discipline && S.discipline.removed ? null : ((R() < b.task.chance) ? pick(TASKS_L1) : null);
   S.biz.taskDone = false;
 }
 
 /* ---------- 月末结算 ---------- */
-function settleMonth(){ return [null,settleL1,settleL2,settleL3,settleL4,settleL5][S.lv](); }
+function settleMonth(){ settleDisplacedLoans(); return [null,settleL1,settleL2,settleL3,settleL4,settleL5][S.lv](); }
 function settleL1(){
+  careerSettle();
   const b = B1(), rl = b.role;
   const M = S.month;
   const kmh = (S.m <= 3) ? (b.kmhMult||1) : 1;

@@ -6,7 +6,7 @@ function inst(id){ return S.biz.inst.find(x=>x.id===id); }
 function depTotalL4(){ return S.biz.inst.reduce((a,x)=>a+x.dep,0); }
 function loansL4(){ return S.biz.inst.reduce((a,x)=>a+x.loans,0); }
 function nplL4(){ return S.biz.inst.reduce((a,x)=>a+x.npl,0); }
-function rwaL4(){ return loansL4() * B4().rwaK + S.biz.projects.filter(p=>!p.done).reduce((a,p)=>a+STRAT_L4.find(s=>s.id===p.id).rwa,0); }
+function rwaL4(){ return careerReserved() + loansL4() * B4().rwaK + S.biz.projects.filter(p=>!p.done).reduce((a,p)=>a+STRAT_L4.find(s=>s.id===p.id).rwa,0); }
 function capRoom(){ return S.biz.capital / B4().minCar - rwaL4(); }
 function deputy(line){ return S.biz.deputies.find(d=>d.line===line); }
 function lineK(line){ const d = deputy(line); const L = B4().lineK; const fit = d ? d.fit[line] : 50; return (L.base + fit/100*L.k) * (0.9 + S.biz.unity/100*0.2); }
@@ -71,6 +71,7 @@ function issueKpiL4(){
   S.kpi.card = KPI_DEF[4].map(d => {
     let target = b.kpiTarget[d.k];
     if(d.kind==="flow") target = Math.round(target*g);
+    if(d.k==="proj" && exhaustedStrategicProjects()) return Object.assign({},d,{k:"projectOps",name:"存量项目质量",target:100,unit:"分",kind:"ratio",actual:0,done:0,pace:0});
     return Object.assign({}, d, {target, actual:0, done:0, pace:0});
   });
   S.kpi.scale0 = depTotalL4() + loansL4();
@@ -87,6 +88,7 @@ function kpiActualL4(k){
     case "roe":    return r1(S.biz.ytd.profit * (12/Math.max(3,S.m)) / S.biz.capital * 100);
     case "rating": return ratingNow();
     case "proj":   return S.biz.ytd.proj;
+    case "projectOps": return r1(50*clamp(S.kpi.comp/100,0,1)+50*clamp(B4().kpiTarget.npl/(nplL4()/Math.max(1,loansL4())*100),0,1));
     case "comp":   return S.kpi.comp;
   }
   return 0;
@@ -101,6 +103,7 @@ function monthStartL4(first){
 }
 
 function settleL4(){
+  careerSettle();
   const b = B4(), M = S.month;
   const kR = lineK("retail"), kC = lineK("corp"), kRisk = lineK("risk"), kOps = lineK("ops");
   const room = capRoom();
