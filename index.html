@@ -515,7 +515,7 @@ const BALANCE = {
 
   audit: { line:40, k:0.004, maxP:0.12 },       // 年底审计:干净度低于 40,每年被查概率 (40-干净度)×0.4%,封顶 12%
 
-  discipline: { reviewP:0.15, probation:15, demote:40, dismiss:95, warningMonths:6, probationMonths:12, demoteMonths:12 },
+  discipline: { reviewP:0.15, probation:15, demote:40, dismiss:95, warningMonths:6, probationMonths:12, demoteMonths:12, returnRetryMonths:6, returnCleanMonths:6, returnComp:90, returnPerf:55, returnTrust:45, returnScore:60 },
 
   kpiCap: 1.2,
   rankStreakKeep: 12,
@@ -1074,6 +1074,7 @@ function kpiActual(k){
   return 0;
 }
 function computeKpi(elapsed){
+  adaptReinstatementKpi();
   const cap = BALANCE.kpiCap;
   let score = 0;
   S.kpi.card.forEach(it => {
@@ -2383,6 +2384,7 @@ function issueKpiL4(){
   S.kpi.card = KPI_DEF[4].map(d => {
     let target = b.kpiTarget[d.k];
     if(d.kind==="flow") target = Math.round(target*g);
+    if(d.k==="proj" && exhaustedStrategicProjects()) return Object.assign({},d,{k:"projectOps",name:"存量项目质量",target:100,unit:"分",kind:"ratio",actual:0,done:0,pace:0});
     return Object.assign({}, d, {target, actual:0, done:0, pace:0});
   });
   S.kpi.scale0 = depTotalL4() + loansL4();
@@ -2399,6 +2401,7 @@ function kpiActualL4(k){
     case "roe":    return r1(S.biz.ytd.profit * (12/Math.max(3,S.m)) / S.biz.capital * 100);
     case "rating": return ratingNow();
     case "proj":   return S.biz.ytd.proj;
+    case "projectOps": return r1(50*clamp(S.kpi.comp/100,0,1)+50*clamp(B4().kpiTarget.npl/(nplL4()/Math.max(1,loansL4())*100),0,1));
     case "comp":   return S.kpi.comp;
   }
   return 0;
@@ -5271,14 +5274,14 @@ function endTurn(){
   job(d => { checkBreakthrough(); d(); });
   job(d => { if(S.m === 12) auditCheck(); if(!S.disciplineNotice) routineDisciplineCheck(); showDisciplineNotice(d); });
   job(d => { if(S.lv===5 && S.turn >= BALANCE.tenure[5]){ endGame(finalL5()); } showDisciplineNotice(d); });
-  job(d => { if(S.phase==="play" && S.turn >= S.promo.windowAt) runPromo(d); else d(); });
+  job(d => { if(S.phase==="play" && reinstatementState()) runReinstatement(d); else if(S.phase==="play" && S.turn >= S.promo.windowAt) runPromo(d); else d(); });
   job(d => offerSidestep(d));
   job(d => { if(S.phase === "play"){ if(S.justEntered){ S.justEntered = false; levelStartJobs(); } else advance(); } d(); });
   runJobs();
 }
 function offerSidestep(d){
   const key = "sideOffered" + S.lv;
-  if(S.phase !== "play" || S.justEntered || S.promo.tries < 2 || S.flags[key]) return d();
+  if(S.phase !== "play" || S.justEntered || reinstatementState() || S.promo.tries < 2 || S.flags[key]) return d();
   S.flags[key] = true;
   const T = SIDESTEP[S.lv];
   ask({kind:"event", title:T.title, body:T.body(S), opts:[
@@ -5298,6 +5301,7 @@ function advance(quiet){
     S.biz.timepoint = 0;
     log("warn", "十月一号早上九点，那三千万转走了。存款日报上，弹子石的数掉回原处。");
   }
+  trackReinstatementConduct();
   const step = BALANCE.turnMonths[S.lv] || 1;
   S.turn++; S.monthAbs += step;
   S.m += step;
@@ -5400,7 +5404,7 @@ function rumorLead(){
   return p.rumorLead[S.lv] + (S.core.trust >= p.trustEarly ? 1 : 0);
 }
 function rumorCheck(d){
-  if(S.lv >= 5 || S.promo.rumored || S.phase!=="play" || disciplineBlocked()) return d();
+  if(S.lv >= 5 || S.promo.rumored || S.phase!=="play" || disciplineBlocked() || reinstatementState()) return d();
   if(S.turn < S.promo.windowAt - rumorLead() + 1) return d();
   S.promo.rumored = true;
   const T = PROMO_TEXT[S.lv];
@@ -5418,7 +5422,7 @@ function rumorCheck(d){
 }
 function checkBreakthrough(){
   const p = BALANCE.promo, bt = p.bt;
-  if(S.promo.bt || S.lv > 4 || disciplineBlocked()) return;
+  if(S.promo.bt || S.lv > 4 || disciplineBlocked() || reinstatementState()) return;
   const ok = (S.biz.rankStreak||0) >= bt.streak && ["perf","rep","trust","clean"].every(k=>S.core[k] >= bt.coreMin);
   if(!ok) return;
   const earliest = BALANCE.tenure[S.lv] - bt.cut[S.lv];
@@ -5552,6 +5556,7 @@ function promoPublicity(){
   return out;
 }
 function promoLose(kind){
+  if(reinstatementState()){ S.phase="play"; S.discipline.reinstatement.nextAt=S.monthAbs+BALANCE.discipline.returnRetryMonths; save(); return; }
   const p = BALANCE.promo;
   S.promo.tries++;
   S.promo.rumored = false;
@@ -5566,15 +5571,15 @@ function promoLose(kind){
   if(kind !== "defer" && S.promo.backed && S.promo.last && !S.promo.last.win) log("", `后来听人说，${S.promo.backed}那边，上面有人打过招呼。`);
   S.phase = "play";
 }
-function endGame(id, terminal){
+function endGame(id, terminal, endingOverride){
   if(id==="caught" && !terminal) return resolveDiscipline(S.flags.audit ? "audit" : "publicity");
   id = refineEnding(id);
   S.phase = "over";
   const E = ENDINGS[S.lv][id];
   let text = E.text(S);
   if(id === "caught" && S.flags.audit && AUDIT_OPEN[S.lv]) text = AUDIT_OPEN[S.lv] + "\n\n" + text.split(/\n\n/).slice(1).join("\n\n");
-  S.over = {id, title:E.title, text, lv:S.lv, age:S.age};
-  keyEvent(`结局：${E.title}`);
+  S.over = {id, title:endingOverride?endingOverride.title:E.title, text:endingOverride?endingOverride.text:text, lv:S.lv, age:S.age};
+  keyEvent(`结局：${S.over.title}`);
   recordMeta();
   save();
 }
@@ -5633,6 +5638,7 @@ function applyTransitionL1(){
 
 /* ---------- 无头升职(测试/校准用) ---------- */
 function runPromo(done){
+  if(reinstatementState()) return runReinstatement(done);
   if(disciplineBlocked()) return done();
   S.phase = "promo";
   S.promo.stage = "assess";
@@ -5879,16 +5885,19 @@ function disciplineBlocked(){
 function captureCareerPost(){
   saveL2ProjectDefinitions();
   const post = {};
+  post.level=S.lv;
   ["biz","kpi","rivals","turn","year","m","sched","pendingEv","chal"].forEach(k=>post[k]=S[k]);
   post.loanDone=(S.loanBook||[]).filter(l=>l.done).map(l=>l.id);
   (S.careerPosts || (S.careerPosts={}))[S.lv] = JSON.parse(JSON.stringify(post));
 }
-function restoreCareerPost(lv){
+function restoreCareerPost(lv, departure){
   const post = S.careerPosts && S.careerPosts[lv];
   if(!post) return false;
-  (S.loanBook||[]).filter(l=>l.lv===lv && l.done && !(post.loanDone||[]).includes(l.id)).forEach(l=>archiveLoanDefault(post,l));
+  (S.loanBook||[]).filter(l=>(lv>=4?l.lv<=lv:l.lv===lv) && l.done && !(post.loanDone||[]).includes(l.id)).forEach(l=>archiveLoanDefault(post,l));
   ["biz","kpi","rivals","turn","year","m","sched","pendingEv","chal"].forEach(k=>S[k]=JSON.parse(JSON.stringify(post[k])));
-  S.turn++; S.year++; S.m=lv>=3?3:1;
+  if(departure && lv===2){ const row=S.biz.outlets.find(x=>x.id==="dzs"); if(row)row.dep=departure.dep; }
+  if(departure && lv===4){ const row=S.biz.inst.find(x=>x.id==="wz"); if(row)Object.assign(row,{dep:departure.dep,loans:departure.loans,npl:departure.npl}); }
+  S.turn++; S.year++; S.m=lv===5?6:(lv>=3?3:1);
   S.promo={windowAt:S.turn+BALANCE.tenure[lv],rumored:false,bt:false,stage:null,tries:0,last:null};
   S.pendingEv=[]; S.chal=[];
   S.track.scoreHistory=[]; S.track.rankHistory=[];
@@ -5897,10 +5906,10 @@ function restoreCareerPost(lv){
 }
 function archiveLoanDefault(post,l){
   const b=post.biz;
-  if(l.lv===2) b.npl+=l.amt;
-  else if(l.lv===3){ b.npaSeq++; b.npa.push({id:"npa"+b.npaSeq,name:l.name,amt:l.amt,type:l.src==="platform"?"platform":"corp",stage:null,until:0,origin:"离任后旧贷逾期",orig:l.amt}); }
-  else if(l.lv===4){ const row=b.inst.find(x=>x.id===(l.institution||(l.id==="mb4"?"yb":"yyb"))); if(row)row.npl+=l.amt; }
-  else if(l.lv===5)b.npl+=l.amt;
+  const lv=post.level || (b.inst?4:b.peers?5:b.branches?3:2);
+  if(lv===2 || lv===5) b.npl+=l.amt;
+  else if(lv===3){ b.npaSeq++; b.npa.push({id:"npa"+b.npaSeq,name:l.name,amt:l.amt,type:l.src==="platform"?"platform":"corp",stage:null,until:0,origin:"离任后旧贷逾期",orig:l.amt}); }
+  else if(lv===4){ const row=b.inst.find(x=>x.id===(l.lv<=2?"na":l.lv===3?"wz":l.institution||(l.id==="mb4"?"yb":"yyb"))); if(row)row.npl+=l.amt; }
   (post.loanDone||(post.loanDone=[])).push(l.id);
 }
 function settleDisplacedLoans(){
@@ -5962,6 +5971,8 @@ function resolveDiscipline(source){
   d.removed=kind==="remove" || d.removed;
   if(d.removed) S.biz.task=null;
   d.lastTaskAt=null;
+  const review=reinstatementState();
+  if(review){ review.nextAt=Math.max(review.nextAt,d.until); review.cleanSince=S.monthAbs; }
   S.phase="play"; S.over=null; S.lvTitle=null;
   const hit=kind==="warning"?8:kind==="probation"?15:25;
   fav(supId(),-hit);
@@ -5972,7 +5983,7 @@ function resolveDiscipline(source){
   record.target=S.lv;
   keyEvent(`${title}：${reason}${oldLevel!==S.lv?`，降任${LV_TITLE[S.lv]}`:""}`);
   log("bad",`${title}：${esc(reason)}。${kind==="demote"?`改任${LV_TITLE[S.lv]}。`:kind==="remove"?"撤销网点负责人职务，转入后台整改岗位。":"本次晋升取消。"}考察至少${months}个月，完成整改后可重新争取任职与晋升；风险和处分记录保留。`);
-  S.disciplineNotice={title,body:`核查事项：${reason}。\n\n${kind==="demote"?`降一级，改任${LV_TITLE[S.lv]}，继续经营。`:kind==="remove"?"撤销网点负责人职务，转到后台整改。可维护客户、做厅堂服务；人员安排及其他管理行动暂停。":"本次晋升取消，继续在当前岗位工作。"}\n\n考察至少${months}个月；完成面板上的整改任务后，才可重新任职、参加晋升。原有年龄、人脉、风险记录和未到期贷款保留，同一批事项不再重复处分。`};
+  S.disciplineNotice={title,body:`核查事项：${reason}。\n\n${kind==="demote"?`降一级，改任${LV_TITLE[S.lv]}，继续经营。`:kind==="remove"?"撤销网点负责人职务，转到后台整改。可维护客户、做厅堂服务；人员安排及其他管理行动暂停。":"本次晋升取消，继续在当前岗位工作。"}\n\n考察至少${months}个月；完成整改后${review?`可在期末申请恢复${LV_TITLE[review.target]}，复核通过后直接复任，不再重复副职过渡。`:"恢复任职与晋升资格。"}原有年龄、人脉、风险记录和未到期贷款保留，同一批事项不再重复处分。`};
   save(); return record;
 }
 function routineDisciplineCheck(){
@@ -6000,6 +6011,93 @@ function updateDiscipline(){
   d.completed=true; d.removed=false;
   keyEvent("完成整改考察，恢复任职与晋升资格");
   log("gold","整改任务完成，考察期已满。恢复任职与晋升资格，仍需正常参加考察与竞聘；历史处分记录保留。");
+}
+
+/* 恢复曾任职级与首次晋升分别考核；旧版处分存档按原处分记录衔接。 */
+function reinstatementState(){
+  const d=S.discipline; if(!d || !d.history)return null;
+  let index=-1;
+  for(let i=d.history.length-1;i>=0;i--){
+    const h=d.history[i];
+    if(h.kind==="demote" && !h.reinstatedAt && h.lv===S.lv+1){ index=i; break; }
+  }
+  if(index<0)return null;
+  if(!d.reinstatement || d.reinstatement.record!==index){
+    const h=d.history[index];
+    d.reinstatement={record:index,target:h.lv,nextAt:d.until,cleanSince:h.monthAbs,attempts:0,last:null};
+  }
+  return d.reinstatement;
+}
+function trackReinstatementConduct(){
+  const review=reinstatementState(); if(!review)return;
+  if(pendingDiscipline().points>0 || S.kpi.comp<BALANCE.discipline.returnComp) review.cleanSince=S.monthAbs;
+}
+function reinstatementAssessment(){
+  const r=reinstatementState(); if(!r)return null;
+  const b=BALANCE.discipline;
+  const score=r1(S.core.perf*0.5+S.core.trust*0.25+S.core.rep*0.25);
+  const reasons=[];
+  if(disciplineBlocked())reasons.push("整改任务或考察期限尚未完成");
+  if(pendingDiscipline().points>0)reasons.push("有新增待核查问题");
+  if(S.monthAbs-r.cleanSince<b.returnCleanMonths)reasons.push(`需连续${b.returnCleanMonths}个月合规达标`);
+  if(S.kpi.comp<b.returnComp)reasons.push(`合规需达到${b.returnComp}分`);
+  if(S.core.perf<b.returnPerf)reasons.push(`业绩需达到${b.returnPerf}分`);
+  if(S.core.trust<b.returnTrust)reasons.push(`上级信任需达到${b.returnTrust}分`);
+  if(score<b.returnScore)reasons.push(`复核综合分需达到${b.returnScore}分`);
+  return {score,pass:!reasons.length,reasons};
+}
+function applyReinstatement(){
+  const review=reinstatementState(), assessment=reinstatementAssessment();
+  if(!review || S.phase!=="play" || !assessment.pass || S.monthAbs<review.nextAt || S.age>=BALANCE.retireAge)return false;
+  const target=review.target, rec=S.discipline.history[review.record];
+  const departure={dep:depTotal()};
+  if(S.lv===2)Object.assign(departure,{loans:S.biz.loans,npl:S.biz.npl});
+  if(S.lv===3)Object.assign(departure,{loans:loansTotalL3(),npl:nplL3()});
+  if(S.lv===4)Object.assign(departure,{loans:loansL4(),npl:nplL4(),rating:ratingNow()});
+  S.carry=S.carry||{};
+  if(S.lv>=2)S.carry["l"+S.lv]=Object.assign({},S.carry["l"+S.lv]||{},departure);
+  captureCareerPost();
+  S.lv=target; S.carry=S.carry||{};
+  if(!restoreCareerPost(target,departure)) [null,null,initL2,initL3,initL4,initL5][target](target===2?S.carry.succ:undefined);
+  rec.reinstatedAt={monthAbs:S.monthAbs,age:S.age,lv:target};
+  review.completedAt=S.monthAbs;
+  S.phase="play";S.over=null;S.lvTitle=null;S.justEntered=true;
+  keyEvent(`${S.age}岁，复任${LV_TITLE[target]}`);
+  log("gold",`复任复核通过，综合分${assessment.score}。恢复${LV_TITLE[target]}职务，直接上岗，不重复副职过渡。历史处分、风险与旧贷继续保留。`);
+  save();return true;
+}
+function runReinstatement(done){
+  const review=reinstatementState(); if(!review || !["play","promo"].includes(S.phase)){done();return;}
+  if(S.phase==="promo"){S.phase="play";S.promo.stage=null;}
+  if(S.age>=BALANCE.retireAge){log("", "已到退休年龄，复任考察结束，办理离岗。");endGame("lock",false,{title:"到龄离岗",text:`${S.age}岁，已达到离岗年龄。\n\n复任考察到此结束，你在${LV_TITLE[S.lv]}岗位办理交接。曾经的任职、整改和处分都保留在履历里。`});done();return;}
+  if(S.monthAbs<review.nextAt || disciplineBlocked()){done();return;}
+  const assessment=reinstatementAssessment();review.attempts++;
+  review.last={monthAbs:S.monthAbs,score:assessment.score,pass:assessment.pass,reasons:assessment.reasons};
+  if(assessment.pass){
+    const title=LV_TITLE[review.target];if(!applyReinstatement()){done();return;}
+    ask({kind:"reinstatement",title:"复任复核通过",body:`恢复${title}职务，直接上岗。\n\n年龄和履历继续累计，处分记录与旧贷保留。今后超过原有职级的晋升，仍按正常流程考察。`,opts:[{t:"回到岗位"}]},done);
+  }else{
+    review.nextAt=S.monthAbs+BALANCE.discipline.returnRetryMonths;
+    log("warn",`复任复核暂未通过：${assessment.reasons.join("；")}。${BALANCE.discipline.returnRetryMonths}个月后再次复核，继续经营。`);
+    save();
+    ask({kind:"reinstatement",title:"继续争取复任",body:`本次未通过：${assessment.reasons.join("；")}。\n\n${BALANCE.discipline.returnRetryMonths}个月后可再复核；恢复曾任职级不使用首次晋升年龄线，到${BALANCE.retireAge}岁办理离岗。`,opts:[{t:"继续整改经营"}]},done);
+  }
+}
+function exhaustedStrategicProjects(){
+  return S.lv===4 && S.biz.projects.length>0 && !S.biz.projQueue.length && S.biz.projects.every(p=>p.done);
+}
+function adaptReinstatementKpi(){
+  if(!reinstatementState() || !exhaustedStrategicProjects())return;
+  const item=S.kpi.card.find(k=>k.k==="proj");
+  if(item)Object.assign(item,{k:"projectOps",name:"存量项目质量",target:100,unit:"分",kind:"ratio"});
+}
+function canResumeReinstatement(){
+  return S.phase==="over" && S.over && ["lock","lock2"].includes(S.over.id) && S.age<BALANCE.retireAge && !!reinstatementState();
+}
+function resumeReinstatement(){
+  if(!canResumeReinstatement())return false;
+  S.phase="play";S.over=null;S.justEntered=false;advance(true);
+  save();return true;
 }
 function canResumeLegacyDiscipline(){
   return S.phase==="over" && S.over && S.over.id==="caught" && !S.discipline && pendingDiscipline().points>0 && pendingDiscipline().points<BALANCE.discipline.dismiss;
@@ -6349,7 +6447,7 @@ const THSZ = {
   get S(){ return S; }, set S(v){ S = v; },
   setBot(m){ BOT = m ? BOTS[m] : null; },
   setHeadless(v){ FORCE_HL = !!v; },
-  internals:{ maintainQuote, canResumeLegacyDiscipline, resumeLegacyDiscipline, pendingDiscipline, resolveDiscipline, disciplineBlocked, doDisciplineTask, updateDiscipline, captureCareerPost, restoreCareerPost, publicityReason, publicityRisk, auditCheck, meetChain, meetSpec, meetPick, MEETINGS, apCost, promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
+  internals:{ maintainQuote, reinstatementState, reinstatementAssessment, runReinstatement, applyReinstatement, trackReinstatementConduct, adaptReinstatementKpi, canResumeReinstatement, resumeReinstatement, canResumeLegacyDiscipline, resumeLegacyDiscipline, pendingDiscipline, resolveDiscipline, disciplineBlocked, doDisciplineTask, updateDiscipline, captureCareerPost, restoreCareerPost, publicityReason, publicityRisk, auditCheck, meetChain, meetSpec, meetPick, MEETINGS, apCost, promoVotes, promoStatements, promoFinal, promoPublicity, promoLose, applyAppoint, applyTransition, checkBreakthrough, computeKpi, computeCore, computeRank, settleMonth, depTotal, pickEvents, eventSpec, EVENTS, EVENTS_LATER, rumorLead, advance, runPromo, fav, dirt, person, staff, card,
     outlet, project, nplRatio, subsL2, skillOf, delegK, decompFair, decompProportional, applyDecomp, appointCands, projAdvance, bookLoan, EVENTS_L2, initL2, staffSkill, EVENTS_L3, EVENTS_L4, initL3, initL4, nplL3, loansTotalL3, effL3, area, branch, inst, depTotalL4, loansL4, nplL4, capRoom, ratingNow, lineK, crisisEventSpec, appointCandsL3, bestAssignGain,
     EVENTS_L5, initL5, levelStartJobs, oddsTier, oddsClamp, roll, ODDS, EVENT_ODDS, applyEventOdds, actOdds, rivalReact, spotlight, whipTargets, issueKpi, settleMonth, settleL5, carL5, ratingL5, rankL5, finalL5, refineEnding, ENDINGS, ENDING_LIST, loadMeta, recordMeta, bioData, bioVerdict, drawBio, endGame, kpiActualL5, get JOBS(){return JOBS;} },
 };
@@ -6512,7 +6610,7 @@ const UI = {
       <div class="player-chip">${PORTRAITS.markup(S.player.portrait||'player_m','tiny')}</div><div class="who">${esc(titleOf(S))}</div>
       <div class="meta">${S.age}岁 · 入行第${S.careerYear}年 · ${turnTxt}</div>
       ${S.phase==="play" ? `<div class="ap" title="行动点">${apDots}</div>` : ""}
-      ${S.promo.rumored && S.phase==="play" ? `<div class="win-badge" title="升职窗口">窗口 · ${Math.max(0,S.promo.windowAt - S.turn)}月后考察</div>` : ""}
+      ${S.promo.rumored && S.phase==="play" && !reinstatementState() ? `<div class="win-badge" title="升职窗口">窗口 · ${Math.max(0,S.promo.windowAt - S.turn)}月后考察</div>` : ""}
       <div class="cores">
         <div class="core"><b class="num" data-roll="perf">${c.perf}</b><span>业绩</span></div>
         <div class="core"><b class="num" data-roll="rep">${c.rep}</b><span>口碑</span></div>
@@ -6839,7 +6937,7 @@ const UI = {
     UI.rolls = {}; UI.relationshipSnapshot = null;
     $("stage").classList.add("hidden"); $("modal").classList.add("hidden");
     UI.showTab("colM"); $("colM").scrollTop = 0;
-    if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play") advance(); d(); }); runJobs(); return; }
+    if(S.phase === "promo"){ UI.refresh(); JOBS = []; jobBusy = false; job(d => runPromo(d)); job(d => { if(S.phase==="play"){if(S.justEntered){S.justEntered=false;levelStartJobs();}else advance();} d(); }); runJobs(); return; }
     UI.refresh();
     showDisciplineNotice();
   },
@@ -7029,14 +7127,16 @@ Object.assign(UI, {
 Object.assign(UI,{
   renderDiscipline(){
     const d=S.discipline; if(!d || !d.history.length)return;
-    const active=disciplineBlocked(), last=d.history[d.history.length-1];
+    const active=disciplineBlocked(), last=d.history[d.history.length-1], review=reinstatementState();
+    const assessment=review?reinstatementAssessment():null;
+    const reviewHtml=review?`<p><b>复任目标：${LV_TITLE[review.target]}</b> · ${review.nextAt>S.monthAbs?"最早"+Math.ceil(review.nextAt-S.monthAbs)+"个月后期末复核":"本期期末复核"}</p><p class="hint">复核综合分${assessment.score}/${BALANCE.discipline.returnScore}；业绩≥${BALANCE.discipline.returnPerf}，信任≥${BALANCE.discipline.returnTrust}，合规≥${BALANCE.discipline.returnComp}，连续${BALANCE.discipline.returnCleanMonths}个月合规达标。通过后直接复任；未通过${BALANCE.discipline.returnRetryMonths}个月后再评，${BALANCE.retireAge}岁到龄离岗。</p>${review.last&&!review.last.pass?`<p class="hint">上次暂缓：${esc(review.last.reasons.join("；"))}</p>`:""}`:"";
     const names={warning:"警告",probation:"考察期",demote:"降职后考察",remove:"撤职整改",dismiss:"职业终结"};
     const tasks=Object.entries(d.tasks).map(([id,n])=>`<button class="btn sm ghost" data-rectify="${id}" ${n>=1||S.ap<1||d.lastTaskAt===S.monthAbs||S.phase!=="play"?"disabled":""}>${{training:"合规培训",review:"档案复核",repair:"客户善后"}[id]}${n>=1?" · 已完成":" · 1点"}</button>`).join(" ");
     const panel=document.createElement("div");panel.className="box";panel.id="disciplinePanel";
-    panel.innerHTML=`<h3>${active?names[last.kind]:"处分与整改记录"}<em>${active?"暂停晋升":"已恢复任职与晋升资格"}</em></h3><p>${esc(last.reason)}</p><p class="hint">${active?`考察至少还需${Math.max(0,d.until-S.monthAbs)}个月，每期可完成一项整改。期限届满且任务全部完成后恢复资格。`:"整改已完成，历史风险及处分记录仍保留。"}</p>${active?`<div class="lb">${tasks}</div>`:""}<button class="btn sm ghost" data-discipline-history>查看处分记录（${d.history.length}次）</button>`;
+    panel.innerHTML=`<h3>${active?names[last.kind]:"处分与整改记录"}<em>${active?"暂停晋升":review?"等待复任复核":"已恢复任职与晋升资格"}</em></h3><p>${esc(last.reason)}</p><p class="hint">${active?`考察至少还需${Math.max(0,d.until-S.monthAbs)}个月，每期可完成一项整改。期限届满且任务全部完成后恢复资格。`:"整改已完成，历史风险及处分记录仍保留。"}</p>${active?`<div class="lb">${tasks}</div>`:""}${reviewHtml}<button class="btn sm ghost" data-discipline-history>查看处分记录（${d.history.length}次）</button>`;
     $("colM").prepend(panel);
     panel.querySelectorAll("[data-rectify]").forEach(el=>el.onclick=()=>{doDisciplineTask(el.dataset.rectify);UI.refresh();});
-    panel.querySelector("[data-discipline-history]").onclick=()=>UI.modal({title:"处分记录",body:d.history.map(h=>`${h.age}岁 · ${LV_TITLE[h.lv]} · ${{warning:"警告",probation:"考察",demote:"降职",remove:"撤职",dismiss:"职业终结"}[h.kind]}\n${h.reason}`).join("\n\n"),opts:[{t:"关闭"}]});
+    panel.querySelector("[data-discipline-history]").onclick=()=>UI.modal({title:"处分记录",body:d.history.map(h=>`${h.age}岁 · ${LV_TITLE[h.lv]} · ${{warning:"警告",probation:"考察",demote:"降职",remove:"撤职",dismiss:"职业终结"}[h.kind]}\n${h.reason}${h.reinstatedAt?"\n"+h.reinstatedAt.age+"岁，已复任"+LV_TITLE[h.reinstatedAt.lv]:""}`).join("\n\n"),opts:[{t:"关闭"}]});
   }
 });
 /* =====================================================================
@@ -7293,8 +7393,9 @@ Object.assign(UI, {
     const lvName = o.lv === 5 ? "泰和银行行长" : ("止步于" + ["","弹子石网点负责人","南岸支行行长","万州分行行长","重庆分行行长"][o.lv]);
     st.innerHTML = `<div class="inner"><h1>${esc(o.title)}</h1><div class="lead">${paras(o.text)}</div>
       <p class="cap">${S.player.sur}${S.player.given} · ${o.age}岁 · ${lvName}</p>
-      <div class="next">${canResumeLegacyDiscipline()?'<button class="btn gold" id="eContinue">按新规则继续</button>':""}<button class="btn gold" id="eB">看履历</button><button class="btn ghost" id="eP">人脉簿</button><button class="btn ghost" id="eD">图鉴</button><button class="btn" id="eR">再开一局</button></div></div>`;
+      <div class="next">${canResumeLegacyDiscipline()?'<button class="btn gold" id="eContinue">按新规则继续</button>':""}${canResumeReinstatement()?'<button class="btn gold" id="eReview">继续复任考察</button>':""}<button class="btn gold" id="eB">看履历</button><button class="btn ghost" id="eP">人脉簿</button><button class="btn ghost" id="eD">图鉴</button><button class="btn" id="eR">再开一局</button></div></div>`;
     st.classList.remove("hidden"); st.scrollTop = 0;
+    if($("eReview")) $("eReview").onclick=()=>{if(resumeReinstatement()){st.classList.add("hidden");UI.refresh();}};
     if($("eContinue")) $("eContinue").onclick=()=>{ if(resumeLegacyDiscipline()){ st.classList.add("hidden"); UI.refresh(); showDisciplineNotice(); } };
     $("eB").onclick = UI.showBio;
     $("eP").onclick = UI.showPeople;
