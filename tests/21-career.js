@@ -36,7 +36,7 @@ T.ok('履职观察期满生成评价记录',!C.record(candidate.id).probation&&C
 enter(2);s=G.S;const teamCandidate=C.available()[0];
 C.assess(teamCandidate.id);T.ok('可组建专业团队，团队负责人实际影响委托产出',C.appoint('team_retail',teamCandidate.id)&&C.teamK('retail')>1&&C.positions().length===7);
 const teamAp=s.ap;T.ok('已任用团队负责人不可重复占网点岗位',C.appoint('dzs',teamCandidate.id)===null&&s.ap===teamAp);
-enter(4);s=G.S;let p=C.available()[0];
+enter(4);s=G.S;let p=C.available('exec_corp')[0];
 T.ok('一级分行有机构和班子岗位可任用',C.positions().length===16&&!!p);
 C.assess(p.id);T.ok('可任用副行长，姓名、分工、专长一致更新',C.appoint('exec_corp',p.id)&&s.biz.deputies.find(d=>d.line==='corp').id===p.id&&s.biz.deputies.find(d=>d.id===p.id).name===p.name);
 enter(5);s=G.S;p=C.available()[0];C.assess(p.id);

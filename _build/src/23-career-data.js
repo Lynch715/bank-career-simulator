@@ -21,6 +21,7 @@ BALANCE.career = {
   reserveCar:0.105, costMargin:0.05, withdrawLoss:0.1,
   executiveK:0.002, regionalK:0.002, reviewFit:60, reviewHelp:-3,
   minSkill:{1:0,2:30,3:45,4:50,5:55},
+  reserveSkill:{4:64,5:70}, reserveFav:50,
   teamK:0.001, competitionBase:75, competitionService:14, competitionRetain:0.6,
   relationStart:60, relationK:0.2, relationGain:10, relationLoss:12,
   liquidityStart:70, liquidityFloor:40, liquidityPressure:4, liquidityGrowthK:2, liquidityLoss:0.00005,
@@ -45,6 +46,15 @@ BALANCE.career = {
 };
 const CAREER_LINES = [{id:'corp',name:'公司'}, {id:'retail',name:'零售'}, {id:'risk',name:'风险'}, {id:'ops',name:'运营'}];
 const CAREER_NAMES = ['', '网点特色与人才', '市场攻坚与团队', '城市经营与干部', '全省协同与班子', '全行战略与干部'];
+// 0 员工，1 网点/支行团队，2 支行/二分部门，3 二分/一分部门，4 一分/总行部门，5 总行班子。
+const CAREER_MANAGEMENT = {
+  1:{min:0,max:0,desc:'管理本网点员工与业务骨干。'},
+  2:{min:0,max:1,desc:'管理所辖网点、支行专业团队及基层后备人才。'},
+  3:{min:1,max:2,desc:'管理所辖支行及二级分行部门干部。'},
+  4:{min:2,max:4,desc:'管理一级分行班子、所辖二级分行及直属支行主要负责人。'},
+  5:{min:4,max:5,desc:'管理总行班子、一级分行主要负责人及总行部门干部。'},
+};
+const CAREER_L5_BRANCHES = {db:'辽宁分行',hb:'北京分行',xb:'陕西分行',hd:'上海分行',hz:'湖北分行',xn:'重庆分行',hn:'广东分行'};
 const CAREER_STAGES = {
   1:['摸排需求','服务试点','持续经营'], 2:['客户竞标','系统对接','集中迁移','客户经营'],
   3:['片区调研','核心客户','链上拓展','经营复盘'], 4:['项目论证','机构试点','联合推广','全市运营'],

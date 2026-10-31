@@ -67,9 +67,9 @@ Object.assign(UI, {
     const all=careerPeople(),slots=careerPositions(),current=new Set(subordinates().map(p=>p.id).concat(slots.map(p=>p.pid)));
     const query=UI.careerPeopleQuery.trim();
     const people=all.filter(p=>(UI.careerPeopleScope==='all'||(UI.careerPeopleScope==='current'?current.has(p.id):!current.has(p.id)))&&(!query||(p.name+' '+p.pos).includes(query)));
-    node.innerHTML=`<p class="hint">培养影响经营能力与专业方向；新任干部须先考察。任用后有一年履职观察。旧部的培养记录与贡献会跨职务保留。</p>
+    node.innerHTML=`<p class="hint">${CAREER_MANAGEMENT[S.lv].desc}候选人按现任职务与履历筛选，新任干部须先考察。${S.lv>=3?'基层旧部仍可在人脉簿查看。':'培养记录与贡献会跨职务保留。'}</p>
       ${slots.length?'<div class="career-toolbar"><button class="btn" id="careerAppoint">干部任用 · 1点</button></div>':''}
-      <div class="career-toolbar">${[['current','当前管理'],['reserve','旧部后备'],['all','全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
+      <div class="career-toolbar">${[['current','当前管理'],['reserve',S.lv>=3?'本级后备':'旧部后备'],['all',S.lv>=3?'本级全部':'全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
       <div class="career-people">${people.map(p=>{
         const r=careerRecord(p.id),line=CAREER_LINES.find(x=>x.id===r.specialty),load=careerLoad(p.id);
         return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
@@ -89,6 +89,7 @@ Object.assign(UI, {
     node.querySelector('#careerTeam').onclick=()=>UI.careerPick('找谁谈工作','同一人谈话后需要间隔一段时间。',careerPeople().map(p=>({t:p.name,s:p.pos,fn:()=>UI.careerPersonModal(p.id)})));
   },
   careerPersonModal(id){
+    if(!careerPeople().some(p=>p.id===id)){UI.careerPick('不属本级干部管理范围','该人员仍保留在人脉簿中；培养与任用由其所属机构办理。',[]);return;}
     const p=person(id),r=careerRecord(id),cost=BC().trainCost[S.lv],ck=careerCheck(0);
     const links=Object.entries(S.cadreRelations||{}).filter(([key])=>key.split('|').includes(id)).map(([key,value])=>{const other=person(key.split('|').find(x=>x!==id));return other?other.name+' '+Math.round(value)+'/100':'';}).filter(Boolean);
     UI.careerPick(p.name+' · 培养与谈话',`能力${Math.round(careerSkill(p))}，与你的关系${Math.round(p.fav)}。${r.training?'正在参加专项培养。':'专项培养费用 '+fmtWan(cost)+'，需'+BC().trainTurns[S.lv]+'回合。'}${links.length?'\n\n同事合作：'+links.join('；'):''}`, [
@@ -103,11 +104,13 @@ Object.assign(UI, {
     UI.careerPick('资产负债安排',`流动性指数${Math.round(a.liquidity)}，低于${BC().liquidityFloor}会增加应急资金成本。每半年最多调整一次。`,BC().alm.map(o=>UI.careerOption(o.name,o.desc+' · 1点行动',()=>careerALM(o.id),a.policy===o.id?'当前策略':a.changedAt===S.monthAbs?'本半年已调整':!careerCheck(0).ok?careerCheck(0).why:'')));
   },
   careerAppointModal(){
-    UI.careerPick('调整哪个岗位','新任人选须有有效考察记录。现任其他岗位的干部需先完成交接，不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
-      const candidates=careerAvailable();
-      UI.careerPick('任用 · '+slot.name,candidates.length?'能力与专业应符合岗位需要，任用后进入履职观察。':'暂无可调配人选。可以先培养后备干部，或将现任干部调整到专项岗位。',candidates.map(p=>{
+    UI.careerPick('调整哪个岗位',CAREER_MANAGEMENT[S.lv].desc+'新任人选须有有效考察记录；现任其他岗位的干部不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
+      const candidates=careerAvailable(slot.id);
+      UI.careerPick('任用 · '+slot.name,candidates.length?'候选人职务与履历符合本岗位范围，任用后进入履职观察。':'暂无符合本岗位职务和履历要求的可调配人选。基层旧部可在人脉簿查看。',candidates.map(p=>{
         const r=careerRecord(p.id),why=!careerCheck(0).ok?careerCheck(0).why:r.training?'正在专项培养':r.assessedUntil<S.monthAbs?'请先到干部人才中完成履职考察':'';
-        return UI.careerOption(p.name,`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`,()=>careerAppoint(slot.id,p.id),why);
+        const option=UI.careerOption(p.name,'',()=>careerAppoint(slot.id,p.id),why);
+        option.s=`${p.pos} · ${why||`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`}`;
+        return option;
       }));
     }})));
   },

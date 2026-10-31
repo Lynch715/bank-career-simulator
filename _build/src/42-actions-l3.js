@@ -98,11 +98,12 @@ function doTilt(line){
 function appointCandsL3(bid){
   const used = new Set(S.biz.branches.map(x=>x.mgr).concat(Object.values(S.biz.lineHeads)));
   const pool = S.people.filter(p => p.alive && p.met && !used.has(p.id) && p.skill != null && (p.kind==="reserve" || ((p.lvMet<=2) && p.skill >= 60 && p.pos.indexOf("离职")<0 && p.pos.indexOf("被查")<0 && p.pos !== "南岸支行行长")));
-  return pool.filter(p => !["zhouqm","maben","weilc","lu","gu","huang"].includes(p.id));
+  return pool.filter(p => !["zhouqm","maben","weilc","lu","gu","huang"].includes(p.id)&&careerLevel(p)>=1&&careerLevel(p)<=2);
 }
 function doAppointL3(bid, pid){
   const ck = canActL3("appoint"); if(!ck.ok) return null;
   const x = branch(bid), np = person(pid); if(!x || !np) return null;
+  if(!careerLive(np)||careerLevel(np)<1||careerLevel(np)>2)return null;
   const b = B3().appoint;
   apUse(1);
   const old = person(x.mgr);

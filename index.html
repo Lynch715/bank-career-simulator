@@ -1814,6 +1814,7 @@ BALANCE.career = {
   reserveCar:0.105, costMargin:0.05, withdrawLoss:0.1,
   executiveK:0.002, regionalK:0.002, reviewFit:60, reviewHelp:-3,
   minSkill:{1:0,2:30,3:45,4:50,5:55},
+  reserveSkill:{4:64,5:70}, reserveFav:50,
   teamK:0.001, competitionBase:75, competitionService:14, competitionRetain:0.6,
   relationStart:60, relationK:0.2, relationGain:10, relationLoss:12,
   liquidityStart:70, liquidityFloor:40, liquidityPressure:4, liquidityGrowthK:2, liquidityLoss:0.00005,
@@ -1838,6 +1839,15 @@ BALANCE.career = {
 };
 const CAREER_LINES = [{id:'corp',name:'公司'}, {id:'retail',name:'零售'}, {id:'risk',name:'风险'}, {id:'ops',name:'运营'}];
 const CAREER_NAMES = ['', '网点特色与人才', '市场攻坚与团队', '城市经营与干部', '全省协同与班子', '全行战略与干部'];
+// 0 员工，1 网点/支行团队，2 支行/二分部门，3 二分/一分部门，4 一分/总行部门，5 总行班子。
+const CAREER_MANAGEMENT = {
+  1:{min:0,max:0,desc:'管理本网点员工与业务骨干。'},
+  2:{min:0,max:1,desc:'管理所辖网点、支行专业团队及基层后备人才。'},
+  3:{min:1,max:2,desc:'管理所辖支行及二级分行部门干部。'},
+  4:{min:2,max:4,desc:'管理一级分行班子、所辖二级分行及直属支行主要负责人。'},
+  5:{min:4,max:5,desc:'管理总行班子、一级分行主要负责人及总行部门干部。'},
+};
+const CAREER_L5_BRANCHES = {db:'辽宁分行',hb:'北京分行',xb:'陕西分行',hd:'上海分行',hz:'湖北分行',xn:'重庆分行',hn:'广东分行'};
 const CAREER_STAGES = {
   1:['摸排需求','服务试点','持续经营'], 2:['客户竞标','系统对接','集中迁移','客户经营'],
   3:['片区调研','核心客户','链上拓展','经营复盘'], 4:['项目论证','机构试点','联合推广','全市运营'],
@@ -3155,6 +3165,15 @@ function careerEnsure(){
       return {id:p.id,name:p.name,line:CAREER_LINES[i].id,fit:Object.assign({},d.fit)};
     });
   }
+  // 沿用已有同级负责人身份，提供符合本级任用范围的交流人选，不把基层旧部自动抬级。
+  if(S.lv>=4 && !g.seniorRoster){
+    const roster=S.lv===5?RIVALS_L4:RIVALS_L3;
+    roster.forEach(d=>{
+      if(S.people.some(p=>p.name===d.boss))return;
+      S.people.push({id:'rival_'+d.id,name:d.boss,skill:BC().reserveSkill[S.lv],fav:BC().reserveFav,kind:'reserve',group:'交流干部',met:true,alive:true,lvMet:S.lv,pos:d.name+'行长',role:d.name+'行长',trait:d.style,recent:'可按本级岗位需要考察交流'});
+    });
+    g.seniorRoster=true;
+  }
   return g;
 }
 function careerExecs(){ const g=careerEnsure(); return S.lv===4?S.biz.deputies:S.lv===5?g.executives:[]; }
@@ -3170,20 +3189,43 @@ function careerPartner(lead,units){
   const ids=units.map(id=>{const x=rows.find(x=>x.id===id);return x&&(x.mgr||x.headId);});
   return ids.filter(id=>id!==lead&&careerLive(person(id)))[0]||careerExecs().find(x=>x.id!==lead)?.id||null;
 }
+function careerLevel(p){
+  if(!p)return -1;
+  // 已任用的岗位是现任职务。旧档中的任命继续有效，不因规则收紧撤人或清空岗位。
+  const g=S.biz.career;
+  if(S.lv===5){if(g?.executives?.some(d=>d.id===p.id))return 5;if(S.biz.regions.some(x=>x.headId===p.id))return 4;}
+  if(S.lv===4){if(S.biz.deputies.some(d=>d.id===p.id))return 4;const row=S.biz.inst.find(x=>x.headId===p.id);if(row)return row.name.includes('分行')?3:2;}
+  if(S.lv===3&&(S.biz.branches.some(x=>x.mgr===p.id)||Object.values(S.biz.lineHeads).includes(p.id)))return 2;
+  if(S.lv===2&&(S.biz.outlets.some(x=>x.mgr===p.id)||S.biz.corp.lead===p.id||Object.values(g?.teams||{}).includes(p.id)))return 1;
+  const pos=(p.pos||p.role||'').replace(/[（(][^）)]*[）)]/g,'').trim();
+  if(/总行.*副行长$/.test(pos))return 5;
+  if(/总行.*(?:总经理|部门负责人|中心负责人|办公室主任|专项岗位)$/.test(pos))return 4;
+  const first=['重庆分行',...RIVALS_L4.map(x=>x.name),...Object.values(CAREER_L5_BRANCHES)];
+  if(first.some(name=>pos.includes(name))||/一级分行/.test(pos)){
+    if(/(?:副行长|行长|片区统筹负责人)$/.test(pos))return 4;
+    if(/(?:总经理|主任|负责人|专项岗位)$/.test(pos))return 3;
+  }
+  const second=['万州分行',...RIVALS_L3.map(x=>x.name)];
+  if((second.some(name=>pos.includes(name))||/二级分行/.test(pos))&&/(?:副行长|行长|调研员)$/.test(pos))return 3;
+  if(/支行.*(?:副行长|行长)$|(?:公司部|零售部|风险部|营业部|人力部|办公室).*(?:总经理|主任|负责人)$/.test(pos))return 2;
+  if(/网点.*负责人$|对公团队.*负责人$|专业团队负责人$/.test(pos))return 1;
+  return 0;
+}
 function careerPeople(){
   careerEnsure();
   const ids=new Set(subordinates().map(p=>p.id));
   if(S.lv===4) S.biz.inst.forEach(x=>ids.add(x.headId));
   if(S.lv===5) careerExecs().forEach(x=>ids.add(x.id));
   S.people.filter(p=>p.skill!=null && ['staff','sub','reserve'].includes(p.kind)).forEach(p=>ids.add(p.id));
-  return [...ids].map(person).filter(p=>careerLive(p) && !['lu','gu','huang','songwy','weilc'].includes(p.id));
+  const scope=CAREER_MANAGEMENT[S.lv];
+  return [...ids].map(person).filter(p=>careerLive(p) && !['lu','gu','huang','songwy','weilc'].includes(p.id)&&careerLevel(p)>=scope.min&&careerLevel(p)<=scope.max);
 }
 function careerPositions(){
   careerEnsure();
   if(S.lv===2) return S.biz.outlets.map(x=>({id:x.id,name:x.name+'负责人',pid:x.mgr,row:x,field:'mgr',line:'retail'})).concat(Object.keys(S.biz.career.teams).map(line=>({id:'team_'+line,name:CAREER_LINES.find(x=>x.id===line).name+'专业团队负责人',pid:S.biz.career.teams[line],row:S.biz.career.teams,field:line,line,team:true})));
   if(S.lv===3) return S.biz.branches.map(x=>({id:x.id,name:x.name+'行长',pid:x.mgr,row:x,field:'mgr',line:'corp'}));
-  if(S.lv===4) return S.biz.inst.map(x=>({id:x.id,name:x.name+'负责人',pid:x.headId,row:x,field:'headId',line:'corp'})).concat(S.biz.deputies.map(x=>({id:'exec_'+x.line,name:'分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true})));
-  if(S.lv===5) return S.biz.regions.map(x=>({id:x.id,name:x.name+'片区统筹负责人',pid:x.headId,row:x,field:'headId',line:'corp'})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true})));
+  if(S.lv===4) return S.biz.inst.map(x=>({id:x.id,name:x.name+'负责人',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:2})).concat(S.biz.deputies.map(x=>({id:'exec_'+x.line,name:'分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:3})));
+  if(S.lv===5) return S.biz.regions.map(x=>({id:x.id,name:CAREER_L5_BRANCHES[x.id]+'行长',pid:x.headId,row:x,field:'headId',line:'corp',minLevel:4})).concat(careerExecs().map(x=>({id:'exec_'+x.line,name:'总行分管'+CAREER_LINES.find(l=>l.id===x.line).name+'副行长',pid:x.id,row:x,field:'id',line:x.line,exec:true,minLevel:4})));
   return [];
 }
 function careerUnits(){
@@ -3197,11 +3239,13 @@ function careerFit(p,line){
   if(d) return d.fit[line];
   return c100(BC().fitBase+careerSkill(p)*BC().fitSkill+(careerRecord(p.id).specialty===line?BC().fitSpecialty:0));
 }
-function careerAvailable(){
+function careerAvailable(postId){
   const used=new Set(careerPositions().map(x=>x.pid).filter(Boolean));
+  const target=postId?careerPositions().find(x=>x.id===postId):null;
+  if(postId&&!target)return [];
   if(S.lv===2) used.add(S.biz.corp.lead);
   if(S.lv===3) Object.values(S.biz.lineHeads).forEach(id=>used.add(id));
-  return careerPeople().filter(p=>!used.has(p.id) && careerSkill(p)>=BC().minSkill[S.lv]);
+  return careerPeople().filter(p=>!used.has(p.id) && careerSkill(p)>=BC().minSkill[S.lv]&&careerLevel(p)>=(target?.minLevel??CAREER_MANAGEMENT[S.lv].min));
 }
 function careerCheck(cost,ap){
   if(S.phase!=='play') return {ok:false,why:'当前不能办理'};
@@ -3236,7 +3280,7 @@ function careerAssess(id){
   return careerDone();
 }
 function careerAppoint(postId,id){
-  const slot=careerPositions().find(x=>x.id===postId),p=careerAvailable().find(x=>x.id===id);
+  const slot=careerPositions().find(x=>x.id===postId),p=careerAvailable(postId).find(x=>x.id===id);
   if(!slot || !p || careerRecord(id).assessedUntil<S.monthAbs || careerRecord(id).training || !careerCheck(0).ok) return null;
   const old=person(slot.pid);
   if(S.lv===2&&!slot.team){if(!doAppoint(postId,id)) return null;}
@@ -3249,7 +3293,7 @@ function careerAppoint(postId,id){
     else if(!slot.team){slot.row.headName=p.name;slot.row.skill=careerSkill(p);}
     p.pos=myUnitName()+'·'+slot.name;p.kind='sub';p.recent='经考察任用，正在履职观察';
     fav(id,BC().appointFav);
-    if(old){old.pos=S.lv===4?'重庆分行专项岗位':'总行专项岗位';old.recent='调整工作分工';fav(old.id,BC().oldFav);}
+    if(old){old.pos=S.lv===5?'总行专项岗位':myUnitName()+'专项岗位';old.recent='调整工作分工';fav(old.id,BC().oldFav);}
     keyEvent(`经考察任用${p.name}担任${slot.name}`);
     log('', `${slot.name}由${p.name}担任。${old?old.name+'调整到专项岗位。':''}行动点-1，任用后进入履职观察。`);
   }
@@ -3339,8 +3383,9 @@ function careerChoose(id,choice){
   return careerDone();
 }
 function careerExecution(p){
-  const leader=careerPeople().find(x=>x.id===p.lead);
-  if(!leader) return {score:0,why:'牵头人已离岗，需要重新委任'};
+  // 历史项目的承办人可以继续履职；收紧新增任用范围不使旧项目停摆。
+  const leader=person(p.lead);
+  if(!careerLive(leader)) return {score:0,why:'牵头人已离岗，需要重新委任'};
   const g=careerEnsure(),d=careerProjectDef(p.id),r=careerRecord(leader.id);
   let score=careerFit(leader,d.line)*BC().skillWeight+leader.fav*BC().relationWeight+g.coord*BC().trustWeight+p.quality+(careerLink(p.lead,p.partner)-BC().relationStart)*BC().relationK;
   if(r.training) score-=BC().trainingPenalty;
@@ -3403,7 +3448,7 @@ function careerMonthStart(){
     if(g.council && g.engaged && S.turn-g.council.at>=BC().councilExpiry){g.coord=c100(g.coord-BC().coordPenalty/2);log('warn','待协调事项搁置过久，团队协作下降。');}
     if(!g.council || S.turn-g.council.at>=BC().councilExpiry){
       const project=g.projects.filter(p=>p.status!=='withdrawn').slice(-1)[0],team=careerPeople();
-      const lead=project?.lead||team[0]?.id,partner=project?.partner||team.find(p=>p.id!==lead)?.id;
+      const lead=team.find(p=>p.id===project?.lead)?.id||team[0]?.id,partner=team.find(p=>p.id===project?.partner&&p.id!==lead)?.id||team.find(p=>p.id!==lead)?.id;
       g.council={id:CAREER_COUNCIL[g.councilSeq++%CAREER_COUNCIL.length].id,at:S.turn,lead,partner,project:project?.id};g.lastCouncil=S.turn;
     }
   }
@@ -3777,11 +3822,12 @@ function doTilt(line){
 function appointCandsL3(bid){
   const used = new Set(S.biz.branches.map(x=>x.mgr).concat(Object.values(S.biz.lineHeads)));
   const pool = S.people.filter(p => p.alive && p.met && !used.has(p.id) && p.skill != null && (p.kind==="reserve" || ((p.lvMet<=2) && p.skill >= 60 && p.pos.indexOf("离职")<0 && p.pos.indexOf("被查")<0 && p.pos !== "南岸支行行长")));
-  return pool.filter(p => !["zhouqm","maben","weilc","lu","gu","huang"].includes(p.id));
+  return pool.filter(p => !["zhouqm","maben","weilc","lu","gu","huang"].includes(p.id)&&careerLevel(p)>=1&&careerLevel(p)<=2);
 }
 function doAppointL3(bid, pid){
   const ck = canActL3("appoint"); if(!ck.ok) return null;
   const x = branch(bid), np = person(pid); if(!x || !np) return null;
+  if(!careerLive(np)||careerLevel(np)<1||careerLevel(np)>2)return null;
   const b = B3().appoint;
   apUse(1);
   const old = person(x.mgr);
@@ -7045,7 +7091,7 @@ function simGame(mode, seed, maxTurns, opts){
 
 const THSZ = {
   newGame, load, save, clearSave, endTurn, runJobs, simGame, BOTS,
-  career:{link:careerLink,alm:careerALM,lineK:careerLineK,teamK:careerTeamK,ensure:careerEnsure,people:careerPeople,positions:careerPositions,available:careerAvailable,record:careerRecord,train:careerTrain,assess:careerAssess,appoint:careerAppoint,talk:careerTalk,style:careerStyle,plan:careerPlan,start:careerStart,choose:careerChoose,push:careerPush,council:careerCouncilChoice,startCheck:careerStartCheck,execution:careerExecution,reserved:careerReserved,monthStart:careerMonthStart,settle:careerSettle,deputySpec:careerDeputySpec,deputyChoice:careerDeputyChoice,projects:CAREER_PROJECTS},
+  career:{level:careerLevel,link:careerLink,alm:careerALM,lineK:careerLineK,teamK:careerTeamK,ensure:careerEnsure,people:careerPeople,positions:careerPositions,available:careerAvailable,record:careerRecord,train:careerTrain,assess:careerAssess,appoint:careerAppoint,talk:careerTalk,style:careerStyle,plan:careerPlan,start:careerStart,choose:careerChoose,push:careerPush,council:careerCouncilChoice,startCheck:careerStartCheck,execution:careerExecution,reserved:careerReserved,monthStart:careerMonthStart,settle:careerSettle,deputySpec:careerDeputySpec,deputyChoice:careerDeputyChoice,projects:CAREER_PROJECTS},
   act:{openOutlet:doOpenOutlet, closeOutlet:doCloseOutlet, renovate:doRenovate, squat:doSquatL3, tilt:doTilt, appointL3:doAppointL3, platform:doPlatform, decidePlatform, reportUpL3:doReportUpL3, disposeNpa, setMix,
     survey:doSurvey, reg5:doReg5, reform:doReform, visit5:doVisit5, issueCapital, setDial, setStrategy,
     swap:doSwap, talk:doTalk, startProj:doStartProj, pushProj:doPushProj, focus:doFocus, quota:doQuota, regulator:doRegulator,
@@ -8391,9 +8437,9 @@ Object.assign(UI, {
     const all=careerPeople(),slots=careerPositions(),current=new Set(subordinates().map(p=>p.id).concat(slots.map(p=>p.pid)));
     const query=UI.careerPeopleQuery.trim();
     const people=all.filter(p=>(UI.careerPeopleScope==='all'||(UI.careerPeopleScope==='current'?current.has(p.id):!current.has(p.id)))&&(!query||(p.name+' '+p.pos).includes(query)));
-    node.innerHTML=`<p class="hint">培养影响经营能力与专业方向；新任干部须先考察。任用后有一年履职观察。旧部的培养记录与贡献会跨职务保留。</p>
+    node.innerHTML=`<p class="hint">${CAREER_MANAGEMENT[S.lv].desc}候选人按现任职务与履历筛选，新任干部须先考察。${S.lv>=3?'基层旧部仍可在人脉簿查看。':'培养记录与贡献会跨职务保留。'}</p>
       ${slots.length?'<div class="career-toolbar"><button class="btn" id="careerAppoint">干部任用 · 1点</button></div>':''}
-      <div class="career-toolbar">${[['current','当前管理'],['reserve','旧部后备'],['all','全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
+      <div class="career-toolbar">${[['current','当前管理'],['reserve',S.lv>=3?'本级后备':'旧部后备'],['all',S.lv>=3?'本级全部':'全部']].map(([id,name])=>`<button class="btn ghost" data-cscope="${id}" aria-pressed="${UI.careerPeopleScope===id}">${name}</button>`).join('')}<label class="career-search">搜索干部<input id="careerSearch" type="search" aria-label="搜索干部" placeholder="姓名或岗位"></label></div><p class="hint">当前显示${people.length}人</p>
       <div class="career-people">${people.map(p=>{
         const r=careerRecord(p.id),line=CAREER_LINES.find(x=>x.id===r.specialty),load=careerLoad(p.id);
         return `<article class="career-person">${PORTRAITS.markup(p,'tiny')}<div><b>${esc(p.name)}</b><p class="hint">${esc(p.pos||p.role||'后备干部')}</p><p>能力 ${Math.round(careerSkill(p))} · 关系 ${Math.round(p.fav)} · 贡献 ${Math.round(r.merit)}</p><p class="hint">${r.training?`培养中 · 还需${r.training.left}回合`:line?line.name+'专长':'尚无专项培养'} · ${r.assessedUntil>=S.monthAbs?'考察有效':'待考察'}${load?' · 牵头'+load+'项':''}${r.probation?' · 履职观察中':''}</p><button class="btn ghost" data-cperson="${p.id}">培养与谈话</button></div></article>`;
@@ -8413,6 +8459,7 @@ Object.assign(UI, {
     node.querySelector('#careerTeam').onclick=()=>UI.careerPick('找谁谈工作','同一人谈话后需要间隔一段时间。',careerPeople().map(p=>({t:p.name,s:p.pos,fn:()=>UI.careerPersonModal(p.id)})));
   },
   careerPersonModal(id){
+    if(!careerPeople().some(p=>p.id===id)){UI.careerPick('不属本级干部管理范围','该人员仍保留在人脉簿中；培养与任用由其所属机构办理。',[]);return;}
     const p=person(id),r=careerRecord(id),cost=BC().trainCost[S.lv],ck=careerCheck(0);
     const links=Object.entries(S.cadreRelations||{}).filter(([key])=>key.split('|').includes(id)).map(([key,value])=>{const other=person(key.split('|').find(x=>x!==id));return other?other.name+' '+Math.round(value)+'/100':'';}).filter(Boolean);
     UI.careerPick(p.name+' · 培养与谈话',`能力${Math.round(careerSkill(p))}，与你的关系${Math.round(p.fav)}。${r.training?'正在参加专项培养。':'专项培养费用 '+fmtWan(cost)+'，需'+BC().trainTurns[S.lv]+'回合。'}${links.length?'\n\n同事合作：'+links.join('；'):''}`, [
@@ -8427,11 +8474,13 @@ Object.assign(UI, {
     UI.careerPick('资产负债安排',`流动性指数${Math.round(a.liquidity)}，低于${BC().liquidityFloor}会增加应急资金成本。每半年最多调整一次。`,BC().alm.map(o=>UI.careerOption(o.name,o.desc+' · 1点行动',()=>careerALM(o.id),a.policy===o.id?'当前策略':a.changedAt===S.monthAbs?'本半年已调整':!careerCheck(0).ok?careerCheck(0).why:'')));
   },
   careerAppointModal(){
-    UI.careerPick('调整哪个岗位','新任人选须有有效考察记录。现任其他岗位的干部需先完成交接，不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
-      const candidates=careerAvailable();
-      UI.careerPick('任用 · '+slot.name,candidates.length?'能力与专业应符合岗位需要，任用后进入履职观察。':'暂无可调配人选。可以先培养后备干部，或将现任干部调整到专项岗位。',candidates.map(p=>{
+    UI.careerPick('调整哪个岗位',CAREER_MANAGEMENT[S.lv].desc+'新任人选须有有效考察记录；现任其他岗位的干部不可同时占两个岗位。',careerPositions().map(slot=>({t:slot.name,s:'现任：'+(person(slot.pid)?.name||'待选'),fn:()=>{
+      const candidates=careerAvailable(slot.id);
+      UI.careerPick('任用 · '+slot.name,candidates.length?'候选人职务与履历符合本岗位范围，任用后进入履职观察。':'暂无符合本岗位职务和履历要求的可调配人选。基层旧部可在人脉簿查看。',candidates.map(p=>{
         const r=careerRecord(p.id),why=!careerCheck(0).ok?careerCheck(0).why:r.training?'正在专项培养':r.assessedUntil<S.monthAbs?'请先到干部人才中完成履职考察':'';
-        return UI.careerOption(p.name,`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`,()=>careerAppoint(slot.id,p.id),why);
+        const option=UI.careerOption(p.name,'',()=>careerAppoint(slot.id,p.id),why);
+        option.s=`${p.pos} · ${why||`能力${Math.round(careerSkill(p))} · 关系${Math.round(p.fav)} · 对口${Math.round(careerFit(p,slot.line))}`}`;
+        return option;
       }));
     }})));
   },
